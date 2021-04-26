@@ -2624,7 +2624,7 @@ void VecCastles::ChangeColors( int col1, int col2 )
 AllCastles::AllCastles()
 {
     // reserve memory
-    _castles.reserve( MAXCASTLES );
+    _castles.reserve( MAX_CASTLE_COUNT );
 }
 
 AllCastles::~AllCastles()
@@ -2663,7 +2663,7 @@ void AllCastles::AddCastle( Castle * castle )
 
     */
 
-    static_assert( MAXCASTLES < 128, "Need to change the type of castleTiles to fit in more than 128 castles" );
+    static_assert( MAX_CASTLE_COUNT < 128, "Need to change the type of castleTiles to fit in more than 128 castles" );
 
     const size_t id = _castles.size() - 1;
     fheroes2::Point temp( castle->GetCenter().x, castle->GetCenter().y );

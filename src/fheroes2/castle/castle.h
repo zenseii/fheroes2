@@ -366,6 +366,11 @@ public:
 private:
     std::vector<Castle *> _castles;
     std::map<fheroes2::Point, size_t> _castleTiles;
+
+    enum
+    {
+        MAX_CASTLE_COUNT = 72
+    };
 };
 
 StreamBase & operator<<( StreamBase &, const VecCastles & );

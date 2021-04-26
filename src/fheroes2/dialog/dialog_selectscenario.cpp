@@ -211,18 +211,18 @@ const Maps::FileInfo * Dialog::SelectScenario( const MapsFileInfoList & all, siz
     const fheroes2::Sprite & shadow = fheroes2::AGG::GetICN( ICN::REQSBKG, 1 );
     fheroes2::Blit( shadow, display, rt.x - SHADOWWIDTH, rt.y + SHADOWWIDTH );
 
-    const Rect countPlayers( rt.x + 45, rt.y + 55, 20, 175 );
-    const Rect sizeMaps( rt.x + 62, rt.y + 55, 20, 175 );
-    const Rect victoryConds( rt.x + 267, rt.y + 55, 20, 175 );
-    const Rect lossConds( rt.x + 287, rt.y + 55, 20, 175 );
+    const fheroes2::Rect countPlayers( rt.x + 45, rt.y + 55, 20, 175 );
+    const fheroes2::Rect sizeMaps( rt.x + 62, rt.y + 55, 20, 175 );
+    const fheroes2::Rect victoryConds( rt.x + 267, rt.y + 55, 20, 175 );
+    const fheroes2::Rect lossConds( rt.x + 287, rt.y + 55, 20, 175 );
 
-    const Rect curCountPlayer( rt.x + 66, rt.y + 264, 18, 18 );
-    const Rect curMapSize( rt.x + 85, rt.y + 264, 18, 18 );
-    const Rect curMapName( rt.x + 107, rt.y + 264, 166, 18 );
-    const Rect curVictoryCond( rt.x + 277, rt.y + 264, 18, 18 );
-    const Rect curLossCond( rt.x + 295, rt.y + 264, 18, 18 );
-    const Rect curDifficulty( rt.x + 220, rt.y + 292, 114, 20 );
-    const Rect curDescription( rt.x + 42, rt.y + 316, 292, 90 );
+    const fheroes2::Rect curCountPlayer( rt.x + 66, rt.y + 264, 18, 18 );
+    const fheroes2::Rect curMapSize( rt.x + 85, rt.y + 264, 18, 18 );
+    const fheroes2::Rect curMapName( rt.x + 107, rt.y + 264, 166, 18 );
+    const fheroes2::Rect curVictoryCond( rt.x + 277, rt.y + 264, 18, 18 );
+    const fheroes2::Rect curLossCond( rt.x + 295, rt.y + 264, 18, 18 );
+    const fheroes2::Rect curDifficulty( rt.x + 220, rt.y + 292, 114, 20 );
+    const fheroes2::Rect curDescription( rt.x + 42, rt.y + 316, 292, 90 );
 
     fheroes2::Button buttonOk( rt.x + 140, rt.y + 410, ICN::REQUESTS, 1, 2 );
 

@@ -28,43 +28,14 @@
 #include "rand.h"
 #include "settings.h"
 
-TimeDelay::TimeDelay( uint32_t dl )
+namespace
 {
-    second = dl;
-}
+    const int defaultBattleSpeed = 4;
 
-uint32_t TimeDelay::operator()() const
-{
-    return second;
-}
+    const double battleSpeedAdjustment = 1.0 / static_cast<double>( 10 - defaultBattleSpeed );
 
-TimeDelay & TimeDelay::operator=( uint32_t dl )
-{
-    second = dl;
-    return *this;
-}
-
-void TimeDelay::Reset()
-{
-    first.reset();
-}
-
-bool TimeDelay::Trigger( uint32_t customDelay )
-{
-    const uint64_t expected = ( customDelay > 0 ) ? customDelay : second;
-    const uint64_t current = first.getMs();
-    if ( current < expected )
-        return false;
-
-    first.reset();
-    return true;
-}
-
-namespace Game
-{
-    void AnimateDelaysInitialize( void );
-
-    static const double battleSpeedAdjustment = 1.0 / static_cast<double>( 10 - DEFAULT_BATTLE_SPEED );
+    int humanHeroMultiplier = 1;
+    int aiHeroMultiplier = 1;
 
     TimeDelay delays[] = { 20, // SCROLL_DELAY
                            20, // SCROLL_START_DELAY
@@ -97,9 +68,6 @@ namespace Game
                            10, // CURRENT_AI_DELAY
                            0, // CUSTOM_DELAY
                            0 };
-
-    int humanHeroMultiplier = 1;
-    int aiHeroMultiplier = 1;
 
     void SetupHeroMovement( const int speed, TimeDelay & delay, int & multiplier )
     {
@@ -145,6 +113,43 @@ namespace Game
             multiplier = 4;
         }
     }
+}
+
+TimeDelay::TimeDelay( uint32_t dl )
+{
+    second = dl;
+}
+
+uint32_t TimeDelay::operator()() const
+{
+    return second;
+}
+
+TimeDelay & TimeDelay::operator=( uint32_t dl )
+{
+    second = dl;
+    return *this;
+}
+
+void TimeDelay::Reset()
+{
+    first.reset();
+}
+
+bool TimeDelay::Trigger( uint32_t customDelay )
+{
+    const uint64_t expected = ( customDelay > 0 ) ? customDelay : second;
+    const uint64_t current = first.getMs();
+    if ( current < expected )
+        return false;
+
+    first.reset();
+    return true;
+}
+
+namespace Game
+{
+    void AnimateDelaysInitialize( void );
 }
 
 void Game::AnimateDelaysInitialize( void )

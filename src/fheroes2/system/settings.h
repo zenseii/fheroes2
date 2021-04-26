@@ -383,6 +383,11 @@ private:
     Point pos_stat;
 
     Players players;
+
+    enum
+    {
+        DEFAULT_SPEED_DELAY = 5
+    };
 };
 
 StreamBase & operator<<( StreamBase &, const Settings & );

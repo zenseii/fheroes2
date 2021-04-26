@@ -29,7 +29,6 @@
 #define KINGDOMMAX 6
 
 // hardcore defines: world
-#define MAXCASTLES 72
 #define DAYOFWEEK 7
 #define WEEKOFMONTH 4
 
@@ -51,9 +50,5 @@
 // hardcore defines: interface
 #define RADARWIDTH 144
 #define BORDERWIDTH 16
-
-// ai/hero speed
-#define DEFAULT_SPEED_DELAY 5
-#define DEFAULT_BATTLE_SPEED 4
 
 #endif
