@@ -403,6 +403,11 @@ void Maps::ClearFog( const int32_t tileIndex, int scoutingDistance, const int pl
         }
     }
 
+    for ( int i = 0; i < 20736; i++ ) {
+        Maps::Tiles & tile = world.GetTiles( i );
+         tile.ClearFog( alliedColors );
+    }
+
     // Update fog directions only for human player and his allies and only if fog has to be cleared.
     if ( isHumanOrHumanFriend && ( fogRevealMaxPos.x >= fogRevealMinPos.x ) && ( fogRevealMaxPos.y >= fogRevealMinPos.y ) ) {
         // Fog directions should be updated 1 tile outside of the cleared fog.
