@@ -261,23 +261,30 @@ Heroes::Heroes( int heroid, int rc )
     // Add to debug hero a lot of stuff.
     if ( _id == DEBUG_HERO ) {
         army.Clean();
-        army.JoinTroop( Monster::BLACK_DRAGON, 2, false );
-        army.JoinTroop( Monster::RED_DRAGON, 3, false );
+        army.JoinTroop( Monster::BLACK_DRAGON, 18, false );
+        army.JoinTroop( Monster::ARCHMAGE, 39, false );
+        army.JoinTroop( Monster::ROC, 49, false );
+        army.JoinTroop( Monster::MINOTAUR_KING, 35, false );
+        army.JoinTroop( Monster::HYDRA, 26, false );
 
         secondary_skills = Skill::SecSkills();
-        secondary_skills.AddSkill( Skill::Secondary( Skill::Secondary::PATHFINDING, Skill::Level::ADVANCED ) );
-        secondary_skills.AddSkill( Skill::Secondary( Skill::Secondary::LOGISTICS, Skill::Level::ADVANCED ) );
-        secondary_skills.AddSkill( Skill::Secondary( Skill::Secondary::SCOUTING, Skill::Level::BASIC ) );
+        secondary_skills.AddSkill( Skill::Secondary( Skill::Secondary::NAVIGATION, Skill::Level::EXPERT ) );
+        secondary_skills.AddSkill( Skill::Secondary( Skill::Secondary::WISDOM, Skill::Level::BASIC ) );
+        secondary_skills.AddSkill( Skill::Secondary( Skill::Secondary::ARCHERY, Skill::Level::BASIC ) );
+        secondary_skills.AddSkill( Skill::Secondary( Skill::Secondary::PATHFINDING, Skill::Level::BASIC ) );
         secondary_skills.AddSkill( Skill::Secondary( Skill::Secondary::MYSTICISM, Skill::Level::BASIC ) );
+        /*secondary_skills.AddSkill( Skill::Secondary( Skill::Secondary::SCOUTING, Skill::Level::BASIC ) );
+        secondary_skills.AddSkill( Skill::Secondary( Skill::Secondary::MYSTICISM, Skill::Level::BASIC ) );*/
+        PickupArtifact( Artifact::TRUE_COMPASS_MOBILITY );
 
-        PickupArtifact( Artifact::STEALTH_SHIELD );
+        /*PickupArtifact( Artifact::STEALTH_SHIELD );
         PickupArtifact( Artifact::DRAGON_SWORD );
         PickupArtifact( Artifact::NOMAD_BOOTS_MOBILITY );
         PickupArtifact( Artifact::TRAVELER_BOOTS_MOBILITY );
-        PickupArtifact( Artifact::TRUE_COMPASS_MOBILITY );
+        PickupArtifact( Artifact::TRUE_COMPASS_MOBILITY );*/
 
-        experience = 777;
-        magic_point = 120;
+        experience = 4500;
+        /*magic_point = 120;*/
 
         // This hero has all the spells in his spell book
         for ( const int spellId : Spell::getAllSpellIdsSuitableForSpellBook() ) {
@@ -2051,7 +2058,7 @@ void AllHeroes::Init()
     }
 
     if ( IS_DEVEL() ) {
-        push_back( new Heroes( Heroes::DEBUG_HERO, Race::WRLK ) );
+        push_back( new Heroes( Heroes::DEBUG_HERO, Race::SORC ) );
     }
     else {
         push_back( new Heroes( Heroes::UNKNOWN, Race::KNGT ) );
