@@ -271,11 +271,11 @@ Heroes::Heroes( int heroid, int rc )
         secondary_skills.AddSkill( Skill::Secondary( Skill::Secondary::NAVIGATION, Skill::Level::EXPERT ) );
         secondary_skills.AddSkill( Skill::Secondary( Skill::Secondary::WISDOM, Skill::Level::BASIC ) );
         secondary_skills.AddSkill( Skill::Secondary( Skill::Secondary::ARCHERY, Skill::Level::BASIC ) );
-        secondary_skills.AddSkill( Skill::Secondary( Skill::Secondary::PATHFINDING, Skill::Level::BASIC ) );
-        secondary_skills.AddSkill( Skill::Secondary( Skill::Secondary::MYSTICISM, Skill::Level::BASIC ) );
+        secondary_skills.AddSkill( Skill::Secondary( Skill::Secondary::LOGISTICS, Skill::Level::ADVANCED ) );
         /*secondary_skills.AddSkill( Skill::Secondary( Skill::Secondary::SCOUTING, Skill::Level::BASIC ) );
         secondary_skills.AddSkill( Skill::Secondary( Skill::Secondary::MYSTICISM, Skill::Level::BASIC ) );*/
         PickupArtifact( Artifact::TRUE_COMPASS_MOBILITY );
+        PickupArtifact( Artifact::SAILORS_ASTROLABE_MOBILITY );
 
         /*PickupArtifact( Artifact::STEALTH_SHIELD );
         PickupArtifact( Artifact::DRAGON_SWORD );
