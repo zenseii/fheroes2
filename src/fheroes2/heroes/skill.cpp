@@ -258,7 +258,7 @@ std::string Skill::Primary::StringDescription( int skill, const Heroes * hero )
         break;
     case KNOWLEDGE:
         res = _(
-            " The hero's knowledge determines how many spell points the hero may have. Under normal circumstances, a hero is limited to 10 spell points per level of knowledge." );
+            "The hero's knowledge determines how many spell points the hero may have. Under normal circumstances, a hero is limited to 10 spell points per level of knowledge." );
         if ( hero )
             hero->GetKnowledge( &ext );
         break;
@@ -496,7 +496,9 @@ std::string Skill::Secondary::GetDescription( const Heroes & hero ) const
         }
         break;
     case ARCHERY: {
-        str = _( "%{skill} increases the damage done by the hero's range attacking creatures by %{count} percent." );
+        str = _(
+            "%{skill} increases the damage done by the hero's range attacking creatures by %{count} percent, and eliminates the %{penalty} percent penalty when shooting past obstacles (e.g. castle walls)." );
+        StringReplace( str, "%{penalty}", GameStatic::getCastleWallRangedPenalty() );
         break;
     }
     case LOGISTICS: {
@@ -507,8 +509,9 @@ std::string Skill::Secondary::GetDescription( const Heroes & hero ) const
         str = _n( "%{skill} increases the hero's viewable area by one square.", "%{skill} increases the hero's viewable area by %{count} squares.", count );
         break;
     }
-    case DIPLOMACY:
-        str = _( "%{skill} allows the hero to negotiate with monsters who are weaker than their army." );
+    case DIPLOMACY: {
+        str = _( "%{skill} allows the hero to negotiate with monsters who are weaker than their army, and reduces the cost of surrender." );
+        str += "\n\n";
         switch ( Level() ) {
         case Level::BASIC:
         case Level::ADVANCED:
@@ -520,7 +523,11 @@ std::string Skill::Secondary::GetDescription( const Heroes & hero ) const
         default:
             break;
         }
+        str += "\n\n";
+        str.append( _( "The cost of surrender is reduced to %{percent} percent of the total cost of troops in the army." ) );
+        StringReplace( str, "%{percent}", GetDiplomacySurrenderCostDiscount( Level() ) );
         break;
+    }
     case NAVIGATION: {
         str = _( "%{skill} increases the hero's movement points over water by %{count} percent." );
         break;
@@ -554,7 +561,7 @@ std::string Skill::Secondary::GetDescription( const Heroes & hero ) const
         str = _( "%{skill} increases the hero's luck by %{count}." );
         break;
     }
-    case BALLISTICS:
+    case BALLISTICS: {
         switch ( Level() ) {
         case Level::BASIC:
             str = _( "%{skill} gives the hero's catapult shots a greater chance to hit and do damage to castle walls." );
@@ -569,7 +576,8 @@ std::string Skill::Secondary::GetDescription( const Heroes & hero ) const
             break;
         }
         break;
-    case EAGLE_EYE:
+    }
+    case EAGLE_EYE: {
         switch ( Level() ) {
         case Level::BASIC:
             str = _( "%{skill} gives the hero a %{count} percent chance to learn any given 1st or 2nd level spell that was cast by an enemy during combat." );
@@ -584,15 +592,17 @@ std::string Skill::Secondary::GetDescription( const Heroes & hero ) const
             break;
         }
         break;
+    }
     case NECROMANCY: {
         count += Skill::GetNecromancyPercent( hero ) - hero.GetSecondaryValues( Skill::Secondary::NECROMANCY );
         name = GetNameWithBonus( hero );
         str = _( "%{skill} allows %{count} percent of the creatures killed in combat to be brought back from the dead as Skeletons." );
         break;
     }
-    case ESTATES:
+    case ESTATES: {
         str = _( "The hero produces %{count} gold pieces per day as tax revenue from estates." );
         break;
+    }
     default:
         // Are you sure that you are passing the correct secondary skill type?
         assert( 0 );
@@ -853,6 +863,20 @@ uint32_t Skill::GetNecromancyPercent( const HeroBase & hero )
     percent += 10 * GetNecromancyBonus( hero );
     // cap at 100% bonus
     return std::min( percent, 100u );
+}
+
+uint32_t Skill::GetDiplomacySurrenderCostDiscount( const int level )
+{
+    switch ( level ) {
+    case Level::BASIC:
+        return 40;
+    case Level::ADVANCED:
+        return 30;
+    case Level::EXPERT:
+        return 20;
+    default:
+        return 0;
+    }
 }
 
 StreamBase & Skill::operator<<( StreamBase & msg, const Primary & skill )

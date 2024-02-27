@@ -298,7 +298,7 @@ void Battle::Arena::BattleProcess( Unit & attacker, Unit & defender, int32_t tgt
         }
     }
 
-    attacker.PostAttackAction();
+    attacker.PostAttackAction( defender );
 }
 
 void Battle::Arena::moveUnit( Unit * unit, const int32_t dst )
@@ -790,7 +790,9 @@ void Battle::Arena::ApplyActionMorale( Command & cmd )
 
 void Battle::Arena::ApplyActionRetreat( const Command & /* cmd */ )
 {
-    if ( !CanRetreatOpponent( _currentColor ) ) {
+    const int currentColor = GetCurrentColor();
+
+    if ( !CanRetreatOpponent( currentColor ) ) {
         ERROR_LOG( "Preconditions were not met" )
 
 #ifdef WITH_DEBUG
@@ -800,12 +802,12 @@ void Battle::Arena::ApplyActionRetreat( const Command & /* cmd */ )
         return;
     }
 
-    DEBUG_LOG( DBG_BATTLE, DBG_TRACE, "color: " << Color::String( _currentColor ) )
+    DEBUG_LOG( DBG_BATTLE, DBG_TRACE, "color: " << Color::String( currentColor ) )
 
-    if ( _army1->GetColor() == _currentColor ) {
+    if ( _army1->GetColor() == currentColor ) {
         result_game.army1 = RESULT_RETREAT;
     }
-    else if ( _army2->GetColor() == _currentColor ) {
+    else if ( _army2->GetColor() == currentColor ) {
         result_game.army2 = RESULT_RETREAT;
     }
     else {
@@ -830,7 +832,9 @@ void Battle::Arena::ApplyActionSurrender( const Command & /* cmd */ )
         return true;
     };
 
-    if ( _army1->GetColor() == _currentColor ) {
+    const int currentColor = GetCurrentColor();
+
+    if ( _army1->GetColor() == currentColor ) {
         Funds cost;
 
         cost.gold = _army1->GetSurrenderCost();
@@ -845,14 +849,14 @@ void Battle::Arena::ApplyActionSurrender( const Command & /* cmd */ )
             return;
         }
 
-        DEBUG_LOG( DBG_BATTLE, DBG_TRACE, "color: " << Color::String( _currentColor ) )
+        DEBUG_LOG( DBG_BATTLE, DBG_TRACE, "color: " << Color::String( currentColor ) )
 
         world.GetKingdom( _army1->GetColor() ).OddFundsResource( cost );
         world.GetKingdom( _army2->GetColor() ).AddFundsResource( cost );
 
         result_game.army1 = RESULT_SURRENDER;
     }
-    else if ( _army2->GetColor() == _currentColor ) {
+    else if ( _army2->GetColor() == currentColor ) {
         Funds cost;
 
         cost.gold = _army2->GetSurrenderCost();
@@ -867,7 +871,7 @@ void Battle::Arena::ApplyActionSurrender( const Command & /* cmd */ )
             return;
         }
 
-        DEBUG_LOG( DBG_BATTLE, DBG_TRACE, "color: " << Color::String( _currentColor ) )
+        DEBUG_LOG( DBG_BATTLE, DBG_TRACE, "color: " << Color::String( currentColor ) )
 
         world.GetKingdom( _army2->GetColor() ).OddFundsResource( cost );
         world.GetKingdom( _army1->GetColor() ).AddFundsResource( cost );
@@ -907,19 +911,24 @@ Battle::TargetsInfo Battle::Arena::GetTargetsForDamage( const Unit & attacker, U
     res.damage = attacker.GetDamage( defender, _randomGenerator );
 
     // Genie special attack
-    if ( attacker.GetID() == Monster::GENIE && _randomGenerator.Get( 1, 10 ) == 2 && defender.GetHitPoints() / 2 > res.damage ) {
-        // Replaces the damage, not adding to it
-        if ( defender.GetCount() == 1 ) {
-            res.damage = defender.GetHitPoints();
-        }
-        else {
-            res.damage = defender.GetHitPoints() / 2;
-        }
+    {
+        const std::vector<fheroes2::MonsterAbility> & attackerAbilities = fheroes2::getMonsterData( attacker.GetID() ).battleStats.abilities;
 
-        if ( Arena::GetInterface() ) {
-            std::string str( _n( "%{name} destroys half the enemy troops!", "%{name} destroy half the enemy troops!", attacker.GetCount() ) );
-            StringReplace( str, "%{name}", attacker.GetName() );
-            Arena::GetInterface()->SetStatus( str, true );
+        const auto abilityIter = std::find( attackerAbilities.begin(), attackerAbilities.end(), fheroes2::MonsterAbility( fheroes2::MonsterAbilityType::ENEMY_HALVING ) );
+        if ( abilityIter != attackerAbilities.end() ) {
+            const uint32_t halvingDamage = ( defender.GetCount() / 2 + defender.GetCount() % 2 ) * defender.Monster::GetHitPoints();
+            if ( halvingDamage > res.damage && _randomGenerator.Get( 1, 100 ) <= abilityIter->percentage ) {
+                // Replaces damage, not adds extra damage
+                res.damage = std::min( defender.GetHitPoints(), halvingDamage );
+
+                Interface * iface = GetInterface();
+                if ( iface ) {
+                    std::string str( _n( "%{name} destroys half the enemy troops!", "%{name} destroy half the enemy troops!", attacker.GetCount() ) );
+                    StringReplace( str, "%{name}", attacker.GetName() );
+
+                    iface->SetStatus( str, true );
+                }
+            }
         }
     }
 
@@ -955,7 +964,7 @@ Battle::TargetsInfo Battle::Arena::GetTargetsForDamage( const Unit & attacker, U
         }
     }
     // lich cloud damage
-    else if ( attacker.isAbilityPresent( fheroes2::MonsterAbilityType::AREA_SHOT ) && !attacker.isHandFighting() ) {
+    else if ( attacker.isAbilityPresent( fheroes2::MonsterAbilityType::AREA_SHOT ) && !Unit::isHandFighting( attacker, defender ) ) {
         for ( const int32_t nearbyIdx : Board::GetAroundIndexes( dst ) ) {
             assert( Board::GetCell( nearbyIdx ) != nullptr );
 

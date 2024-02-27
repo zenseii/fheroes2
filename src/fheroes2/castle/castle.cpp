@@ -26,6 +26,7 @@
 #include <algorithm>
 #include <array>
 #include <cassert>
+#include <cmath>
 #include <iterator>
 #include <ostream>
 
@@ -917,10 +918,10 @@ void Castle::ActionNewWeekAIBonuses()
         return;
     }
 
-    static const std::array<uint32_t, 6> basicDwellings
+    static const std::array<building_t, 6> basicDwellings
         = { DWELLING_MONSTER1, DWELLING_MONSTER2, DWELLING_MONSTER3, DWELLING_MONSTER4, DWELLING_MONSTER5, DWELLING_MONSTER6 };
 
-    for ( const uint32_t dwellingId : basicDwellings ) {
+    for ( const building_t dwellingId : basicDwellings ) {
         uint32_t * dwellingMonsters = GetDwelling( dwellingId );
         if ( dwellingMonsters == nullptr ) {
             // Such dwelling (or its upgrade) has not been built.
@@ -937,7 +938,22 @@ void Castle::ActionNewWeekAIBonuses()
             originalGrowth += GetGrownWel2();
         }
 
-        *dwellingMonsters += static_cast<uint32_t>( originalGrowth * Difficulty::GetUnitGrowthBonusForAI( Game::getDifficulty() ) );
+        if ( originalGrowth == 0 ) {
+            continue;
+        }
+
+        const long bonusGrowth = std::lround( originalGrowth * Difficulty::GetUnitGrowthBonusForAI( Game::getDifficulty(), Game::isCampaign(), dwellingId ) );
+        if ( bonusGrowth >= 0 ) {
+            *dwellingMonsters += bonusGrowth;
+
+            continue;
+        }
+
+        // If the original unit growth is non-zero, then the total unit growth after the application of penalties should be at least one unit
+        const uint32_t growthPenalty = std::min( static_cast<uint32_t>( -bonusGrowth ), originalGrowth - 1 );
+        assert( *dwellingMonsters > growthPenalty );
+
+        *dwellingMonsters -= growthPenalty;
     }
 }
 
@@ -1018,7 +1034,7 @@ bool Castle::AllowBuyHero( std::string * msg ) const
 
     if ( !myKingdom.AllowRecruitHero( true ) ) {
         if ( msg ) {
-            *msg = _( "Cannot afford a Hero" );
+            *msg = _( "Cannot afford a Hero." );
         }
         return false;
     }
@@ -2642,7 +2658,7 @@ bool Castle::BuyBoat() const
     return true;
 }
 
-void Castle::setName( const std::set<std::string> & usedNames )
+void Castle::setName( const std::set<std::string, std::less<>> & usedNames )
 {
     assert( name.empty() );
 
