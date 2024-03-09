@@ -2747,6 +2747,10 @@ void Battle::Interface::HumanTurn( const Unit & unit, Actions & actions )
             Redraw();
             humanturn_redraw = false;
         }
+        else if ( listlog && listlog->IsNeedRedraw() ) {
+            listlog->Redraw();
+            fheroes2::Display::instance().render( listlog->GetArea() );
+        }
     }
 
     popup.Reset();
@@ -2796,7 +2800,24 @@ void Battle::Interface::HumanBattleTurn( const Unit & unit, Actions & actions, s
     // Add offsets to inner objects
     const fheroes2::Rect mainTowerRect = main_tower + _interfacePosition.getPosition();
     const fheroes2::Rect turnOrderRect = _turnOrder + _interfacePosition.getPosition();
-    if ( Arena::GetTower( TowerType::TWR_CENTER ) && le.MouseCursor( mainTowerRect ) ) {
+    fheroes2::Rect battleFieldRect{ _interfacePosition.x, _interfacePosition.y, _interfacePosition.width, _interfacePosition.height - status.height };
+
+    bool doListlogProcessing = listlog && listlog->isOpenLog();
+
+    if ( doListlogProcessing ) {
+        const fheroes2::Rect & lislogRect = listlog->GetArea();
+        battleFieldRect.height -= lislogRect.height;
+
+        // Do battle log event processing only if mouse pointer is over it.
+        doListlogProcessing = le.MouseCursor( lislogRect ) || le.MousePressLeft( lislogRect );
+    }
+
+    if ( doListlogProcessing ) {
+        cursor.SetThemes( Cursor::WAR_POINTER );
+
+        listlog->QueueEventProcessing();
+    }
+    else if ( Arena::GetTower( TowerType::TWR_CENTER ) && le.MouseCursor( mainTowerRect ) ) {
         cursor.SetThemes( Cursor::WAR_INFO );
         msg = _( "View Ballista info" );
 
@@ -2919,12 +2940,7 @@ void Battle::Interface::HumanBattleTurn( const Unit & unit, Actions & actions, s
             humanturn_redraw = true;
         }
     }
-    else if ( listlog && listlog->isOpenLog() && le.MouseCursor( listlog->GetArea() ) ) {
-        cursor.SetThemes( Cursor::WAR_POINTER );
-
-        listlog->QueueEventProcessing();
-    }
-    else if ( le.MouseCursor( { _interfacePosition.x, _interfacePosition.y, _interfacePosition.width, _interfacePosition.height - status.height } ) ) {
+    else if ( le.MouseCursor( battleFieldRect ) ) {
         const int themes = GetBattleCursor( msg );
         cursor.SetThemes( themes );
 
@@ -2939,7 +2955,7 @@ void Battle::Interface::HumanBattleTurn( const Unit & unit, Actions & actions, s
 
             boardActionIntentUpdater.setIntent( { themes, index_pos } );
 
-            if ( le.MouseClickLeft() ) {
+            if ( le.MouseClickLeft( battleFieldRect ) ) {
                 MouseLeftClickBoardAction( themes, *cell, boardActionIntentUpdater.isConfirmed(), actions );
             }
             else if ( le.MousePressRight() ) {
