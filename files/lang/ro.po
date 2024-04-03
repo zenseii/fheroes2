@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-06 22:25+0000\n"
+"POT-Creation-Date: 2024-03-27 01:17+0000\n"
 "PO-Revision-Date: 2022-10-25 08:56+0200\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: \n"
@@ -29,164 +29,181 @@ msgid ""
 "NEW\n"
 "GAME"
 msgstr ""
+"JOC\n"
+"NOU"
 
 msgid ""
 "SAVE\n"
 "GAME"
 msgstr ""
+"SALVEAZĂ\n"
+"JOCUL"
 
 msgid ""
 "LOAD\n"
 "GAME"
 msgstr ""
+"ÎNCARCĂ\n"
+"JOCUL"
 
 msgid "INFO"
-msgstr ""
+msgstr "INFO"
 
 msgid "QUIT"
-msgstr ""
+msgstr "ÎNCHIDE"
 
 msgid "CANCEL"
-msgstr ""
+msgstr "RENUNȚĂ"
 
 msgid "OKAY"
-msgstr ""
+msgstr "OKAY"
 
 msgid "smallerButton|OKAY"
-msgstr ""
+msgstr "OKAY"
 
 msgid "ACCEPT"
-msgstr ""
+msgstr "ACCEPTĂ"
 
 msgid "DECLINE"
-msgstr ""
+msgstr "REFUZĂ"
 
 msgid "LEARN"
-msgstr ""
+msgstr "ÎNVAȚĂ"
 
 msgid "TRADE"
-msgstr ""
+msgstr "TROC"
 
 msgid "YES"
-msgstr ""
+msgstr "DA"
 
 msgid "NO"
-msgstr ""
+msgstr "NU"
 
 msgid "EXIT"
-msgstr ""
+msgstr "EXIT"
 
 msgid "smallerButton|EXIT"
-msgstr ""
+msgstr "EXIT"
 
 msgid "DISMISS"
-msgstr ""
+msgstr "RENUNȚĂ"
 
 msgid "UPGRADE"
-msgstr ""
+msgstr "AMELIOREAZĂ"
 
 msgid "RESTART"
-msgstr ""
+msgstr "RESTART"
 
 msgid "HEROES"
-msgstr ""
+msgstr "EROI"
 
 msgid ""
 "TOWNS/\n"
 "CASTLES"
 msgstr ""
+"ORAȘE\n"
+"CASTELE"
 
 msgid "S"
-msgstr ""
+msgstr "S"
 
 msgid "M"
-msgstr ""
+msgstr "M"
 
 msgid "L"
-msgstr ""
+msgstr "L"
 
 msgid "X-L"
-msgstr ""
+msgstr "X-L"
 
 msgid "ALL"
-msgstr ""
+msgstr "TOT"
 
 msgid "SELECT"
-msgstr ""
+msgstr "SELECTEAZĂ"
 
 msgid ""
 "STANDARD\n"
 "GAME"
 msgstr ""
+"JOC\n"
+"STANDARD"
 
 msgid ""
 "CAMPAIGN\n"
 "GAME"
-msgstr ""
+msgstr "CAMPANIE"
 
 msgid ""
 "MULTI-\n"
 "PLAYER\n"
 "GAME"
 msgstr ""
+"JOC\n"
+"MULTI-\n"
+"PLAYER"
 
 msgid "CONFIG"
-msgstr ""
+msgstr "CONFIG"
 
 msgid ""
 "ORIGINAL\n"
 "CAMPAIGN"
 msgstr ""
+"CAMPANIE\n"
+"ORIGINALĂ"
 
 msgid ""
 "EXPANSION\n"
 "CAMPAIGN"
 msgstr ""
+"CAMPANIE\n"
+"EXPANSIUNE"
 
 msgid "HOT SEAT"
 msgstr ""
 
 msgid "2 PLAYERS"
-msgstr ""
+msgstr "2 JUCĂTORI"
 
 msgid "3 PLAYERS"
-msgstr ""
+msgstr "3 JUCĂTORI"
 
 msgid "4 PLAYERS"
-msgstr ""
+msgstr "4 JUCĂTORI"
 
 msgid "5 PLAYERS"
-msgstr ""
+msgstr "5 JUCĂTORI"
 
 msgid "6 PLAYERS"
-msgstr ""
+msgstr "6 JUCĂTORI"
 
 msgid "GIFT"
 msgstr "OFERĂ"
 
 msgid "MAX"
-msgstr ""
+msgstr "MAX"
 
 msgid "DIFFICULTY"
 msgstr "DIFICULTATE"
 
 msgid "VIEW INTRO"
-msgstr ""
+msgstr "VEZI INTRO"
 
 msgid "MIN"
 msgstr "MIN"
 
 msgid "RESET"
-msgstr ""
+msgstr "RESET"
 
 msgid "START"
-msgstr ""
+msgstr "START"
 
 msgid "CASTLE"
-msgstr ""
+msgstr "CASTEL"
 
 msgid "TOWN"
-msgstr ""
+msgstr "ORAȘ"
 
 msgid ""
 "D\n"
@@ -197,6 +214,13 @@ msgid ""
 "S\n"
 "S"
 msgstr ""
+"R\n"
+"E\n"
+"N\n"
+"U\n"
+"N\n"
+"Ț\n"
+"Ă"
 
 msgid ""
 "E\n"
@@ -204,6 +228,10 @@ msgid ""
 "I\n"
 "T"
 msgstr ""
+"E\n"
+"X\n"
+"I\n"
+"T"
 
 msgid ""
 "C\n"
@@ -215,6 +243,14 @@ msgid ""
 "G\n"
 "N"
 msgstr ""
+"C\n"
+"A\n"
+"M\n"
+"P\n"
+"A\n"
+"N\n"
+"I\n"
+"E"
 
 msgid ""
 "S\n"
@@ -226,6 +262,14 @@ msgid ""
 "R\n"
 "D"
 msgstr ""
+"S\n"
+"T\n"
+"A\n"
+"N\n"
+"D\n"
+"A\n"
+"R\n"
+"D"
 
 msgid "Warrior"
 msgstr "Războinic"
@@ -257,7 +301,7 @@ msgid ""
 "A pack of\n"
 "%{monster}"
 msgstr ""
-"O haita de\n"
+"O haită de\n"
 "%{monster}"
 
 msgid ""
@@ -332,8 +376,8 @@ msgstr "(250-499)"
 msgid "All %{race} troops +1"
 msgstr "Toate %{race} forțele +1"
 
-msgid "Multiple"
-msgstr "Multiple"
+msgid "NeutralRaceTroops|Neutral"
+msgstr ""
 
 msgid "Troops of %{count} alignments -%{penalty}"
 msgstr "Trupe cu %{count} aliniamente -%{penalty}"
@@ -446,16 +490,16 @@ msgid "Shadow Cursor"
 msgstr "Cursor de umbră"
 
 msgid "Audio"
-msgstr ""
+msgstr "Audio"
 
 msgid "Settings"
-msgstr ""
+msgstr "Setări"
 
 msgid "Configure"
 msgstr ""
 
 msgid "Hot Keys"
-msgstr ""
+msgstr "Scurtături"
 
 msgid "Damage Info"
 msgstr ""
@@ -2714,25 +2758,25 @@ msgid "off"
 msgstr ""
 
 msgid "Music"
-msgstr ""
+msgstr "Muzică"
 
 msgid "Effects"
-msgstr ""
+msgstr "Efecte"
 
 msgid "MIDI"
-msgstr ""
+msgstr "MIDI"
 
 msgid "MIDI Expansion"
-msgstr ""
+msgstr "MIDI Expansiune"
 
 msgid "External"
-msgstr ""
+msgstr "Extern"
 
 msgid "Music Type"
-msgstr ""
+msgstr "Tip de Muzică"
 
 msgid "3D Audio"
-msgstr ""
+msgstr "Audio 3D"
 
 msgid "Toggle ambient music level."
 msgstr ""
@@ -2759,10 +2803,10 @@ msgid "Need: "
 msgstr ""
 
 msgid "Load Game"
-msgstr ""
+msgstr "Încarcă un joc"
 
 msgid "No save files to load."
-msgstr ""
+msgstr "Nu există fișiere salvate."
 
 msgid "New Game"
 msgstr ""
@@ -2780,34 +2824,34 @@ msgid "Save the current game."
 msgstr ""
 
 msgid "Quit"
-msgstr ""
+msgstr "Închide"
 
 msgid "Quit out of Heroes of Might and Magic II."
 msgstr ""
 
 msgid "Language"
-msgstr ""
+msgstr "Limbă"
 
 msgid "Graphics"
-msgstr ""
+msgstr "Grafică"
 
 msgid "Black & White"
-msgstr ""
+msgstr "Alb & Negru"
 
 msgid "Mouse Cursor"
-msgstr ""
+msgstr "Cursor Mouse"
 
 msgid "Color"
-msgstr ""
+msgstr "Colorat"
 
 msgid "Text Support"
-msgstr ""
+msgstr "Suport Text"
 
 msgid "Change the language of the game."
 msgstr ""
 
 msgid "Select Game Language"
-msgstr ""
+msgstr "Selectați Limba"
 
 msgid "Change the graphics settings of the game."
 msgstr ""
@@ -2831,16 +2875,16 @@ msgid ""
 msgstr ""
 
 msgid "Rating"
-msgstr ""
+msgstr "Rată"
 
 msgid "Map Size"
 msgstr ""
 
 msgid "Opponents"
-msgstr ""
+msgstr "Oponenți"
 
 msgid "Class"
-msgstr ""
+msgstr "Clasă"
 
 msgid ""
 "Victory\n"
@@ -2874,26 +2918,25 @@ msgid "Gift from %{name}"
 msgstr ""
 
 msgid "Resolution"
-msgstr ""
+msgstr "Rezoluție"
 
 msgid "Fullscreen"
-msgstr ""
+msgstr "Ecran Întreg"
 
 msgid "window|Mode"
-msgstr ""
+msgstr "Mod"
 
 msgid "Windowed"
-msgstr ""
+msgstr "Fereastră"
 
 msgid "V-Sync"
-msgstr ""
+msgstr "V-Sync"
 
 msgid "FPS"
 msgstr ""
 
-#, fuzzy
 msgid "System Info"
-msgstr "System Options"
+msgstr "Informații Sistem"
 
 msgid "Change the resolution of the game."
 msgstr ""
@@ -2922,7 +2965,7 @@ msgid "Event: "
 msgstr ""
 
 msgid "Hot Keys:"
-msgstr ""
+msgstr "Scurtături:"
 
 msgid "Evil"
 msgstr ""
@@ -2946,7 +2989,7 @@ msgid "Slow"
 msgstr ""
 
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 msgid "Fast"
 msgstr ""
@@ -2967,7 +3010,7 @@ msgid "Sets the speed at which you scroll the window."
 msgstr ""
 
 msgid "Select Game Language:"
-msgstr ""
+msgstr "Selectați Limba:"
 
 msgid "Click to choose the selected language."
 msgstr ""
@@ -3149,10 +3192,10 @@ msgstr ""
 msgid "Open Virtual Keyboard"
 msgstr ""
 
-msgid "How many units do you wish to move?"
+msgid "How many creatures do you wish to move?"
 msgstr ""
 
-msgid "Select how many slots to separate into:"
+msgid "Select how many units to separate into:"
 msgstr ""
 
 msgid "Map: "
@@ -3192,7 +3235,7 @@ msgid "File to Save:"
 msgstr ""
 
 msgid "File to Load:"
-msgstr ""
+msgstr "Încarcă fișierul:"
 
 msgid "Accept the choice made."
 msgstr ""
@@ -3233,7 +3276,7 @@ msgid "doubleLinedRace|Neutral"
 msgstr ""
 
 msgid "race|Random"
-msgstr ""
+msgstr "Aleatorie"
 
 msgid "Click to start placing the selected castle/town."
 msgstr ""
@@ -3351,7 +3394,7 @@ msgid "Victory Condition"
 msgstr ""
 
 msgid "Map difficulty:"
-msgstr ""
+msgstr "Dificultatea hărții:"
 
 msgid "N"
 msgstr ""
@@ -3905,7 +3948,7 @@ msgid "Create a randomly generated map."
 msgstr ""
 
 msgid "Random"
-msgstr ""
+msgstr "Aleatorie"
 
 msgid "Cancel back to the Map Editor main menu."
 msgstr ""
@@ -3916,32 +3959,45 @@ msgstr ""
 msgid "Warning"
 msgstr "Atenție"
 
-msgid "difficulty|Easy"
+#, fuzzy
+msgid "Animation"
+msgstr "Anexare"
+
+msgid "Passability"
 msgstr ""
+
+msgid "Toggle animation of the objects."
+msgstr ""
+
+msgid "Toggle display of objects' passability."
+msgstr ""
+
+msgid "difficulty|Easy"
+msgstr "Ușor"
 
 msgid "difficulty|Normal"
-msgstr ""
+msgstr "Normal"
 
 msgid "difficulty|Hard"
-msgstr ""
+msgstr "Greu"
 
 msgid "difficulty|Expert"
-msgstr ""
+msgstr "Expert"
 
 msgid "difficulty|Impossible"
-msgstr ""
+msgstr "Imposibil"
 
 msgid "and more..."
 msgstr ""
 
 msgid "Easy"
-msgstr ""
+msgstr "Ușor"
 
 msgid "Hard"
-msgstr ""
+msgstr "Greu"
 
 msgid "Campaign Difficulty"
-msgstr ""
+msgstr "Dificultatea campaniei"
 
 msgid ""
 "Choose this difficulty to experience the game's story with less challenge. "
@@ -4018,27 +4074,24 @@ msgid "The number of days spent on this campaign."
 msgstr ""
 
 msgid "Project Coordination and Core Development"
-msgstr ""
+msgstr "Coordonare de Proiect și Dezvoltare"
 
 msgid "Development"
-msgstr ""
+msgstr "Dezvoltare"
 
 msgid "Visit us at "
-msgstr ""
+msgstr "Vizitați-ne la "
 
 msgid "QA and Support"
-msgstr ""
+msgstr "QA și Suport"
 
 msgid "Dev and Support"
-msgstr ""
+msgstr "Dezvoltare și Suport"
 
 msgid "Special Thanks to"
 msgstr ""
 
-msgid "and many other contributors!"
-msgstr ""
-
-msgid "and many-many other supporters!"
+msgid "and many-many other contributors and supporters!"
 msgstr ""
 
 msgid "Support us at"
@@ -4111,7 +4164,7 @@ msgid "Manual and Helpfile"
 msgstr ""
 
 msgid "Scenarios"
-msgstr ""
+msgstr "Scenarii"
 
 msgid "Heroes of Might and Magic II: The Price of Loyalty team"
 msgstr ""
@@ -4717,6 +4770,13 @@ msgid ""
 msgstr ""
 
 msgid ""
+"fheroes2 needs data files from the original Heroes of Might and Magic II to "
+"operate. You appear to be using the demo version of Heroes of Might and "
+"Magic II for this purpose. Please note that only one scenario will be "
+"available in this setup."
+msgstr ""
+
+msgid ""
 "A multi-player game, with several human players competing against each other "
 "on a single map."
 msgstr ""
@@ -4903,28 +4963,28 @@ msgid "Major Event!"
 msgstr ""
 
 msgid "Scenario:"
-msgstr ""
+msgstr "Scenariu:"
 
 msgid "Game Difficulty:"
-msgstr ""
+msgstr "Dificultatea jocului:"
 
 msgid "Opponents:"
-msgstr ""
+msgstr "Oponenți:"
 
 msgid "Class:"
-msgstr ""
+msgstr "Clasă:"
 
 msgid "Rating %{rating}%"
-msgstr ""
+msgstr "Rată %{rating}%"
 
 msgid "Click here to select which scenario to play."
 msgstr ""
 
 msgid "Scenario"
-msgstr ""
+msgstr "Scenariu"
 
 msgid "Game Difficulty"
-msgstr ""
+msgstr "Dificultatea jocului"
 
 msgid ""
 "This lets you change the starting difficulty at which you will play. Higher "
@@ -5115,7 +5175,7 @@ msgid ""
 msgstr ""
 
 msgid "Are you sure you want to quit?"
-msgstr ""
+msgstr "Sigur vreți să închideți?"
 
 msgid "Are you sure you want to restart? (Your current game will be lost.)"
 msgstr ""
@@ -6723,7 +6783,7 @@ msgid "skill|Advanced"
 msgstr ""
 
 msgid "skill|Expert"
-msgstr ""
+msgstr "Expert"
 
 msgid "Pathfinding"
 msgstr ""
@@ -6995,70 +7055,70 @@ msgid ""
 msgstr ""
 
 msgid "Blue"
-msgstr ""
+msgstr "Albastru"
 
 msgid "Green"
-msgstr ""
+msgstr "Verde"
 
 msgid "Red"
-msgstr ""
+msgstr "Roșu"
 
 msgid "Yellow"
-msgstr ""
+msgstr "Galben"
 
 msgid "Orange"
-msgstr ""
+msgstr "Portocaliu"
 
 msgid "Purple"
-msgstr ""
+msgstr "Mov"
 
 msgid "barrier|Aqua"
 msgstr ""
 
 msgid "barrier|Blue"
-msgstr ""
+msgstr "Albastru"
 
 msgid "barrier|Brown"
-msgstr ""
+msgstr "Maro"
 
 msgid "barrier|Gold"
-msgstr ""
+msgstr "Auriu"
 
 msgid "barrier|Green"
-msgstr ""
+msgstr "Verde"
 
 msgid "barrier|Orange"
-msgstr ""
+msgstr "Portocaliu"
 
 msgid "barrier|Purple"
-msgstr ""
+msgstr "Mov"
 
 msgid "barrier|Red"
-msgstr ""
+msgstr "Roșu"
 
 msgid "tent|Aqua"
-msgstr ""
+msgstr "Turcoaz"
 
 msgid "tent|Blue"
-msgstr ""
+msgstr "Albastru"
 
 msgid "tent|Brown"
-msgstr ""
+msgstr "Maro"
 
 msgid "tent|Gold"
-msgstr ""
+msgstr "Auriu"
 
 msgid "tent|Green"
-msgstr ""
+msgstr "Verde"
 
 msgid "tent|Orange"
-msgstr ""
+msgstr "Portocaliu"
 
 msgid "tent|Purple"
-msgstr ""
+msgstr "Mov"
 
 msgid "tent|Red"
-msgstr ""
+msgstr "Roșu"
 
 msgid "Experience"
 msgstr ""
@@ -7102,7 +7162,7 @@ msgid "luck|Bad"
 msgstr ""
 
 msgid "luck|Normal"
-msgstr ""
+msgstr "Normal"
 
 msgid "luck|Good"
 msgstr ""
@@ -7138,7 +7198,7 @@ msgid "morale|Poor"
 msgstr ""
 
 msgid "morale|Normal"
-msgstr ""
+msgstr "Normal"
 
 msgid "morale|Good"
 msgstr ""
@@ -7163,51 +7223,53 @@ msgid "Positive morale may give the hero's units extra attacks in combat."
 msgstr "Moralul scăzut face ca %{monster} să înghețe de panică."
 
 msgid "Knight"
-msgstr ""
+msgstr "Cavaler"
 
 msgid "Barbarian"
-msgstr ""
+msgstr "Barbar"
 
 msgid "Sorceress"
-msgstr ""
+msgstr "Vrăjitoare"
 
 msgid "Warlock"
-msgstr ""
+msgstr "Mag"
 
 msgid "Wizard"
-msgstr ""
+msgstr "Magician"
 
 msgid "Necromancer"
-msgstr ""
+msgstr "Necromant"
 
 msgid "Multi"
-msgstr ""
+msgstr "Multi"
 
 msgid "doubleLined|Knight"
-msgstr ""
+msgstr "Cavaler"
 
 msgid "doubleLined|Barbarian"
-msgstr ""
+msgstr "Barbar"
 
 msgid "doubleLined|Sorceress"
-msgstr ""
+msgstr "Vrăjitoare"
 
 msgid "doubleLined|Warlock"
-msgstr ""
+msgstr "Mag"
 
 msgid "doubleLined|Wizard"
-msgstr ""
+msgstr "Magician"
 
 msgid ""
 "doubleLined|Necro-\n"
 "mancer"
 msgstr ""
+"Necro-\n"
+"mant"
 
 msgid "doubleLinedRace|Multi"
-msgstr ""
+msgstr "Multi"
 
 msgid "doubleLinedRace|Random"
-msgstr ""
+msgstr "Aleatorie"
 
 msgid "speed|Standing"
 msgstr ""
@@ -7744,6 +7806,12 @@ msgid "Earth Summoning Altar"
 msgstr ""
 
 msgid "Water Summoning Altar"
+msgstr ""
+
+msgid "Swampy Lake"
+msgstr ""
+
+msgid "Frozen Lake"
 msgstr ""
 
 msgid "Unknown Monster"
@@ -9462,7 +9530,7 @@ msgid "Gems"
 msgstr ""
 
 msgid "Gold"
-msgstr ""
+msgstr "Aur"
 
 msgid ""
 "There are seven resources in Heroes 2, used to build and improves castles, "
@@ -9896,9 +9964,8 @@ msgstr ""
 msgid "Sets Water Elementals to guard a mine against enemy armies."
 msgstr ""
 
-#, fuzzy
 msgid "Random Spell"
-msgstr "Aruncă vraja"
+msgstr "Vrajă aleatorie"
 
 msgid "Randomly selected spell of any level."
 msgstr ""
@@ -10053,12 +10120,5 @@ msgid ""
 "fheroes2/releases"
 msgstr ""
 
-#, fuzzy
-#~ msgid "on"
-#~ msgstr "Nimic"
-
-#~ msgid "vs"
-#~ msgstr "contra"
-
-#~ msgid "%{race2} %{name2}"
-#~ msgstr "%{race2} %{name2}"
+#~ msgid "Multiple"
+#~ msgstr "Multiple"

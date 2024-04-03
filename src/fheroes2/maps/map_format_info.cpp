@@ -25,6 +25,7 @@
 #include <type_traits>
 
 #include "serialize.h"
+#include "zzlib.h"
 
 namespace
 {
@@ -92,7 +93,7 @@ namespace Maps::Map_Format
     {
         return msg << metadata.customName << metadata.customPortrait << metadata.armyMonsterType << metadata.armyMonsterCount << metadata.artifact
                    << metadata.artifactMetadata << metadata.availableSpells << metadata.isOnPatrol << metadata.patrolRadius << metadata.secondarySkill
-                   << metadata.secondarySkillLevel << metadata.customLevel << metadata.customExperience << metadata.customAttack << metadata.customDefence
+                   << metadata.secondarySkillLevel << metadata.customLevel << metadata.customExperience << metadata.customAttack << metadata.customDefense
                    << metadata.customKnowledge << metadata.customSpellPower << metadata.magicPoints;
     }
 
@@ -100,8 +101,40 @@ namespace Maps::Map_Format
     {
         return msg >> metadata.customName >> metadata.customPortrait >> metadata.armyMonsterType >> metadata.armyMonsterCount >> metadata.artifact
                >> metadata.artifactMetadata >> metadata.availableSpells >> metadata.isOnPatrol >> metadata.patrolRadius >> metadata.secondarySkill
-               >> metadata.secondarySkillLevel >> metadata.customLevel >> metadata.customExperience >> metadata.customAttack >> metadata.customDefence
+               >> metadata.secondarySkillLevel >> metadata.customLevel >> metadata.customExperience >> metadata.customAttack >> metadata.customDefense
                >> metadata.customKnowledge >> metadata.customSpellPower >> metadata.magicPoints;
+    }
+
+    StreamBase & operator<<( StreamBase & msg, const SphinxMetadata & metadata )
+    {
+        return msg << metadata.question << metadata.answers << metadata.artifact << metadata.resources;
+    }
+
+    StreamBase & operator>>( StreamBase & msg, SphinxMetadata & metadata )
+    {
+        return msg >> metadata.question >> metadata.answers >> metadata.artifact >> metadata.resources;
+    }
+
+    StreamBase & operator<<( StreamBase & msg, const SignMetadata & metadata )
+    {
+        return msg << metadata.message;
+    }
+
+    StreamBase & operator>>( StreamBase & msg, SignMetadata & metadata )
+    {
+        return msg >> metadata.message;
+    }
+
+    StreamBase & operator<<( StreamBase & msg, const AdventureMapEventMetadata & metadata )
+    {
+        return msg << metadata.message << metadata.humanPlayerColors << metadata.computerPlayerColors << metadata.isRecurringEvent << metadata.artifact
+                   << metadata.resources;
+    }
+
+    StreamBase & operator>>( StreamBase & msg, AdventureMapEventMetadata & metadata )
+    {
+        return msg >> metadata.message >> metadata.humanPlayerColors >> metadata.computerPlayerColors >> metadata.isRecurringEvent >> metadata.artifact
+               >> metadata.resources;
     }
 
     StreamBase & operator<<( StreamBase & msg, const BaseMapFormat & map )
@@ -120,13 +153,56 @@ namespace Maps::Map_Format
 
     StreamBase & operator<<( StreamBase & msg, const MapFormat & map )
     {
-        return msg << static_cast<const BaseMapFormat &>( map ) << map.additionalInfo << map.tiles << map.standardMetadata << map.castleMetadata << map.heroMetadata;
+        // Only the base map information is not encoded.
+        // The rest of data must be compressed to prevent manual corruption of the file.
+        msg << static_cast<const BaseMapFormat &>( map );
+
+        StreamBuf compressed;
+        compressed.setbigendian( true );
+
+        compressed << map.additionalInfo << map.tiles << map.standardMetadata << map.castleMetadata << map.heroMetadata << map.sphinxMetadata << map.signMetadata
+                   << map.adventureMapEventMetadata;
+
+        const std::vector<uint8_t> temp = Compression::compressData( compressed.data(), compressed.size() );
+
+        msg.putRaw( temp.data(), temp.size() );
+
+        return msg;
     }
 
     StreamBase & operator>>( StreamBase & msg, MapFormat & map )
     {
         // TODO: verify the correctness of metadata.
-        return msg >> static_cast<BaseMapFormat &>( map ) >> map.additionalInfo >> map.tiles >> map.standardMetadata >> map.castleMetadata >> map.heroMetadata;
+        msg >> static_cast<BaseMapFormat &>( map );
+
+        StreamBuf decompressed;
+        decompressed.setbigendian( true );
+
+        {
+            std::vector<uint8_t> temp = msg.getRaw();
+            if ( temp.empty() ) {
+                // This is a corrupted file.
+                map = {};
+                return msg;
+            }
+
+            const std::vector<uint8_t> decompressedData = Compression::decompressData( temp.data(), temp.size() );
+            if ( decompressedData.empty() ) {
+                // This is a corrupted file.
+                map = {};
+                return msg;
+            }
+
+            // Let's try to free up some memory
+            temp = std::vector<uint8_t>{};
+
+            decompressed.putRaw( decompressedData.data(), decompressedData.size() );
+        }
+
+        decompressed >> map.additionalInfo >> map.tiles >> map.standardMetadata >> map.castleMetadata >> map.heroMetadata >> map.sphinxMetadata >> map.signMetadata
+            >> map.adventureMapEventMetadata;
+
+        return msg;
     }
 
     bool loadBaseMap( const std::string & path, BaseMapFormat & map )

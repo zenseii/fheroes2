@@ -24,6 +24,7 @@
 #include <array>
 #include <cassert>
 #include <cstddef>
+#include <map>
 #include <memory>
 #include <set>
 #include <string>
@@ -42,6 +43,7 @@
 #include "game_static.h"
 #include "gamedefs.h"
 #include "ground.h"
+#include "heroes.h"
 #include "history_manager.h"
 #include "icn.h"
 #include "image.h"
@@ -57,6 +59,7 @@
 #include "maps_tiles_helper.h"
 #include "math_base.h"
 #include "mp2.h"
+#include "render_processor.h"
 #include "screen.h"
 #include "settings.h"
 #include "spell.h"
@@ -71,9 +74,6 @@
 #include "view_world.h"
 #include "world.h"
 #include "world_object_uid.h"
-
-class Castle;
-class Heroes;
 
 namespace
 {
@@ -244,6 +244,10 @@ namespace
                     // Two objects have been removed from this tile. Start search from the beginning.
                     objectIter = mapTile.objects.begin();
 
+                    // Remove this town metadata.
+                    assert( mapFormat.castleMetadata.find( objectId ) != mapFormat.castleMetadata.end() );
+                    mapFormat.castleMetadata.erase( objectId );
+
                     needRedraw = true;
                 }
                 else if ( objectIter->group == Maps::ObjectGroup::ROADS ) {
@@ -260,11 +264,18 @@ namespace
 
                     ++objectIter;
                 }
+                else if ( objectIter->group == Maps::ObjectGroup::KINGDOM_HEROES ) {
+                    // Remove this hero metadata.
+                    assert( mapFormat.heroMetadata.find( objectIter->id ) != mapFormat.heroMetadata.end() );
+                    mapFormat.heroMetadata.erase( objectIter->id );
+
+                    objectIter = mapTile.objects.erase( objectIter );
+                    needRedraw = true;
+                }
                 else {
                     objectIter = mapTile.objects.erase( objectIter );
                     needRedraw = true;
                 }
-
                 if ( objectsUids.empty() ) {
                     break;
                 }
@@ -306,8 +317,13 @@ namespace Interface
         const uint32_t combinedRedraw = _redraw | force;
 
         if ( combinedRedraw & REDRAW_GAMEAREA ) {
+            int renderFlags = LEVEL_OBJECTS | LEVEL_HEROES | LEVEL_ROUTES;
+            if ( combinedRedraw & REDRAW_PASSABILITIES ) {
+                renderFlags |= LEVEL_PASSABILITIES;
+            }
+
             // Render all except the fog.
-            _gameArea.Redraw( display, LEVEL_OBJECTS | LEVEL_HEROES | LEVEL_ROUTES );
+            _gameArea.Redraw( display, renderFlags );
 
             if ( _warningMessage.isValid() ) {
                 const fheroes2::Rect & roi = _gameArea.GetROI();
@@ -362,6 +378,16 @@ namespace Interface
 
     fheroes2::GameMode Interface::EditorInterface::startEdit( const bool isNewMap )
     {
+        // The Editor has a special option to disable animation. This affects cycling animation as well.
+        // First, we disable it to make sure to enable it back while exiting this function.
+        fheroes2::ScreenPaletteRestorer restorer;
+
+        const Settings & conf = Settings::Get();
+
+        if ( conf.isEditorAnimationEnabled() ) {
+            fheroes2::RenderProcessor::instance().startColorCycling();
+        }
+
         reset();
 
         if ( isNewMap ) {
@@ -372,8 +398,6 @@ namespace Interface
         // Stop all sounds and music.
         AudioManager::ResetAudio();
 
-        const Settings & conf = Settings::Get();
-
         _radar.Build();
         _radar.SetHide( false );
 
@@ -381,7 +405,12 @@ namespace Interface
 
         _gameArea.SetUpdateCursor();
 
-        setRedraw( REDRAW_GAMEAREA | REDRAW_RADAR | REDRAW_PANEL | REDRAW_STATUS | REDRAW_BORDER );
+        uint32_t redrawFlags = REDRAW_GAMEAREA | REDRAW_RADAR | REDRAW_PANEL | REDRAW_STATUS | REDRAW_BORDER;
+        if ( conf.isEditorPassabilityEnabled() ) {
+            redrawFlags |= REDRAW_PASSABILITIES;
+        }
+
+        setRedraw( redrawFlags );
 
         int32_t fastScrollRepeatCount = 0;
         const int32_t fastScrollStartThreshold = 2;
@@ -629,11 +658,16 @@ namespace Interface
             if ( res == fheroes2::GameMode::CANCEL ) {
                 // map objects animation
                 if ( Game::validateAnimationDelay( Game::MAPS_DELAY ) ) {
-                    Game::updateAdventureMapAnimationIndex();
+                    if ( conf.isEditorAnimationEnabled() ) {
+                        Game::updateAdventureMapAnimationIndex();
+                    }
                     _redraw |= REDRAW_GAMEAREA;
                 }
 
                 if ( needRedraw() ) {
+                    if ( conf.isEditorPassabilityEnabled() ) {
+                        _redraw |= REDRAW_PASSABILITIES;
+                    }
                     redraw( 0 );
 
                     // If this assertion blows up it means that we are holding a RedrawLocker lock for rendering which should not happen.
@@ -770,18 +804,49 @@ namespace Interface
 
     void EditorInterface::mouseCursorAreaClickLeft( const int32_t tileIndex )
     {
+        assert( tileIndex >= 0 && tileIndex < static_cast<int32_t>( world.getSize() ) );
+
         Maps::Tiles & tile = world.GetTiles( tileIndex );
 
-        Heroes * otherHero = tile.getHero();
-        Castle * otherCastle = world.getCastle( tile.GetCenter() );
+        if ( _editorPanel.isDetailEdit() ) {
+            for ( const auto & object : _mapFormat.tiles[tileIndex].objects ) {
+                const auto & objectGroupInfo = Maps::getObjectsByGroup( object.group );
+                assert( object.index <= objectGroupInfo.size() );
 
-        if ( otherHero ) {
-            // TODO: Make hero edit dialog: e.g. with functions like in Battle only dialog, but only for one hero.
-            Game::OpenHeroesDialog( *otherHero, true, true );
-        }
-        else if ( otherCastle ) {
-            // TODO: Make Castle edit dialog: e.g. like original build dialog.
-            Game::OpenCastleDialog( *otherCastle );
+                const auto & objectInfo = objectGroupInfo[object.index];
+                assert( !objectInfo.groundLevelParts.empty() );
+
+                const MP2::MapObjectType objectType = objectInfo.groundLevelParts.front().objectType;
+
+                const bool isActionObject = MP2::isActionObject( objectType );
+                if ( !isActionObject ) {
+                    // Only action objects can have metadata.
+                    continue;
+                }
+
+                // TODO: add more code to edit other action objects that have metadata.
+                if ( objectType == MP2::OBJ_HERO ) {
+                    const int color = ( 1 << objectInfo.metadata[0] );
+                    const int race = ( 1 << objectInfo.metadata[1] );
+
+                    // Make a temporary hero to edit his details.
+                    Heroes hero;
+                    auto heroMetadata = _mapFormat.heroMetadata.find( object.id );
+                    if ( heroMetadata != _mapFormat.heroMetadata.end() ) {
+                        hero.applyHeroMetadata( _mapFormat.heroMetadata[object.id], race, true );
+                    }
+
+                    hero.SetColor( color );
+
+                    fheroes2::ActionCreator action( _historyManager, _mapFormat );
+                    hero.OpenDialog( false, false, true, true, true, true );
+                    Maps::Map_Format::HeroMetadata heroNewMetadata = hero.getHeroMetadata();
+                    if ( heroNewMetadata != _mapFormat.heroMetadata[object.id] ) {
+                        _mapFormat.heroMetadata[object.id] = std::move( heroNewMetadata );
+                        action.commit();
+                    }
+                }
+            }
         }
         else if ( _editorPanel.isTerrainEdit() ) {
             const fheroes2::Rect brushSize = _editorPanel.getBrushArea();

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2021 - 2024                                             *
+ *   Copyright (C) 2024                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include "editor_options.h"
+
 #include <cassert>
 #include <cstdint>
 #include <vector>
@@ -25,17 +27,18 @@
 #include "agg_image.h"
 #include "dialog.h"
 #include "dialog_audio.h"
-#include "dialog_game_settings.h"
 #include "dialog_graphics_settings.h"
 #include "dialog_hotkeys.h"
 #include "dialog_language_selection.h"
+#include "editor_interface.h"
 #include "game_hotkeys.h"
-#include "game_mainmenu_ui.h"
 #include "gamedefs.h"
 #include "icn.h"
 #include "image.h"
+#include "interface_base.h"
 #include "localevent.h"
 #include "math_base.h"
+#include "render_processor.h"
 #include "screen.h"
 #include "settings.h"
 #include "translations.h"
@@ -46,21 +49,20 @@
 
 namespace
 {
-    enum class SelectedWindow : int
+    enum class DialogAction : uint8_t
     {
         Configuration,
         Language,
         Graphics,
         AudioSettings,
         HotKeys,
-        CursorType,
-        TextSupportMode,
+        Animation,
+        Passabiility,
         UpdateSettings,
-        Exit
+        Close
     };
 
     const fheroes2::Size offsetBetweenOptions{ 92, 110 };
-
     const fheroes2::Point optionOffset{ 36, 47 };
     const int32_t optionWindowSize{ 65 };
 
@@ -68,14 +70,14 @@ namespace
     const fheroes2::Rect graphicsRoi{ optionOffset.x + offsetBetweenOptions.width, optionOffset.y, optionWindowSize, optionWindowSize };
     const fheroes2::Rect audioRoi{ optionOffset.x + offsetBetweenOptions.width * 2, optionOffset.y, optionWindowSize, optionWindowSize };
     const fheroes2::Rect hotKeyRoi{ optionOffset.x, optionOffset.y + offsetBetweenOptions.height, optionWindowSize, optionWindowSize };
-    const fheroes2::Rect cursorTypeRoi{ optionOffset.x + offsetBetweenOptions.width, optionOffset.y + offsetBetweenOptions.height, optionWindowSize, optionWindowSize };
-    const fheroes2::Rect textSupportModeRoi{ optionOffset.x + offsetBetweenOptions.width * 2, optionOffset.y + offsetBetweenOptions.height, optionWindowSize,
-                                             optionWindowSize };
+    const fheroes2::Rect animationRoi{ optionOffset.x + offsetBetweenOptions.width, optionOffset.y + offsetBetweenOptions.height, optionWindowSize, optionWindowSize };
+    const fheroes2::Rect passabilityRoi{ optionOffset.x + offsetBetweenOptions.width * 2, optionOffset.y + offsetBetweenOptions.height, optionWindowSize,
+                                         optionWindowSize };
 
     void drawLanguage( const fheroes2::Rect & optionRoi )
     {
         const fheroes2::SupportedLanguage currentLanguage = fheroes2::getLanguageFromAbbreviation( Settings::Get().getGameLanguage() );
-        fheroes2::LanguageSwitcher languageSwitcher( currentLanguage );
+        const fheroes2::LanguageSwitcher languageSwitcher( currentLanguage );
 
         fheroes2::drawOption( optionRoi, fheroes2::AGG::GetICN( ICN::SPANEL, 18 ), _( "Language" ), fheroes2::getLanguageName( currentLanguage ),
                               fheroes2::UiOptionTextWidth::THREE_ELEMENTS_ROW );
@@ -98,29 +100,27 @@ namespace
                               fheroes2::UiOptionTextWidth::THREE_ELEMENTS_ROW );
     }
 
-    void drawCursorTypeOptions( const fheroes2::Rect & optionRoi )
+    void drawAnimationOptions( const fheroes2::Rect & optionRoi )
     {
-        if ( Settings::Get().isMonochromeCursorEnabled() ) {
-            fheroes2::drawOption( optionRoi, fheroes2::AGG::GetICN( ICN::SPANEL, 20 ), _( "Mouse Cursor" ), _( "Black & White" ),
-                                  fheroes2::UiOptionTextWidth::THREE_ELEMENTS_ROW );
+        if ( Settings::Get().isEditorAnimationEnabled() ) {
+            fheroes2::drawOption( optionRoi, fheroes2::AGG::GetICN( ICN::ESPANEL, 1 ), _( "Animation" ), _( "On" ), fheroes2::UiOptionTextWidth::THREE_ELEMENTS_ROW );
         }
         else {
-            fheroes2::drawOption( optionRoi, fheroes2::AGG::GetICN( ICN::SPANEL, 21 ), _( "Mouse Cursor" ), _( "Color" ),
-                                  fheroes2::UiOptionTextWidth::THREE_ELEMENTS_ROW );
+            fheroes2::drawOption( optionRoi, fheroes2::AGG::GetICN( ICN::ESPANEL, 0 ), _( "Animation" ), _( "Off" ), fheroes2::UiOptionTextWidth::THREE_ELEMENTS_ROW );
         }
     }
 
-    void drawTextSupportModeOptions( const fheroes2::Rect & optionRoi )
+    void drawPassabilityOptions( const fheroes2::Rect & optionRoi )
     {
-        if ( Settings::Get().isTextSupportModeEnabled() ) {
-            fheroes2::drawOption( optionRoi, fheroes2::AGG::GetICN( ICN::CSPANEL, 4 ), _( "Text Support" ), _( "On" ), fheroes2::UiOptionTextWidth::THREE_ELEMENTS_ROW );
+        if ( Settings::Get().isEditorPassabilityEnabled() ) {
+            fheroes2::drawOption( optionRoi, fheroes2::AGG::GetICN( ICN::ESPANEL, 5 ), _( "Passability" ), _( "Show" ), fheroes2::UiOptionTextWidth::THREE_ELEMENTS_ROW );
         }
         else {
-            fheroes2::drawOption( optionRoi, fheroes2::AGG::GetICN( ICN::SPANEL, 9 ), _( "Text Support" ), _( "Off" ), fheroes2::UiOptionTextWidth::THREE_ELEMENTS_ROW );
+            fheroes2::drawOption( optionRoi, fheroes2::AGG::GetICN( ICN::ESPANEL, 4 ), _( "Passability" ), _( "Hide" ), fheroes2::UiOptionTextWidth::THREE_ELEMENTS_ROW );
         }
     }
 
-    SelectedWindow showConfigurationWindow()
+    DialogAction openEditorOptionsDialog()
     {
         fheroes2::Display & display = fheroes2::Display::instance();
 
@@ -140,7 +140,7 @@ namespace
         fheroes2::Blit( dialogShadow, display, windowRoi.x - BORDERWIDTH, windowRoi.y + BORDERWIDTH );
         fheroes2::Blit( dialog, display, windowRoi.x, windowRoi.y );
 
-        fheroes2::ImageRestorer emptyDialogRestorer( display, windowRoi.x, windowRoi.y, windowRoi.width, windowRoi.height );
+        const fheroes2::ImageRestorer emptyDialogRestorer( display, windowRoi.x, windowRoi.y, windowRoi.width, windowRoi.height );
 
         const int buttonIcnId = isEvilInterface ? ICN::BUTTON_SMALL_OKAY_EVIL : ICN::BUTTON_SMALL_OKAY_GOOD;
 
@@ -148,16 +148,16 @@ namespace
         const fheroes2::Rect windowGraphicsRoi( graphicsRoi + windowRoi.getPosition() );
         const fheroes2::Rect windowAudioRoi( audioRoi + windowRoi.getPosition() );
         const fheroes2::Rect windowHotKeyRoi( hotKeyRoi + windowRoi.getPosition() );
-        const fheroes2::Rect windowCursorTypeRoi( cursorTypeRoi + windowRoi.getPosition() );
-        const fheroes2::Rect windowTextSupportModeRoi( textSupportModeRoi + windowRoi.getPosition() );
+        const fheroes2::Rect windowAnimationRoi( animationRoi + windowRoi.getPosition() );
+        const fheroes2::Rect windowPassabilityRoi( passabilityRoi + windowRoi.getPosition() );
 
-        const auto drawOptions = [&windowLanguageRoi, &windowGraphicsRoi, &windowAudioRoi, &windowHotKeyRoi, &windowCursorTypeRoi, &windowTextSupportModeRoi]() {
+        const auto drawOptions = [&windowLanguageRoi, &windowGraphicsRoi, &windowAudioRoi, &windowHotKeyRoi, &windowAnimationRoi, &windowPassabilityRoi]() {
             drawLanguage( windowLanguageRoi );
             drawGraphics( windowGraphicsRoi );
             drawAudioOptions( windowAudioRoi );
             drawHotKeyOptions( windowHotKeyRoi );
-            drawCursorTypeOptions( windowCursorTypeRoi );
-            drawTextSupportModeOptions( windowTextSupportModeRoi );
+            drawAnimationOptions( windowAnimationRoi );
+            drawPassabilityOptions( windowPassabilityRoi );
         };
 
         drawOptions();
@@ -166,8 +166,6 @@ namespace
         okayButton.draw();
 
         display.render();
-
-        bool isTextSupportModeEnabled = conf.isTextSupportModeEnabled();
 
         LocalEvent & le = LocalEvent::Get();
         while ( le.HandleEvents() ) {
@@ -182,22 +180,22 @@ namespace
                 break;
             }
             if ( le.MouseClickLeft( windowLanguageRoi ) ) {
-                return SelectedWindow::Language;
+                return DialogAction::Language;
             }
             if ( le.MouseClickLeft( windowGraphicsRoi ) ) {
-                return SelectedWindow::Graphics;
+                return DialogAction::Graphics;
             }
             if ( le.MouseClickLeft( windowAudioRoi ) ) {
-                return SelectedWindow::AudioSettings;
+                return DialogAction::AudioSettings;
             }
             if ( le.MouseClickLeft( windowHotKeyRoi ) ) {
-                return SelectedWindow::HotKeys;
+                return DialogAction::HotKeys;
             }
-            if ( le.MouseClickLeft( windowCursorTypeRoi ) ) {
-                return SelectedWindow::CursorType;
+            if ( le.MouseClickLeft( windowAnimationRoi ) ) {
+                return DialogAction::Animation;
             }
-            if ( le.MouseClickLeft( windowTextSupportModeRoi ) ) {
-                return SelectedWindow::TextSupportMode;
+            if ( le.MouseClickLeft( windowPassabilityRoi ) ) {
+                return DialogAction::Passabiility;
             }
 
             if ( le.MousePressRight( windowLanguageRoi ) ) {
@@ -212,92 +210,109 @@ namespace
             else if ( le.MousePressRight( windowHotKeyRoi ) ) {
                 fheroes2::showStandardTextMessage( _( "Hot Keys" ), _( "Check and configure all the hot keys present in the game." ), 0 );
             }
-            else if ( le.MousePressRight( windowCursorTypeRoi ) ) {
-                fheroes2::showStandardTextMessage( _( "Mouse Cursor" ), _( "Toggle colored cursor on or off. This is only an aesthetic choice." ), 0 );
+            else if ( le.MousePressRight( windowAnimationRoi ) ) {
+                fheroes2::showStandardTextMessage( _( "Animation" ), _( "Toggle animation of the objects." ), 0 );
             }
-            else if ( le.MousePressRight( windowTextSupportModeRoi ) ) {
-                fheroes2::showStandardTextMessage( _( "Text Support" ), _( "Toggle text support mode to output extra information about windows and events in the game." ),
-                                                   0 );
+            else if ( le.MousePressRight( windowPassabilityRoi ) ) {
+                fheroes2::showStandardTextMessage( _( "Passability" ), _( "Toggle display of objects' passability." ), 0 );
             }
             else if ( le.MousePressRight( okayButton.area() ) ) {
                 fheroes2::showStandardTextMessage( _( "Okay" ), _( "Exit this menu." ), 0 );
             }
-
-            // Text support mode can be toggled using a global hotkey, we need to properly reflect this change in the UI
-            if ( isTextSupportModeEnabled != conf.isTextSupportModeEnabled() ) {
-                isTextSupportModeEnabled = conf.isTextSupportModeEnabled();
-
-                emptyDialogRestorer.restore();
-                drawOptions();
-
-                display.render( emptyDialogRestorer.rect() );
-            }
         }
 
-        return SelectedWindow::Exit;
+        return DialogAction::Close;
     }
 }
 
-namespace fheroes2
+namespace Editor
 {
-    void openGameSettings()
+    void openEditorSettings()
     {
-        drawMainMenuScreen();
-
+        // We should write to the configuration file only once to avoid extra I/O operations.
+        bool saveConfiguration = false;
         Settings & conf = Settings::Get();
 
-        bool saveConfiguration = false;
+        auto redrawEditorMap = [&conf]() {
+            Interface::EditorInterface & editorInterface = Interface::EditorInterface::Get();
 
-        SelectedWindow windowType = SelectedWindow::Configuration;
-        while ( windowType != SelectedWindow::Exit ) {
-            switch ( windowType ) {
-            case SelectedWindow::Configuration:
-                windowType = showConfigurationWindow();
+            editorInterface.reset();
+            // Since the radar interface has a restorer we must redraw it first to avoid the restorer doing something nasty.
+            editorInterface.redraw( Interface::REDRAW_RADAR );
+
+            uint32_t redrawOptions = Interface::REDRAW_ALL;
+            if ( conf.isEditorPassabilityEnabled() ) {
+                redrawOptions |= Interface::REDRAW_PASSABILITIES;
+            }
+
+            editorInterface.redraw( redrawOptions & ( ~Interface::REDRAW_RADAR ) );
+        };
+
+        DialogAction action = DialogAction::Configuration;
+
+        while ( action != DialogAction::Close ) {
+            switch ( action ) {
+            case DialogAction::Configuration:
+                action = openEditorOptionsDialog();
                 break;
-            case SelectedWindow::Language: {
-                const std::vector<SupportedLanguage> supportedLanguages = getSupportedLanguages();
+            case DialogAction::Language: {
+                const std::vector<fheroes2::SupportedLanguage> supportedLanguages = fheroes2::getSupportedLanguages();
 
                 if ( supportedLanguages.size() > 1 ) {
-                    selectLanguage( supportedLanguages, getLanguageFromAbbreviation( conf.getGameLanguage() ) );
+                    selectLanguage( supportedLanguages, fheroes2::getLanguageFromAbbreviation( conf.getGameLanguage() ) );
                 }
                 else {
-                    assert( supportedLanguages.front() == SupportedLanguage::English );
+                    assert( supportedLanguages.front() == fheroes2::SupportedLanguage::English );
 
-                    conf.setGameLanguage( getLanguageAbbreviation( SupportedLanguage::English ) );
+                    conf.setGameLanguage( fheroes2::getLanguageAbbreviation( fheroes2::SupportedLanguage::English ) );
 
                     fheroes2::showStandardTextMessage( "Attention", "Your version of Heroes of Might and Magic II does not support any other languages than English.",
                                                        Dialog::OK );
                 }
 
-                windowType = SelectedWindow::UpdateSettings;
+                redrawEditorMap();
+                saveConfiguration = true;
+                action = DialogAction::Configuration;
                 break;
             }
-            case SelectedWindow::Graphics:
-                saveConfiguration |= fheroes2::openGraphicsSettingsDialog( []() { drawMainMenuScreen(); } );
-                windowType = SelectedWindow::Configuration;
+            case DialogAction::Graphics:
+                saveConfiguration |= fheroes2::openGraphicsSettingsDialog( redrawEditorMap );
+
+                action = DialogAction::Configuration;
                 break;
-            case SelectedWindow::AudioSettings:
-                saveConfiguration |= Dialog::openAudioSettingsDialog( false );
-                windowType = SelectedWindow::Configuration;
+            case DialogAction::AudioSettings:
+                saveConfiguration |= Dialog::openAudioSettingsDialog( true );
+
+                action = DialogAction::Configuration;
                 break;
-            case SelectedWindow::HotKeys:
+            case DialogAction::HotKeys:
                 fheroes2::openHotkeysDialog();
-                windowType = SelectedWindow::Configuration;
+
+                action = DialogAction::Configuration;
                 break;
-            case SelectedWindow::CursorType:
-                conf.setMonochromeCursor( !conf.isMonochromeCursorEnabled() );
-                windowType = SelectedWindow::UpdateSettings;
-                break;
-            case SelectedWindow::TextSupportMode:
-                conf.setTextSupportMode( !conf.isTextSupportModeEnabled() );
-                windowType = SelectedWindow::UpdateSettings;
-                break;
-            case SelectedWindow::UpdateSettings:
+            case DialogAction::Animation:
+                conf.setEditorAnimation( !conf.isEditorAnimationEnabled() );
                 saveConfiguration = true;
-                windowType = SelectedWindow::Configuration;
+
+                if ( conf.isEditorAnimationEnabled() ) {
+                    fheroes2::RenderProcessor::instance().startColorCycling();
+                }
+                else {
+                    fheroes2::RenderProcessor::instance().stopColorCycling();
+                }
+
+                action = DialogAction::Configuration;
+                break;
+            case DialogAction::Passabiility:
+                conf.setEditorPassability( !conf.isEditorPassabilityEnabled() );
+                saveConfiguration = true;
+
+                redrawEditorMap();
+
+                action = DialogAction::Configuration;
                 break;
             default:
-                return;
+                break;
             }
         }
 

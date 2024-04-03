@@ -25,8 +25,6 @@
 
 #include <algorithm>
 #include <cassert>
-#include <cstddef>
-#include <memory>
 #include <ostream>
 #include <string>
 #include <vector>
@@ -242,19 +240,6 @@ void Kingdom::ActionNewDayResourceUpdate( const std::function<void( const EventD
     // Skip the income for the first day
     if ( world.CountDay() > 1 ) {
         AddFundsResource( GetIncome() );
-
-        // Resource bonuses from campaign awards
-        if ( isControlHuman() && Settings::Get().isCampaignGameType() ) {
-            const std::vector<Campaign::CampaignAwardData> campaignAwards = Campaign::CampaignSaveData::Get().getObtainedCampaignAwards();
-
-            for ( size_t i = 0; i < campaignAwards.size(); ++i ) {
-                if ( campaignAwards[i]._type != Campaign::CampaignAwardData::TYPE_RESOURCE_BONUS ) {
-                    continue;
-                }
-
-                AddFundsResource( Funds( campaignAwards[i]._subType, campaignAwards[i]._amount ) );
-            }
-        }
     }
 
     const bool isAIPlayer = ( GetControl() == CONTROL_AI );
@@ -708,7 +693,7 @@ Funds Kingdom::GetIncome( int type /* INCOME_ALL */ ) const
         }
     }
 
-    if ( ( type & INCOME_CAMPAIGN_BONUS ) && Settings::Get().isCampaignGameType() ) {
+    if ( isControlHuman() && ( type & INCOME_CAMPAIGN_BONUS ) && Settings::Get().isCampaignGameType() ) {
         const std::vector<Campaign::CampaignAwardData> awards = Campaign::CampaignSaveData::Get().getObtainedCampaignAwards();
         for ( const Campaign::CampaignAwardData & award : awards ) {
             if ( award._type != Campaign::CampaignAwardData::TYPE_RESOURCE_BONUS ) {
@@ -1007,8 +992,8 @@ StreamBase & operator>>( StreamBase & msg, Kingdom & kingdom )
     msg >> kingdom.modes >> kingdom.color >> kingdom.resource >> kingdom.lost_town_days >> kingdom.castles >> kingdom.heroes >> kingdom.recruits >> kingdom.visit_object
         >> kingdom.puzzle_maps >> kingdom.visited_tents_colors;
 
-    static_assert( LAST_SUPPORTED_FORMAT_VERSION < FORMAT_VERSION_1100_RELEASE, "Remove the logic below." );
-    if ( Game::GetVersionOfCurrentSaveFile() < FORMAT_VERSION_1100_RELEASE ) {
+    static_assert( LAST_SUPPORTED_FORMAT_VERSION < FORMAT_VERSION_PRE2_1100_RELEASE, "Remove the logic below." );
+    if ( Game::GetVersionOfCurrentSaveFile() < FORMAT_VERSION_PRE2_1100_RELEASE ) {
         int dummy;
 
         msg >> dummy;
