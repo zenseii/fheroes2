@@ -118,9 +118,11 @@ namespace Maps
     //
     // !!! IMPORTANT !!!
     // Do NOT change the order of the items as they are used for the map format.
-    enum class ObjectGroup : int32_t
+    enum class ObjectGroup : uint8_t
     {
         // These groups are not being used by the Editor directly but they are still a part of a tile.
+        NONE,
+
         ROADS,
         STREAMS,
 
@@ -157,6 +159,8 @@ namespace Maps
     };
 
     const std::vector<ObjectInfo> & getObjectsByGroup( const ObjectGroup group );
+
+    const ObjectInfo & getObjectInfo( const ObjectGroup group, const int32_t objectIndex );
 
     MP2::MapObjectType getObjectTypeByIcn( const MP2::ObjectIcnType icnType, const uint32_t icnIndex );
 

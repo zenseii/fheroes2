@@ -33,10 +33,15 @@
 #include "agg_image.h"
 #include "artifact.h"
 #include "audio_manager.h"
+#include "color.h"
 #include "cursor.h"
 #include "dialog.h"
 #include "dialog_selectitems.h"
+#include "editor_castle_details_window.h"
+#include "editor_map_specs_window.h"
 #include "editor_object_popup_window.h"
+#include "editor_save_map_window.h"
+#include "editor_sphinx_window.h"
 #include "game.h"
 #include "game_delays.h"
 #include "game_hotkeys.h"
@@ -58,7 +63,9 @@
 #include "maps_tiles.h"
 #include "maps_tiles_helper.h"
 #include "math_base.h"
+#include "monster.h"
 #include "mp2.h"
+#include "race.h"
 #include "render_processor.h"
 #include "screen.h"
 #include "settings.h"
@@ -69,6 +76,7 @@
 #include "ui_button.h"
 #include "ui_dialog.h"
 #include "ui_map_object.h"
+#include "ui_monster.h"
 #include "ui_text.h"
 #include "ui_tool.h"
 #include "view_world.h"
@@ -99,18 +107,6 @@ namespace
         return { startPos.x + startPos.y * worldWidth, endPos.x + endPos.y * worldWidth };
     }
 
-    const Maps::ObjectInfo & getObjectInfo( const Maps::ObjectGroup group, const int32_t objectType )
-    {
-        const auto & objectInfo = Maps::getObjectsByGroup( group );
-        if ( objectType < 0 || objectType >= static_cast<int32_t>( objectInfo.size() ) ) {
-            assert( 0 );
-            static const Maps::ObjectInfo emptyObjectInfo{ MP2::OBJ_NONE };
-            return emptyObjectInfo;
-        }
-
-        return objectInfo[objectType];
-    }
-
     bool isObjectPlacementAllowed( const Maps::ObjectInfo & info, const fheroes2::Point & mainTilePos )
     {
         // Run through all tile offsets and check that all objects parts can be put on the map.
@@ -127,6 +123,37 @@ namespace
 
         for ( const auto & objectPart : info.topLevelParts ) {
             if ( !Maps::isValidAbsPoint( mainTilePos.x + objectPart.tileOffset.x, mainTilePos.y + objectPart.tileOffset.y ) ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    bool isActionObjectAllowed( const Maps::ObjectInfo & info, const fheroes2::Point & mainTilePos )
+    {
+        // Active action object parts must be placed on a tile without any other objects.
+        // Only ground parts should be checked for this condition.
+        for ( const auto & objectPart : info.groundLevelParts ) {
+            if ( objectPart.layerType == Maps::SHADOW_LAYER || objectPart.layerType == Maps::TERRAIN_LAYER ) {
+                // Shadow and terrain layer parts are ignored.
+                continue;
+            }
+
+            const fheroes2::Point pos{ mainTilePos.x + objectPart.tileOffset.x, mainTilePos.y + objectPart.tileOffset.y };
+            if ( !Maps::isValidAbsPoint( pos.x, pos.y ) ) {
+                return false;
+            }
+
+            const auto & tile = world.GetTiles( pos.x, pos.y );
+
+            if ( MP2::isOffGameActionObject( tile.GetObject() ) ) {
+                // An action object already exist. We cannot allow to put anything on top of it.
+                return false;
+            }
+
+            if ( MP2::isOffGameActionObject( objectPart.objectType ) && !Maps::isClearGround( tile ) ) {
+                // We are trying to place an action object on a tile that has some other objects.
                 return false;
             }
         }
@@ -157,23 +184,14 @@ namespace
         return true;
     }
 
-    bool checkConditionForOccupiedTiles( const Maps::ObjectInfo & info, const fheroes2::Point & mainTilePos,
-                                         const std::function<bool( const Maps::Tiles & tile )> & condition )
-    {
-        return isConditionValid( Maps::getGroundLevelOccupiedTileOffset( info ), mainTilePos, condition );
-    }
-
     bool checkConditionForUsedTiles( const Maps::ObjectInfo & info, const fheroes2::Point & mainTilePos,
                                      const std::function<bool( const Maps::Tiles & tile )> & condition )
     {
         return isConditionValid( Maps::getGroundLevelUsedTileOffset( info ), mainTilePos, condition );
     }
 
-    bool removeObjects( Maps::Map_Format::MapFormat & mapFormat, const int32_t startTileId, const int32_t endTileId, const std::set<Maps::ObjectGroup> & objectGroups )
+    bool removeObjects( Maps::Map_Format::MapFormat & mapFormat, std::set<uint32_t> objectsUids, const std::set<Maps::ObjectGroup> & objectGroups )
     {
-        // '_mapFormat' stores only object's main (action) tile so initially we do search for objects in 'tiles'.
-        std::set<uint32_t> objectsUids = Maps::getObjectUidsInArea( startTileId, endTileId );
-
         if ( objectsUids.empty() ) {
             return false;
         }
@@ -248,7 +266,24 @@ namespace
                     assert( mapFormat.castleMetadata.find( objectId ) != mapFormat.castleMetadata.end() );
                     mapFormat.castleMetadata.erase( objectId );
 
+                    // There could be a road in front of the castle entrance. Remove it because there is no entrance to the castle anymore.
+                    const size_t bottomTileIndex = mapTileIndex + mapFormat.size;
+                    assert( bottomTileIndex < mapFormat.tiles.size() );
+                    auto & bottomTileObjects = mapFormat.tiles[bottomTileIndex].objects;
+                    const bool isRoadAtBottom
+                        = std::find_if( bottomTileObjects.begin(), bottomTileObjects.end(),
+                                        []( const Maps::Map_Format::ObjectInfo & mapObject ) { return mapObject.group == Maps::ObjectGroup::ROADS; } )
+                          != bottomTileObjects.end();
+                    if ( isRoadAtBottom ) {
+                        // TODO: Update (not remove) the road. It may be done properly only after roads handling will be moved from 'world' tiles to 'Map_Format' tiles.
+                        Maps::updateRoadOnTile( world.GetTiles( static_cast<int32_t>( bottomTileIndex ) ), false );
+                    }
+
                     needRedraw = true;
+
+                    if ( !Maps::updateMapPlayers( mapFormat ) ) {
+                        assert( 0 );
+                    }
                 }
                 else if ( objectIter->group == Maps::ObjectGroup::ROADS ) {
                     assert( mapTileIndex < world.getSize() );
@@ -264,10 +299,66 @@ namespace
 
                     ++objectIter;
                 }
-                else if ( objectIter->group == Maps::ObjectGroup::KINGDOM_HEROES ) {
+                else if ( objectIter->group == Maps::ObjectGroup::KINGDOM_HEROES || Maps::isJailObject( objectIter->group, objectIter->index ) ) {
                     // Remove this hero metadata.
                     assert( mapFormat.heroMetadata.find( objectIter->id ) != mapFormat.heroMetadata.end() );
                     mapFormat.heroMetadata.erase( objectIter->id );
+
+                    objectIter = mapTile.objects.erase( objectIter );
+                    needRedraw = true;
+
+                    if ( !Maps::updateMapPlayers( mapFormat ) ) {
+                        assert( 0 );
+                    }
+                }
+                else if ( objectIter->group == Maps::ObjectGroup::MONSTERS ) {
+                    assert( mapFormat.standardMetadata.find( objectIter->id ) != mapFormat.standardMetadata.end() );
+                    mapFormat.standardMetadata.erase( objectIter->id );
+
+                    objectIter = mapTile.objects.erase( objectIter );
+                    needRedraw = true;
+                }
+                else if ( objectIter->group == Maps::ObjectGroup::ADVENTURE_MISCELLANEOUS ) {
+                    const auto & objects = Maps::getObjectsByGroup( objectIter->group );
+
+                    assert( objectIter->index < objects.size() );
+                    const auto objectType = objects[objectIter->index].objectType;
+                    switch ( objectType ) {
+                    case MP2::OBJ_EVENT:
+                        assert( mapFormat.adventureMapEventMetadata.find( objectIter->id ) != mapFormat.adventureMapEventMetadata.end() );
+                        mapFormat.adventureMapEventMetadata.erase( objectIter->id );
+                        break;
+                    case MP2::OBJ_SIGN:
+                        assert( mapFormat.signMetadata.find( objectIter->id ) != mapFormat.signMetadata.end() );
+                        mapFormat.signMetadata.erase( objectIter->id );
+                        break;
+                    case MP2::OBJ_SPHINX:
+                        assert( mapFormat.sphinxMetadata.find( objectIter->id ) != mapFormat.sphinxMetadata.end() );
+                        mapFormat.sphinxMetadata.erase( objectIter->id );
+                        break;
+                    default:
+                        break;
+                    }
+
+                    objectIter = mapTile.objects.erase( objectIter );
+                    needRedraw = true;
+                }
+                else if ( objectIter->group == Maps::ObjectGroup::ADVENTURE_WATER ) {
+                    const auto & objects = Maps::getObjectsByGroup( objectIter->group );
+
+                    assert( objectIter->index < objects.size() );
+                    const auto objectType = objects[objectIter->index].objectType;
+                    if ( objectType == MP2::OBJ_BOTTLE ) {
+                        assert( mapFormat.signMetadata.find( objectIter->id ) != mapFormat.signMetadata.end() );
+                        mapFormat.signMetadata.erase( objectIter->id );
+                    }
+
+                    objectIter = mapTile.objects.erase( objectIter );
+                    needRedraw = true;
+                }
+                else if ( objectIter->group == Maps::ObjectGroup::ADVENTURE_ARTIFACTS ) {
+                    assert( mapFormat.standardMetadata.find( objectIter->id ) != mapFormat.standardMetadata.end() );
+                    mapFormat.standardMetadata.erase( objectIter->id );
 
                     objectIter = mapTile.objects.erase( objectIter );
                     needRedraw = true;
@@ -276,6 +367,7 @@ namespace
                     objectIter = mapTile.objects.erase( objectIter );
                     needRedraw = true;
                 }
+
                 if ( objectsUids.empty() ) {
                     break;
                 }
@@ -283,6 +375,203 @@ namespace
         }
 
         return needRedraw;
+    }
+
+    void updateWorldCastlesHeroes( const Maps::Map_Format::MapFormat & map )
+    {
+        const auto & townObjects = Maps::getObjectsByGroup( Maps::ObjectGroup::KINGDOM_TOWNS );
+        const auto & heroObjects = Maps::getObjectsByGroup( Maps::ObjectGroup::KINGDOM_HEROES );
+
+        for ( size_t i = 0; i < map.tiles.size(); ++i ) {
+            for ( const auto & object : map.tiles[i].objects ) {
+                if ( object.group == Maps::ObjectGroup::KINGDOM_TOWNS ) {
+                    const uint8_t color = Color::IndexToColor( Maps::getTownColorIndex( map, i, object.id ) );
+                    const uint8_t race = Race::IndexToRace( static_cast<int>( townObjects[object.index].metadata[0] ) );
+
+                    world.addCastle( static_cast<int32_t>( i ), race, color );
+                }
+                else if ( object.group == Maps::ObjectGroup::KINGDOM_HEROES ) {
+                    const auto & metadata = heroObjects[object.index].metadata;
+                    const uint8_t color = Color::IndexToColor( static_cast<int>( metadata[0] ) );
+
+                    Heroes * hero = world.GetHeroForHire( static_cast<int>( metadata[1] ) );
+                    if ( hero ) {
+                        hero->SetCenter( { static_cast<int32_t>( i ) % world.w(), static_cast<int32_t>( i ) / world.w() } );
+                        hero->SetColor( color );
+                    }
+                }
+            }
+        }
+    }
+
+    bool verifyTerrainPlacement( const fheroes2::Point & tilePos, const Maps::ObjectGroup groupType, const int32_t objectType, std::string & errorMessage )
+    {
+        switch ( groupType ) {
+        case Maps::ObjectGroup::ADVENTURE_ARTIFACTS:
+        case Maps::ObjectGroup::ADVENTURE_DWELLINGS:
+        case Maps::ObjectGroup::ADVENTURE_MINES:
+        case Maps::ObjectGroup::ADVENTURE_POWER_UPS:
+        case Maps::ObjectGroup::ADVENTURE_TREASURES:
+        case Maps::ObjectGroup::KINGDOM_HEROES:
+        case Maps::ObjectGroup::LANDSCAPE_MOUNTAINS:
+        case Maps::ObjectGroup::LANDSCAPE_ROCKS:
+        case Maps::ObjectGroup::LANDSCAPE_TREES:
+        case Maps::ObjectGroup::MONSTERS: {
+            const auto & objectInfo = Maps::getObjectInfo( groupType, objectType );
+            if ( !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
+                errorMessage = _( "%{objects} cannot be placed on water." );
+                StringReplace( errorMessage, "%{objects}", Interface::EditorPanel::getObjectGroupName( groupType ) );
+                return false;
+            }
+
+            break;
+        }
+        case Maps::ObjectGroup::ADVENTURE_WATER:
+        case Maps::ObjectGroup::LANDSCAPE_WATER: {
+            const auto & objectInfo = Maps::getObjectInfo( groupType, objectType );
+            if ( !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return tileToCheck.isWater(); } ) ) {
+                errorMessage = _( "%{objects} must be placed on water." );
+                StringReplace( errorMessage, "%{objects}", Interface::EditorPanel::getObjectGroupName( groupType ) );
+                return false;
+            }
+
+            break;
+        }
+        case Maps::ObjectGroup::LANDSCAPE_MISCELLANEOUS: {
+            const auto & objectInfo = Maps::getObjectInfo( groupType, objectType );
+
+            assert( !objectInfo.groundLevelParts.empty() );
+            const auto & firstObjectPart = objectInfo.groundLevelParts.front();
+
+            // River deltas are only objects that can be placed on water and on land.
+            // Yes, the below code is very hacky but so far this is the best we can do.
+            if ( firstObjectPart.icnType == MP2::OBJ_ICN_TYPE_OBJNMUL2 && ( firstObjectPart.icnIndex == 2U || firstObjectPart.icnIndex == 11U ) ) {
+                // This is a river delta. Just don't check the terrain type.
+            }
+            else if ( !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
+                errorMessage = _( "%{objects} cannot be placed on water." );
+                StringReplace( errorMessage, "%{objects}", Interface::EditorPanel::getObjectGroupName( groupType ) );
+                return false;
+            }
+
+            break;
+        }
+        case Maps::ObjectGroup::KINGDOM_TOWNS: {
+            const Maps::Tiles & tile = world.GetTiles( tilePos.x, tilePos.y );
+
+            if ( tile.isWater() ) {
+                errorMessage = _( "%{objects} cannot be placed on water." );
+                StringReplace( errorMessage, "%{objects}", Interface::EditorPanel::getObjectGroupName( groupType ) );
+                return false;
+            }
+
+            const int groundType = Maps::Ground::getGroundByImageIndex( tile.getTerrainImageIndex() );
+            const int32_t basementId = fheroes2::getTownBasementId( groundType );
+
+            const auto & townObjectInfo = Maps::getObjectInfo( groupType, objectType );
+            const auto & basementObjectInfo = Maps::getObjectInfo( Maps::ObjectGroup::LANDSCAPE_TOWN_BASEMENTS, basementId );
+
+            if ( !checkConditionForUsedTiles( townObjectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
+                errorMessage = _( "%{objects} cannot be placed on water." );
+                StringReplace( errorMessage, "%{objects}", Interface::EditorPanel::getObjectGroupName( groupType ) );
+                return false;
+            }
+
+            if ( !checkConditionForUsedTiles( basementObjectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
+                errorMessage = _( "%{objects} cannot be placed on water." );
+                StringReplace( errorMessage, "%{objects}", Interface::EditorPanel::getObjectGroupName( groupType ) );
+                return false;
+            }
+
+            break;
+        }
+        case Maps::ObjectGroup::ADVENTURE_MISCELLANEOUS: {
+            const auto & objectInfo = Maps::getObjectInfo( groupType, objectType );
+
+            if ( objectInfo.objectType == MP2::OBJ_EVENT ) {
+                // Only event objects are allowed to be placed anywhere.
+            }
+            else if ( !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
+                errorMessage = _( "%{objects} cannot be placed on water." );
+                StringReplace( errorMessage, "%{objects}", Interface::EditorPanel::getObjectGroupName( groupType ) );
+                return false;
+            }
+
+            break;
+        }
+        default:
+            // Did you add a new object group? Add the logic for it!
+            assert( 0 );
+            break;
+        }
+
+        return true;
+    }
+
+    bool verifyObjectPlacement( const fheroes2::Point & tilePos, const Maps::ObjectGroup groupType, const int32_t objectType, std::string & errorMessage )
+    {
+        switch ( groupType ) {
+        case Maps::ObjectGroup::ADVENTURE_ARTIFACTS:
+        case Maps::ObjectGroup::ADVENTURE_DWELLINGS:
+        case Maps::ObjectGroup::ADVENTURE_MINES:
+        case Maps::ObjectGroup::ADVENTURE_MISCELLANEOUS:
+        case Maps::ObjectGroup::ADVENTURE_POWER_UPS:
+        case Maps::ObjectGroup::ADVENTURE_TREASURES:
+        case Maps::ObjectGroup::ADVENTURE_WATER:
+        case Maps::ObjectGroup::KINGDOM_HEROES:
+        case Maps::ObjectGroup::LANDSCAPE_MOUNTAINS:
+        case Maps::ObjectGroup::LANDSCAPE_MISCELLANEOUS:
+        case Maps::ObjectGroup::LANDSCAPE_ROCKS:
+        case Maps::ObjectGroup::LANDSCAPE_TREES:
+        case Maps::ObjectGroup::LANDSCAPE_WATER:
+        case Maps::ObjectGroup::MONSTERS: {
+            const auto & objectInfo = Maps::getObjectInfo( groupType, objectType );
+
+            if ( !isObjectPlacementAllowed( objectInfo, tilePos ) ) {
+                errorMessage = _( "Objects cannot be placed outside the map." );
+                return false;
+            }
+
+            if ( !isActionObjectAllowed( objectInfo, tilePos ) ) {
+                errorMessage = _( "Action objects must be placed on clear tiles." );
+                return false;
+            }
+            break;
+        }
+        case Maps::ObjectGroup::KINGDOM_TOWNS: {
+            const Maps::Tiles & tile = world.GetTiles( tilePos.x, tilePos.y );
+
+            if ( tile.isWater() ) {
+                errorMessage = _( "%{objects} cannot be placed on water." );
+                StringReplace( errorMessage, "%{objects}", Interface::EditorPanel::getObjectGroupName( groupType ) );
+                return false;
+            }
+
+            const int groundType = Maps::Ground::getGroundByImageIndex( tile.getTerrainImageIndex() );
+            const int32_t basementId = fheroes2::getTownBasementId( groundType );
+
+            const auto & townObjectInfo = Maps::getObjectInfo( groupType, objectType );
+            const auto & basementObjectInfo = Maps::getObjectInfo( Maps::ObjectGroup::LANDSCAPE_TOWN_BASEMENTS, basementId );
+
+            if ( !isObjectPlacementAllowed( townObjectInfo, tilePos ) || !isObjectPlacementAllowed( basementObjectInfo, tilePos ) ) {
+                errorMessage = _( "Objects cannot be placed outside the map." );
+                return false;
+            }
+
+            if ( !isActionObjectAllowed( townObjectInfo, tilePos ) ) {
+                errorMessage = _( "Action objects must be placed on clear tiles." );
+                return false;
+            }
+            break;
+        }
+        default: {
+            // Did you add a new object group? Add the logic for it!
+            assert( 0 );
+            return false;
+        }
+        }
+
+        return verifyTerrainPlacement( tilePos, groupType, objectType, errorMessage );
     }
 }
 
@@ -306,8 +595,6 @@ namespace Interface
 
         _gameArea.SetCenterInPixels( prevCenter + fheroes2::Point( newRoi.x + newRoi.width / 2, newRoi.y + newRoi.height / 2 )
                                      - fheroes2::Point( prevRoi.x + prevRoi.width / 2, prevRoi.y + prevRoi.height / 2 ) );
-
-        _historyManager.reset();
     }
 
     void EditorInterface::redraw( const uint32_t force )
@@ -390,9 +677,12 @@ namespace Interface
 
         reset();
 
+        _historyManager.reset();
+
         if ( isNewMap ) {
             _mapFormat = {};
             Maps::saveMapInEditor( _mapFormat );
+            _loadedFileName.clear();
         }
 
         // Stop all sounds and music.
@@ -441,35 +731,7 @@ namespace Interface
                     res = eventNewMap();
                 }
                 else if ( HotKeyPressEvent( Game::HotKeyEvent::WORLD_SAVE_GAME ) ) {
-                    const std::string dataPath = System::GetDataDirectory( "fheroes2" );
-                    if ( dataPath.empty() ) {
-                        fheroes2::showStandardTextMessage( _( "Warning!" ), "Unable to locate data directory to save the map.", Dialog::OK );
-                        continue;
-                    }
-
-                    if ( !Maps::updateMapPlayers( _mapFormat ) ) {
-                        fheroes2::showStandardTextMessage( _( "Warning!" ), "The map is corrupted.", Dialog::OK );
-                        continue;
-                    }
-
-                    const std::string mapDirectory = System::concatPath( dataPath, "maps" );
-
-                    if ( !System::IsDirectory( mapDirectory ) && !System::MakeDirectory( mapDirectory ) ) {
-                        fheroes2::showStandardTextMessage( _( "Warning!" ), "Unable to create a directory to save the map.", Dialog::OK );
-                        continue;
-                    }
-
-                    std::string fileName;
-                    if ( !Dialog::InputString( _( "Map filename" ), fileName, std::string(), 128 ) ) {
-                        continue;
-                    }
-
-                    _mapFormat.name = fileName;
-                    _mapFormat.description = "Put a real description here.";
-
-                    if ( !Maps::Map_Format::saveMap( System::concatPath( mapDirectory, fileName + ".fh2m" ), _mapFormat ) ) {
-                        fheroes2::showStandardTextMessage( _( "Warning!" ), "Failed to save the map.", Dialog::OK );
-                    }
+                    saveMapToFile();
                 }
                 else if ( HotKeyPressEvent( Game::HotKeyEvent::MAIN_MENU_LOAD_GAME ) ) {
                     res = eventLoadMap();
@@ -511,6 +773,15 @@ namespace Interface
                 }
                 else if ( HotKeyPressEvent( Game::HotKeyEvent::EDITOR_REDO_LAST_ACTION ) ) {
                     redoAction();
+                }
+                else if ( HotKeyPressEvent( Game::HotKeyEvent::EDITOR_TO_GAME_MAIN_MENU ) ) {
+                    const int returnValue
+                        = fheroes2::showStandardTextMessage( _( "Editor" ), _( "Do you wish to return to the game's Main Menu? All unsaved changes will be lost." ),
+                                                             Dialog::YES | Dialog::NO );
+
+                    if ( returnValue == Dialog::YES ) {
+                        return fheroes2::GameMode::MAIN_MENU;
+                    }
                 }
             }
 
@@ -619,14 +890,20 @@ namespace Interface
 
                         const int groundId = _editorPanel.selectedGroundType();
                         Maps::setTerrainOnTiles( _selectedTile, _tileUnderCursor, groundId );
+                        _validateObjectsOnTerrainUpdate();
 
                         action.commit();
+
+                        _redraw |= mapUpdateFlags;
+
+                        // TODO: Make a proper function to remove all types of objects from the 'world tiles' not to do full reload of '_mapFormat'.
+                        Maps::readMapInEditor( _mapFormat );
                     }
                     else if ( _editorPanel.isEraseMode() ) {
                         // Erase objects in the selected area.
                         fheroes2::ActionCreator action( _historyManager, _mapFormat );
 
-                        if ( removeObjects( _mapFormat, _selectedTile, _tileUnderCursor, _editorPanel.getEraseObjectGroups() ) ) {
+                        if ( removeObjects( _mapFormat, Maps::getObjectUidsInArea( _selectedTile, _tileUnderCursor ), _editorPanel.getEraseObjectGroups() ) ) {
                             action.commit();
                             _redraw |= mapUpdateFlags;
 
@@ -759,7 +1036,7 @@ namespace Interface
             else if ( le.MouseClickLeft( buttonSave.area() ) || Game::HotKeyPressEvent( Game::HotKeyEvent::WORLD_SAVE_GAME ) ) {
                 back.restore();
 
-                fheroes2::showStandardTextMessage( _( "Warning!" ), "The Map Editor is still in development. Save function is not implemented yet.", Dialog::OK );
+                Get().saveMapToFile();
 
                 break;
             }
@@ -818,24 +1095,21 @@ namespace Interface
 
                 const MP2::MapObjectType objectType = objectInfo.groundLevelParts.front().objectType;
 
-                const bool isActionObject = MP2::isActionObject( objectType );
+                const bool isActionObject = MP2::isOffGameActionObject( objectType );
                 if ( !isActionObject ) {
                     // Only action objects can have metadata.
                     continue;
                 }
 
                 // TODO: add more code to edit other action objects that have metadata.
-                if ( objectType == MP2::OBJ_HERO ) {
-                    const int color = ( 1 << objectInfo.metadata[0] );
-                    const int race = ( 1 << objectInfo.metadata[1] );
+                if ( objectType == MP2::OBJ_HERO || objectType == MP2::OBJ_JAIL ) {
+                    assert( _mapFormat.heroMetadata.find( object.id ) != _mapFormat.heroMetadata.end() );
+
+                    const int color = ( objectType == MP2::OBJ_JAIL ) ? Color::NONE : ( 1 << objectInfo.metadata[0] );
 
                     // Make a temporary hero to edit his details.
                     Heroes hero;
-                    auto heroMetadata = _mapFormat.heroMetadata.find( object.id );
-                    if ( heroMetadata != _mapFormat.heroMetadata.end() ) {
-                        hero.applyHeroMetadata( _mapFormat.heroMetadata[object.id], race, true );
-                    }
-
+                    hero.applyHeroMetadata( _mapFormat.heroMetadata[object.id], objectType == MP2::OBJ_JAIL, true );
                     hero.SetColor( color );
 
                     fheroes2::ActionCreator action( _historyManager, _mapFormat );
@@ -843,6 +1117,91 @@ namespace Interface
                     Maps::Map_Format::HeroMetadata heroNewMetadata = hero.getHeroMetadata();
                     if ( heroNewMetadata != _mapFormat.heroMetadata[object.id] ) {
                         _mapFormat.heroMetadata[object.id] = std::move( heroNewMetadata );
+                        action.commit();
+                    }
+                }
+                else if ( objectType == MP2::OBJ_CASTLE || objectType == MP2::OBJ_RANDOM_TOWN || objectType == MP2::OBJ_RANDOM_CASTLE ) {
+                    assert( _mapFormat.castleMetadata.find( object.id ) != _mapFormat.castleMetadata.end() );
+
+                    const int race = Race::IndexToRace( static_cast<int>( objectInfo.metadata[0] ) );
+                    const int color = Color::IndexToColor( Maps::getTownColorIndex( _mapFormat, tileIndex, object.id ) );
+                    Editor::castleDetailsDialog( _mapFormat.castleMetadata[object.id], race, color );
+                }
+                else if ( objectType == MP2::OBJ_SIGN || objectType == MP2::OBJ_BOTTLE ) {
+                    fheroes2::ActionCreator action( _historyManager, _mapFormat );
+
+                    std::string header = _( "Input %{object} text" );
+                    StringReplace( header, "%{object}", MP2::StringObject( objectType ) );
+
+                    std::string signText = _mapFormat.signMetadata[object.id].message;
+                    if ( Dialog::inputString( std::move( header ), signText, {}, 0, true ) ) {
+                        _mapFormat.signMetadata[object.id].message = std::move( signText );
+                        action.commit();
+                    }
+                }
+                else if ( object.group == Maps::ObjectGroup::MONSTERS ) {
+                    uint32_t monsterCount = 0;
+
+                    auto monsterMetadata = _mapFormat.standardMetadata.find( object.id );
+                    if ( monsterMetadata != _mapFormat.standardMetadata.end() ) {
+                        monsterCount = monsterMetadata->second.metadata[0];
+                    }
+
+                    Monster tempMonster( static_cast<int>( object.index ) + 1 );
+
+                    std::string str = _( "Set %{monster} Count" );
+                    StringReplace( str, "%{monster}", tempMonster.GetName() );
+
+                    fheroes2::Sprite surface;
+
+                    if ( tempMonster.isValid() ) {
+                        surface = fheroes2::AGG::GetICN( ICN::STRIP, 12 );
+                        fheroes2::renderMonsterFrame( Monster( static_cast<int>( object.index ) + 1 ), surface, { 6, 6 } );
+                    }
+
+                    fheroes2::ActionCreator action( _historyManager, _mapFormat );
+                    if ( Dialog::SelectCount( str, 0, 500000, monsterCount, 1, surface ) ) {
+                        _mapFormat.standardMetadata[object.id] = { static_cast<int32_t>( monsterCount ), 0, Monster::JOIN_CONDITION_UNSET };
+                        action.commit();
+                    }
+                }
+                else if ( object.group == Maps::ObjectGroup::ADVENTURE_ARTIFACTS ) {
+                    if ( objectInfo.objectType == MP2::OBJ_RANDOM_ULTIMATE_ARTIFACT ) {
+                        assert( _mapFormat.standardMetadata.find( object.id ) != _mapFormat.standardMetadata.end() );
+
+                        uint32_t radius = static_cast<uint32_t>( _mapFormat.standardMetadata[object.id].metadata[0] );
+
+                        fheroes2::ActionCreator action( _historyManager, _mapFormat );
+                        if ( Dialog::SelectCount( _( "Set Random Ultimate Artifact Radius" ), 0, 100, radius ) ) {
+                            _mapFormat.standardMetadata[object.id].metadata[0] = static_cast<int32_t>( radius );
+                            action.commit();
+                        }
+                    }
+                    else if ( objectInfo.objectType == MP2::OBJ_ARTIFACT && objectInfo.metadata[0] == Artifact::SPELL_SCROLL ) {
+                        // Find Spell Scroll object.
+                        assert( _mapFormat.standardMetadata.find( object.id ) != _mapFormat.standardMetadata.end() );
+
+                        const int spellId = Dialog::selectSpell( _mapFormat.standardMetadata[object.id].metadata[0], true ).GetID();
+
+                        if ( spellId == Spell::NONE ) {
+                            // We do not place the Spell Scroll artifact if the spell for it was not selected.
+                            return;
+                        }
+
+                        fheroes2::ActionCreator action( _historyManager, _mapFormat );
+
+                        _mapFormat.standardMetadata[object.id].metadata[0] = spellId;
+
+                        Maps::setSpellOnTile( tile, spellId );
+
+                        action.commit();
+                    }
+                }
+                else if ( objectType == MP2::OBJ_SPHINX ) {
+                    assert( _mapFormat.sphinxMetadata.find( object.id ) != _mapFormat.sphinxMetadata.end() );
+
+                    fheroes2::ActionCreator action( _historyManager, _mapFormat );
+                    if ( Editor::openSphinxWindow( _mapFormat.sphinxMetadata[object.id] ) ) {
                         action.commit();
                     }
                 }
@@ -870,9 +1229,14 @@ namespace Interface
                 _selectedTile = -1;
             }
 
+            _validateObjectsOnTerrainUpdate();
+
             _redraw |= mapUpdateFlags;
 
             action.commit();
+
+            // TODO: Make a proper function to remove all types of objects from the 'world tiles' not to do full reload of '_mapFormat'.
+            Maps::readMapInEditor( _mapFormat );
         }
         else if ( _editorPanel.isRoadDraw() ) {
             fheroes2::ActionCreator action( _historyManager, _mapFormat );
@@ -899,7 +1263,7 @@ namespace Interface
             fheroes2::ActionCreator action( _historyManager, _mapFormat );
 
             const fheroes2::Point indices = getBrushAreaIndicies( brushSize, tileIndex );
-            if ( removeObjects( _mapFormat, indices.x, indices.y, _editorPanel.getEraseObjectGroups() ) ) {
+            if ( removeObjects( _mapFormat, Maps::getObjectUidsInArea( indices.x, indices.y ), _editorPanel.getEraseObjectGroups() ) ) {
                 action.commit();
                 _redraw |= mapUpdateFlags;
 
@@ -913,15 +1277,16 @@ namespace Interface
             }
         }
         else if ( _editorPanel.isObjectMode() ) {
-            handleObjectMouseLeftClick( tile );
+            _handleObjectMouseLeftClick( tile );
         }
     }
 
-    void EditorInterface::handleObjectMouseLeftClick( Maps::Tiles & tile )
+    void EditorInterface::_handleObjectMouseLeftClick( Maps::Tiles & tile )
     {
         assert( _editorPanel.isObjectMode() );
 
-        if ( _editorPanel.getSelectedObjectType() < 0 ) {
+        const int32_t objectType = _editorPanel.getSelectedObjectType();
+        if ( objectType < 0 ) {
             return;
         }
 
@@ -929,63 +1294,15 @@ namespace Interface
 
         const Maps::ObjectGroup groupType = _editorPanel.getSelectedObjectGroup();
 
-        if ( groupType == Maps::ObjectGroup::MONSTERS ) {
-            const auto & objectInfo = getObjectInfo( groupType, _editorPanel.getSelectedObjectType() );
+        std::string errorMessage;
 
-            if ( !isObjectPlacementAllowed( objectInfo, tilePos ) ) {
-                _warningMessage.reset( _( "Objects cannot be placed outside the map." ) );
+        if ( groupType == Maps::ObjectGroup::KINGDOM_HEROES ) {
+            if ( !verifyObjectPlacement( tilePos, groupType, objectType, errorMessage ) ) {
+                _warningMessage.reset( std::move( errorMessage ) );
                 return;
             }
 
-            if ( !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
-                _warningMessage.reset( _( "Monsters cannot be placed on water." ) );
-                return;
-            }
-
-            if ( !checkConditionForOccupiedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return Maps::isClearGround( tileToCheck ); } ) ) {
-                _warningMessage.reset( _( "Choose a tile which does not contain any objects." ) );
-                return;
-            }
-
-            setObjectOnTileAsAction( tile, groupType, _editorPanel.getSelectedObjectType() );
-        }
-        else if ( groupType == Maps::ObjectGroup::ADVENTURE_TREASURES ) {
-            const auto & objectInfo = getObjectInfo( groupType, _editorPanel.getSelectedObjectType() );
-
-            if ( !isObjectPlacementAllowed( objectInfo, tilePos ) ) {
-                _warningMessage.reset( _( "Objects cannot be placed outside the map." ) );
-                return;
-            }
-
-            if ( !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
-                _warningMessage.reset( _( "Treasures cannot be placed on water." ) );
-                return;
-            }
-
-            if ( !checkConditionForOccupiedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return Maps::isClearGround( tileToCheck ); } ) ) {
-                _warningMessage.reset( _( "Choose a tile which does not contain any objects." ) );
-                return;
-            }
-
-            setObjectOnTileAsAction( tile, groupType, _editorPanel.getSelectedObjectType() );
-        }
-        else if ( groupType == Maps::ObjectGroup::KINGDOM_HEROES ) {
-            const auto & objectInfo = getObjectInfo( groupType, _editorPanel.getSelectedObjectType() );
-
-            if ( !isObjectPlacementAllowed( objectInfo, tilePos ) ) {
-                _warningMessage.reset( _( "Objects cannot be placed outside the map." ) );
-                return;
-            }
-
-            if ( !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
-                _warningMessage.reset( _( "Heroes cannot be placed on water." ) );
-                return;
-            }
-
-            if ( !checkConditionForOccupiedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return Maps::isClearGround( tileToCheck ); } ) ) {
-                _warningMessage.reset( _( "Choose a tile which does not contain any objects." ) );
-                return;
-            }
+            const auto & objectInfo = Maps::getObjectInfo( groupType, objectType );
 
             // Heroes are limited to 8 per color so all attempts to set more than 8 heroes must be prevented.
             const auto & objects = Maps::getObjectsByGroup( groupType );
@@ -1010,37 +1327,46 @@ namespace Interface
                 return;
             }
 
-            setObjectOnTileAsAction( tile, groupType, _editorPanel.getSelectedObjectType() );
+            if ( !_setObjectOnTileAsAction( tile, groupType, objectType ) ) {
+                return;
+            }
+
+            Heroes * hero = world.GetHeroForHire( Race::IndexToRace( static_cast<int>( objectInfo.metadata[1] ) ) );
+            if ( hero ) {
+                hero->SetCenter( tilePos );
+                hero->SetColor( Color::IndexToColor( static_cast<int>( color ) ) );
+            }
+            else {
+                // How is it possible that the action was successful but no hero?
+                assert( 0 );
+            }
 
             if ( !Maps::updateMapPlayers( _mapFormat ) ) {
                 _warningMessage.reset( _( "Failed to update player information." ) );
             }
         }
         else if ( groupType == Maps::ObjectGroup::ADVENTURE_ARTIFACTS ) {
-            const auto & objectInfo = getObjectInfo( groupType, _editorPanel.getSelectedObjectType() );
-
-            if ( !isObjectPlacementAllowed( objectInfo, tilePos ) ) {
-                _warningMessage.reset( _( "Objects cannot be placed outside the map." ) );
+            if ( !verifyObjectPlacement( tilePos, groupType, objectType, errorMessage ) ) {
+                _warningMessage.reset( std::move( errorMessage ) );
                 return;
             }
 
-            if ( !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
-                _warningMessage.reset( _( "Artifacts cannot be placed on water." ) );
-                return;
+            const auto & objectInfo = Maps::getObjectInfo( groupType, objectType );
+
+            if ( objectInfo.objectType == MP2::OBJ_RANDOM_ULTIMATE_ARTIFACT ) {
+                // First of all, verify that only one Random Ultimate artifact exists on the map.
+                for ( const auto & tileInfo : _mapFormat.tiles ) {
+                    for ( const auto & object : tileInfo.objects ) {
+                        if ( groupType == object.group && static_cast<uint32_t>( objectType ) == object.index ) {
+                            _warningMessage.reset( _( "Only one Random Ultimate Artifact can be placed on the map." ) );
+                            return;
+                        }
+                    }
+                }
             }
-
-            if ( !checkConditionForOccupiedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return Maps::isClearGround( tileToCheck ); } ) ) {
-                _warningMessage.reset( _( "Choose a tile which does not contain any objects." ) );
-                return;
-            }
-
-            const int32_t artifactType = _editorPanel.getSelectedObjectType();
-
-            const auto & artifactInfo = Maps::getObjectsByGroup( Maps::ObjectGroup::ADVENTURE_ARTIFACTS );
-            assert( artifactType >= 0 && artifactType < static_cast<int32_t>( artifactInfo.size() ) );
 
             // For each Spell Scroll artifact we select a spell.
-            if ( artifactInfo[artifactType].objectType == MP2::OBJ_ARTIFACT && artifactInfo[artifactType].metadata[0] == Artifact::SPELL_SCROLL ) {
+            if ( objectInfo.objectType == MP2::OBJ_ARTIFACT && objectInfo.metadata[0] == Artifact::SPELL_SCROLL ) {
                 const int spellId = Dialog::selectSpell( Spell::RANDOM, true ).GetID();
 
                 if ( spellId == Spell::NONE ) {
@@ -1048,112 +1374,23 @@ namespace Interface
                     return;
                 }
 
-                setObjectOnTileAsAction( tile, groupType, _editorPanel.getSelectedObjectType() );
+                if ( !_setObjectOnTileAsAction( tile, groupType, objectType ) ) {
+                    return;
+                }
+
+                assert( !_mapFormat.tiles[tile.GetIndex()].objects.empty() );
+
+                const auto & insertedObject = _mapFormat.tiles[tile.GetIndex()].objects.back();
+                assert( insertedObject.group == groupType && insertedObject.index == static_cast<uint32_t>( objectType ) );
+                assert( _mapFormat.standardMetadata.find( insertedObject.id ) != _mapFormat.standardMetadata.end() );
+
+                _mapFormat.standardMetadata[insertedObject.id].metadata[0] = spellId;
+
                 Maps::setSpellOnTile( tile, spellId );
             }
             else {
-                setObjectOnTileAsAction( tile, groupType, _editorPanel.getSelectedObjectType() );
+                _setObjectOnTileAsAction( tile, groupType, objectType );
             }
-        }
-        else if ( groupType == Maps::ObjectGroup::LANDSCAPE_MOUNTAINS ) {
-            const auto & objectInfo = getObjectInfo( groupType, _editorPanel.getSelectedObjectType() );
-
-            if ( !isObjectPlacementAllowed( objectInfo, tilePos ) ) {
-                _warningMessage.reset( _( "Objects cannot be placed outside the map." ) );
-                return;
-            }
-
-            if ( !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
-                _warningMessage.reset( _( "Mountains cannot be placed on water." ) );
-                return;
-            }
-
-            if ( !checkConditionForOccupiedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return Maps::isClearGround( tileToCheck ); } ) ) {
-                _warningMessage.reset( _( "Choose a tile which does not contain any objects." ) );
-                return;
-            }
-
-            setObjectOnTileAsAction( tile, groupType, _editorPanel.getSelectedObjectType() );
-        }
-        else if ( groupType == Maps::ObjectGroup::LANDSCAPE_ROCKS ) {
-            const auto & objectInfo = getObjectInfo( groupType, _editorPanel.getSelectedObjectType() );
-
-            if ( !isObjectPlacementAllowed( objectInfo, tilePos ) ) {
-                _warningMessage.reset( _( "Objects cannot be placed outside the map." ) );
-                return;
-            }
-
-            if ( !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
-                _warningMessage.reset( _( "Rocks cannot be placed on water." ) );
-                return;
-            }
-
-            if ( !checkConditionForOccupiedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return Maps::isClearGround( tileToCheck ); } ) ) {
-                _warningMessage.reset( _( "Choose a tile which does not contain any objects." ) );
-                return;
-            }
-
-            setObjectOnTileAsAction( tile, groupType, _editorPanel.getSelectedObjectType() );
-        }
-        else if ( groupType == Maps::ObjectGroup::LANDSCAPE_TREES ) {
-            const auto & objectInfo = getObjectInfo( groupType, _editorPanel.getSelectedObjectType() );
-
-            if ( !isObjectPlacementAllowed( objectInfo, tilePos ) ) {
-                _warningMessage.reset( _( "Objects cannot be placed outside the map." ) );
-                return;
-            }
-
-            if ( !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
-                _warningMessage.reset( _( "Trees cannot be placed on water." ) );
-                return;
-            }
-
-            if ( !checkConditionForOccupiedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return Maps::isClearGround( tileToCheck ); } ) ) {
-                _warningMessage.reset( _( "Choose a tile which does not contain any objects." ) );
-                return;
-            }
-
-            setObjectOnTileAsAction( tile, groupType, _editorPanel.getSelectedObjectType() );
-        }
-        else if ( groupType == Maps::ObjectGroup::ADVENTURE_WATER || groupType == Maps::ObjectGroup::LANDSCAPE_WATER ) {
-            const auto & objectInfo = getObjectInfo( groupType, _editorPanel.getSelectedObjectType() );
-
-            if ( !isObjectPlacementAllowed( objectInfo, tilePos ) ) {
-                _warningMessage.reset( _( "Objects cannot be placed outside the map." ) );
-                return;
-            }
-
-            if ( !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return tileToCheck.isWater(); } ) ) {
-                _warningMessage.reset( _( "Ocean object must be placed on water." ) );
-                return;
-            }
-
-            if ( !checkConditionForOccupiedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return Maps::isClearGround( tileToCheck ); } ) ) {
-                _warningMessage.reset( _( "Choose a tile which does not contain any objects." ) );
-                return;
-            }
-
-            setObjectOnTileAsAction( tile, groupType, _editorPanel.getSelectedObjectType() );
-        }
-        else if ( groupType == Maps::ObjectGroup::LANDSCAPE_MISCELLANEOUS ) {
-            const auto & objectInfo = getObjectInfo( groupType, _editorPanel.getSelectedObjectType() );
-
-            if ( !isObjectPlacementAllowed( objectInfo, tilePos ) ) {
-                _warningMessage.reset( _( "Objects cannot be placed outside the map." ) );
-                return;
-            }
-
-            if ( !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
-                _warningMessage.reset( _( "Landscape objects cannot be placed on water." ) );
-                return;
-            }
-
-            if ( !checkConditionForOccupiedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return Maps::isClearGround( tileToCheck ); } ) ) {
-                _warningMessage.reset( _( "Choose a tile which does not contain any objects." ) );
-                return;
-            }
-
-            setObjectOnTileAsAction( tile, groupType, _editorPanel.getSelectedObjectType() );
         }
         else if ( groupType == Maps::ObjectGroup::KINGDOM_TOWNS ) {
             int32_t type = -1;
@@ -1165,50 +1402,19 @@ namespace Interface
                 return;
             }
 
-            if ( tile.isWater() ) {
-                _warningMessage.reset( _( "Towns cannot be placed on water." ) );
+            if ( !verifyObjectPlacement( tilePos, groupType, type, errorMessage ) ) {
+                _warningMessage.reset( std::move( errorMessage ) );
                 return;
             }
 
             const int groundType = Maps::Ground::getGroundByImageIndex( tile.getTerrainImageIndex() );
             const int32_t basementId = fheroes2::getTownBasementId( groundType );
 
-            const auto & townObjectInfo = getObjectInfo( groupType, type );
-            const auto & basementObjectInfo = getObjectInfo( Maps::ObjectGroup::LANDSCAPE_TOWN_BASEMENTS, basementId );
-
-            if ( !isObjectPlacementAllowed( townObjectInfo, tilePos ) ) {
-                _warningMessage.reset( _( "Objects cannot be placed outside the map." ) );
-                return;
-            }
-
-            if ( !isObjectPlacementAllowed( basementObjectInfo, tilePos ) ) {
-                _warningMessage.reset( _( "Objects cannot be placed outside the map." ) );
-                return;
-            }
-
-            if ( !checkConditionForUsedTiles( townObjectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
-                _warningMessage.reset( _( "Towns cannot be placed on water." ) );
-                return;
-            }
-
-            if ( !checkConditionForUsedTiles( basementObjectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
-                _warningMessage.reset( _( "Towns cannot be placed on water." ) );
-                return;
-            }
-
-            if ( !checkConditionForOccupiedTiles( townObjectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return Maps::isClearGround( tileToCheck ); } ) ) {
-                _warningMessage.reset( _( "Choose a tile which does not contain any objects." ) );
-                return;
-            }
-
-            if ( !checkConditionForOccupiedTiles( basementObjectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return Maps::isClearGround( tileToCheck ); } ) ) {
-                _warningMessage.reset( _( "Choose a tile which does not contain any objects." ) );
-                return;
-            }
+            const auto & townObjectInfo = Maps::getObjectInfo( groupType, type );
 
             fheroes2::ActionCreator action( _historyManager, _mapFormat );
 
-            if ( !setObjectOnTile( tile, Maps::ObjectGroup::LANDSCAPE_TOWN_BASEMENTS, basementId ) ) {
+            if ( !_setObjectOnTile( tile, Maps::ObjectGroup::LANDSCAPE_TOWN_BASEMENTS, basementId ) ) {
                 return;
             }
 
@@ -1220,23 +1426,30 @@ namespace Interface
 
             Maps::setLastObjectUID( objectId );
 
-            if ( !setObjectOnTile( tile, groupType, type ) ) {
+            if ( !_setObjectOnTile( tile, groupType, type ) ) {
                 return;
+            }
+
+            // By default use random (default) army for the neutral race town/castle.
+            if ( Color::IndexToColor( color ) == Color::NONE ) {
+                Maps::setDefaultCastleDefenderArmy( _mapFormat.castleMetadata[Maps::getLastObjectUID()] );
             }
 
             // Add flags.
             assert( tile.GetIndex() > 0 && tile.GetIndex() < world.w() * world.h() - 1 );
             Maps::setLastObjectUID( objectId );
 
-            if ( !setObjectOnTile( world.GetTiles( tile.GetIndex() - 1 ), Maps::ObjectGroup::LANDSCAPE_FLAGS, color * 2 ) ) {
+            if ( !_setObjectOnTile( world.GetTiles( tile.GetIndex() - 1 ), Maps::ObjectGroup::LANDSCAPE_FLAGS, color * 2 ) ) {
                 return;
             }
 
             Maps::setLastObjectUID( objectId );
 
-            if ( !setObjectOnTile( world.GetTiles( tile.GetIndex() + 1 ), Maps::ObjectGroup::LANDSCAPE_FLAGS, color * 2 + 1 ) ) {
+            if ( !_setObjectOnTile( world.GetTiles( tile.GetIndex() + 1 ), Maps::ObjectGroup::LANDSCAPE_FLAGS, color * 2 + 1 ) ) {
                 return;
             }
+
+            world.addCastle( tile.GetIndex(), Race::IndexToRace( static_cast<int>( townObjectInfo.metadata[0] ) ), Color::IndexToColor( color ) );
 
             action.commit();
 
@@ -1255,91 +1468,27 @@ namespace Interface
                 return;
             }
 
-            const auto & objectInfo = getObjectInfo( groupType, type );
-
-            if ( !isObjectPlacementAllowed( objectInfo, tilePos ) ) {
-                _warningMessage.reset( _( "Objects cannot be placed outside the map." ) );
-                return;
-            }
-
-            if ( !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
-                _warningMessage.reset( _( "Mines cannot be placed on water." ) );
-                return;
-            }
-
-            if ( !checkConditionForOccupiedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return Maps::isClearGround( tileToCheck ); } ) ) {
-                _warningMessage.reset( _( "Choose a tile which does not contain any objects." ) );
+            if ( !verifyObjectPlacement( tilePos, groupType, type, errorMessage ) ) {
+                _warningMessage.reset( std::move( errorMessage ) );
                 return;
             }
 
             fheroes2::ActionCreator action( _historyManager, _mapFormat );
 
-            if ( !setObjectOnTile( tile, groupType, type ) ) {
+            if ( !_setObjectOnTile( tile, groupType, type ) ) {
                 return;
             }
 
             // TODO: Place owner flag according to the color state.
             action.commit();
         }
-        else if ( groupType == Maps::ObjectGroup::ADVENTURE_DWELLINGS ) {
-            const auto & objectInfo = getObjectInfo( groupType, _editorPanel.getSelectedObjectType() );
-
-            if ( !isObjectPlacementAllowed( objectInfo, tilePos ) ) {
-                _warningMessage.reset( _( "Objects cannot be placed outside the map." ) );
+        else {
+            if ( !verifyObjectPlacement( tilePos, groupType, objectType, errorMessage ) ) {
+                _warningMessage.reset( std::move( errorMessage ) );
                 return;
             }
 
-            if ( !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
-                _warningMessage.reset( _( "Dwellings cannot be placed on water." ) );
-                return;
-            }
-
-            if ( !checkConditionForOccupiedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return Maps::isClearGround( tileToCheck ); } ) ) {
-                _warningMessage.reset( _( "Choose a tile which does not contain any objects." ) );
-                return;
-            }
-
-            setObjectOnTileAsAction( tile, groupType, _editorPanel.getSelectedObjectType() );
-        }
-        else if ( groupType == Maps::ObjectGroup::ADVENTURE_POWER_UPS ) {
-            const auto & objectInfo = getObjectInfo( groupType, _editorPanel.getSelectedObjectType() );
-
-            if ( !isObjectPlacementAllowed( objectInfo, tilePos ) ) {
-                _warningMessage.reset( _( "Objects cannot be placed outside the map." ) );
-                return;
-            }
-
-            if ( !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
-                _warningMessage.reset( _( "Power-ups cannot be placed on water." ) );
-                return;
-            }
-
-            if ( !checkConditionForOccupiedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return Maps::isClearGround( tileToCheck ); } ) ) {
-                _warningMessage.reset( _( "Choose a tile which does not contain any objects." ) );
-                return;
-            }
-
-            setObjectOnTileAsAction( tile, groupType, _editorPanel.getSelectedObjectType() );
-        }
-        else if ( groupType == Maps::ObjectGroup::ADVENTURE_MISCELLANEOUS ) {
-            const auto & objectInfo = getObjectInfo( groupType, _editorPanel.getSelectedObjectType() );
-
-            if ( !isObjectPlacementAllowed( objectInfo, tilePos ) ) {
-                _warningMessage.reset( _( "Objects cannot be placed outside the map." ) );
-                return;
-            }
-
-            if ( !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
-                _warningMessage.reset( _( "Adventure objects cannot be placed on water." ) );
-                return;
-            }
-
-            if ( !checkConditionForOccupiedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return Maps::isClearGround( tileToCheck ); } ) ) {
-                _warningMessage.reset( _( "Choose a tile which does not contain any objects." ) );
-                return;
-            }
-
-            setObjectOnTileAsAction( tile, groupType, _editorPanel.getSelectedObjectType() );
+            _setObjectOnTileAsAction( tile, groupType, objectType );
         }
     }
 
@@ -1363,9 +1512,9 @@ namespace Interface
         }
     }
 
-    bool EditorInterface::setObjectOnTile( Maps::Tiles & tile, const Maps::ObjectGroup groupType, const int32_t objectIndex )
+    bool EditorInterface::_setObjectOnTile( Maps::Tiles & tile, const Maps::ObjectGroup groupType, const int32_t objectIndex )
     {
-        const auto & objectInfo = getObjectInfo( groupType, objectIndex );
+        const auto & objectInfo = Maps::getObjectInfo( groupType, objectIndex );
         if ( objectInfo.empty() ) {
             // Check your logic as you are trying to insert an empty object!
             assert( 0 );
@@ -1383,13 +1532,16 @@ namespace Interface
         return true;
     }
 
-    void EditorInterface::setObjectOnTileAsAction( Maps::Tiles & tile, const Maps::ObjectGroup groupType, const int32_t objectIndex )
+    bool EditorInterface::_setObjectOnTileAsAction( Maps::Tiles & tile, const Maps::ObjectGroup groupType, const int32_t objectIndex )
     {
         fheroes2::ActionCreator action( _historyManager, _mapFormat );
 
-        if ( setObjectOnTile( tile, groupType, objectIndex ) ) {
+        if ( _setObjectOnTile( tile, groupType, objectIndex ) ) {
             action.commit();
+            return true;
         }
+
+        return false;
     }
 
     bool EditorInterface::loadMap( const std::string & filePath )
@@ -1404,6 +1556,132 @@ namespace Interface
             return false;
         }
 
+        updateWorldCastlesHeroes( _mapFormat );
+
+        _loadedFileName = System::truncateFileExtensionAndPath( filePath );
+
         return true;
+    }
+
+    void EditorInterface::saveMapToFile()
+    {
+        if ( !Maps::updateMapPlayers( _mapFormat ) ) {
+            fheroes2::showStandardTextMessage( _( "Warning!" ), _( "The map is corrupted." ), Dialog::OK );
+            return;
+        }
+
+        const std::string dataPath = System::GetDataDirectory( "fheroes2" );
+        if ( dataPath.empty() ) {
+            fheroes2::showStandardTextMessage( _( "Warning!" ), _( "Unable to locate data directory to save the map." ), Dialog::OK );
+            return;
+        }
+
+        const std::string mapDirectory = System::concatPath( dataPath, "maps" );
+
+        if ( !System::IsDirectory( mapDirectory ) && !System::MakeDirectory( mapDirectory ) ) {
+            fheroes2::showStandardTextMessage( _( "Warning!" ), _( "Unable to create a directory to save the map." ), Dialog::OK );
+            return;
+        }
+
+        std::string fileName = _loadedFileName;
+        std::string mapName = _mapFormat.name;
+        std::string fullPath;
+
+        while ( true ) {
+            if ( !Editor::mapSaveSelectFile( fileName, mapName ) ) {
+                return;
+            }
+
+            fullPath = System::concatPath( mapDirectory, fileName + ".fh2m" );
+
+            if ( !System::IsFile( fullPath )
+                 || fheroes2::showStandardTextMessage( "", _( "Are you sure you want to overwrite the existing map?" ), Dialog::YES | Dialog::NO ) == Dialog::YES ) {
+                break;
+            }
+        }
+
+        _mapFormat.name = std::move( mapName );
+        _loadedFileName = std::move( fileName );
+
+        if ( Maps::Map_Format::saveMap( fullPath, _mapFormat ) ) {
+            // On some OSes like Windows, the path may contain '\' symbols. This symbol doesn't exist in the resources.
+            // To avoid this we have to replace all '\' symbols with '/' symbols.
+            StringReplace( fullPath, "\\", "/" );
+
+            _warningMessage.reset( _( "Map saved to: " ) + fullPath );
+
+            return;
+        }
+
+        fheroes2::showStandardTextMessage( _( "Warning!" ), _( "Failed to save the map." ), Dialog::OK );
+    }
+
+    void EditorInterface::openMapSpecificationsDialog()
+    {
+        fheroes2::ActionCreator action( _historyManager, _mapFormat );
+
+        if ( Editor::mapSpecificationsDialog( _mapFormat ) ) {
+            action.commit();
+        }
+    }
+
+    void EditorInterface::_validateObjectsOnTerrainUpdate()
+    {
+        std::string errorMessage;
+
+        std::set<uint32_t> uids;
+
+        for ( size_t i = 0; i < _mapFormat.tiles.size(); ++i ) {
+            const fheroes2::Point pos{ static_cast<int32_t>( i ) % world.w(), static_cast<int32_t>( i ) / world.w() };
+
+            bool removeRoadAndStream = false;
+
+            for ( const auto & object : _mapFormat.tiles[i].objects ) {
+                if ( object.group == Maps::ObjectGroup::LANDSCAPE_FLAGS || object.group == Maps::ObjectGroup::LANDSCAPE_TOWN_BASEMENTS ) {
+                    // These objects belong to the main objects and will be checked with them.
+                    continue;
+                }
+
+                if ( object.group == Maps::ObjectGroup::ROADS || object.group == Maps::ObjectGroup::STREAMS ) {
+                    if ( world.GetTiles( static_cast<int32_t>( i ) ).isWater() ) {
+                        removeRoadAndStream = true;
+                    }
+
+                    continue;
+                }
+
+                if ( !verifyTerrainPlacement( pos, object.group, static_cast<int32_t>( object.index ), errorMessage ) ) {
+                    uids.emplace( object.id );
+                }
+            }
+
+            if ( removeRoadAndStream ) {
+                auto & worldTile = world.GetTiles( static_cast<int32_t>( i ) );
+
+                Maps::updateRoadOnTile( worldTile, false );
+                Maps::updateStreamOnTile( worldTile, false );
+            }
+        }
+
+        if ( !uids.empty() ) {
+            std::set<Maps::ObjectGroup> groups;
+            for ( int32_t i = 0; i < static_cast<int32_t>( Maps::ObjectGroup::GROUP_COUNT ); ++i ) {
+                groups.emplace( static_cast<Maps::ObjectGroup>( i ) );
+            }
+
+            removeObjects( _mapFormat, uids, groups );
+        }
+
+        // Run through each town and castle and update its terrain.
+        for ( size_t i = 0; i < _mapFormat.tiles.size(); ++i ) {
+            for ( auto & object : _mapFormat.tiles[i].objects ) {
+                if ( object.group == Maps::ObjectGroup::LANDSCAPE_TOWN_BASEMENTS ) {
+                    const auto & worldTile = world.GetTiles( static_cast<int32_t>( i ) );
+                    const int groundType = Maps::Ground::getGroundByImageIndex( worldTile.getTerrainImageIndex() );
+                    const int32_t basementId = fheroes2::getTownBasementId( groundType );
+                    object.index = static_cast<uint32_t>( basementId );
+                }
+            }
+        }
     }
 }

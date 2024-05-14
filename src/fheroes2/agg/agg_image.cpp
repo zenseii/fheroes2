@@ -40,6 +40,7 @@
 #include "agg_file.h"
 #include "battle_cell.h"
 #include "exception.h"
+#include "game_language.h"
 #include "h2d.h"
 #include "icn.h"
 #include "image.h"
@@ -160,6 +161,8 @@ namespace
                                                 ICN::BUTTON_CASTLE_EVIL,
                                                 ICN::BUTTON_TOWN_GOOD,
                                                 ICN::BUTTON_TOWN_EVIL,
+                                                ICN::BUTTON_RESTRICT_GOOD,
+                                                ICN::BUTTON_RESTRICT_EVIL,
                                                 ICN::BUTTON_GUILDWELL_EXIT,
                                                 ICN::GOOD_CAMPAIGN_BUTTONS,
                                                 ICN::EVIL_CAMPAIGN_BUTTONS,
@@ -435,7 +438,7 @@ namespace
         return isReleasedState ? fheroes2::GetColorId( 180, 180, 180 ) : fheroes2::GetColorId( 144, 144, 144 );
     }
 
-    const char * getSupportedText( const char * text, const fheroes2::FontType & font )
+    const char * getSupportedText( const char * text, const fheroes2::FontType font )
     {
         const char * translatedText = _( text );
         return fheroes2::isFontAvailable( translatedText, font ) ? translatedText : text;
@@ -1800,6 +1803,16 @@ namespace fheroes2
 
                 break;
             }
+            case ICN::BUTTON_RESTRICT_GOOD:
+            case ICN::BUTTON_RESTRICT_EVIL: {
+                _icnVsSprite[id].resize( 2 );
+
+                getTextAdaptedButton( _icnVsSprite[id][0], _icnVsSprite[id][1], gettext_noop( "RESTRICT" ),
+                                      id == ICN::BUTTON_RESTRICT_EVIL ? ICN::EMPTY_EVIL_BUTTON : ICN::EMPTY_GOOD_BUTTON,
+                                      id == ICN::BUTTON_RESTRICT_EVIL ? ICN::STONEBAK_EVIL : ICN::STONEBAK );
+
+                break;
+            }
             case ICN::UNIFORM_EVIL_MAX_BUTTON:
             case ICN::UNIFORM_EVIL_MIN_BUTTON:
             case ICN::UNIFORM_GOOD_MAX_BUTTON:
@@ -2654,6 +2667,8 @@ namespace fheroes2
             case ICN::BUTTON_CASTLE_EVIL:
             case ICN::BUTTON_TOWN_GOOD:
             case ICN::BUTTON_TOWN_EVIL:
+            case ICN::BUTTON_RESTRICT_GOOD:
+            case ICN::BUTTON_RESTRICT_EVIL:
             case ICN::BUTTON_GUILDWELL_EXIT:
             case ICN::GOOD_CAMPAIGN_BUTTONS:
             case ICN::EVIL_CAMPAIGN_BUTTONS:
@@ -3170,6 +3185,25 @@ namespace fheroes2
                         // Fix incorrect pixel at position 260x305.
                         original.image()[195460] = 31;
                     }
+
+                    // Since we cannot access game settings from here we are checking an existence
+                    // of one of POL resources as an indicator for this version.
+                    if ( !::AGG::getDataFromAggFile( ICN::GetString( ICN::X_TRACK1 ) ).empty() ) {
+                        Sprite editorIcon;
+                        h2d::readImage( "main_menu_editor_icon.image", editorIcon );
+
+                        Blit( editorIcon, 0, 0, original, editorIcon.x(), editorIcon.y(), editorIcon.width(), editorIcon.height() );
+                    }
+                }
+                return true;
+            case ICN::BTNSHNGL:
+                LoadOriginalICN( id );
+                if ( _icnVsSprite[id].size() == 20 ) {
+                    _icnVsSprite[id].resize( 23 );
+
+                    h2d::readImage( "main_menu_editor_released_button.image", _icnVsSprite[id][20] );
+                    h2d::readImage( "main_menu_editor_highlighted_button.image", _icnVsSprite[id][21] );
+                    h2d::readImage( "main_menu_editor_pressed_button.image", _icnVsSprite[id][22] );
                 }
                 return true;
             case ICN::TOWNBKG3:
@@ -3651,28 +3685,54 @@ namespace fheroes2
             }
             case ICN::NGEXTRA: {
                 LoadOriginalICN( id );
+
                 std::vector<Sprite> & images = _icnVsSprite[id];
 
-                if ( images.size() >= 34 ) {
-                    // Fix extra column at the end of AI controlled player.
-                    for ( size_t i = 27; i < 34; ++i ) {
-                        if ( images[i].width() == 62 && images[i].height() == 58 ) {
-                            Copy( images[i], 58, 44, images[i], 59, 44, 1, 11 );
-                        }
-                    }
+                if ( images.size() != 82 ) {
+                    // The game assets are wrong, skip modifications.
+                    return true;
+                }
 
-                    for ( size_t i = 39; i < 45; ++i ) {
-                        if ( images[i].width() == 62 && images[i].height() == 58 ) {
-                            Copy( images[i], 58, 44, images[i], 59, 44, 1, 11 );
-                        }
+                // Fix extra column at the end of AI controlled player.
+                for ( size_t i = 27; i < 34; ++i ) {
+                    if ( images[i].width() == 62 && images[i].height() == 58 ) {
+                        Copy( images[i], 58, 44, images[i], 59, 44, 1, 11 );
                     }
                 }
 
-                if ( images.size() >= 70 ) {
-                    // fix transparent corners on pressed OKAY and CANCEL buttons
-                    CopyTransformLayer( images[66], images[67] );
-                    CopyTransformLayer( images[68], images[69] );
+                for ( size_t i = 39; i < 45; ++i ) {
+                    if ( images[i].width() == 62 && images[i].height() == 58 ) {
+                        Copy( images[i], 58, 44, images[i], 59, 44, 1, 11 );
+                    }
                 }
+
+                // fix transparent corners on pressed OKAY and CANCEL buttons
+                CopyTransformLayer( images[66], images[67] );
+                CopyTransformLayer( images[68], images[69] );
+
+                // Add 6 special icons for the Editor.
+                images.resize( 82 + 6 );
+
+                for ( size_t i = 0; i < 6; ++i ) {
+                    if ( images[i + 3].width() != 62 || images[i + 3].height() != 45 ) {
+                        continue;
+                    }
+
+                    Sprite & humonOrAiImage = images[i + 82];
+                    Copy( images[i + 3], humonOrAiImage );
+
+                    // Fill the icon with the player's color.
+                    Fill( humonOrAiImage, 15, 8, 32, 30, images[i + 82].image()[252] );
+
+                    // Make a temporary image to cut human icon's background.
+                    Image temp( 33, 35 );
+                    Copy( images[i + 9], 15, 5, temp, 0, 0, 33, 35 );
+                    ReplaceColorIdByTransformId( temp, images[i + 82].image()[252], 1U );
+
+                    Copy( images[i + 3], 15, 8, humonOrAiImage, 27, 8, 31, 30 );
+                    Blit( temp, humonOrAiImage, 4, 5 );
+                }
+
                 return true;
             }
             case ICN::DIFFICULTY_ICON_EASY:
@@ -4634,7 +4694,7 @@ namespace fheroes2
                     }
                 }
 
-                // An extra image for the neutral color.
+                // An extra image for the neutral color (for Editor).
                 if ( _icnVsSprite[id].size() == 7 ) {
                     Sprite neutralShield( GetICN( ICN::SPELLS, 15 ) );
                     if ( neutralShield.width() < 2 || neutralShield.height() < 2 ) {
