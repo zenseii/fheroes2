@@ -208,38 +208,6 @@ namespace Interface
     EditorPanel::EditorPanel( EditorInterface & interface_ )
         : _interface( interface_ )
     {
-        uint32_t icnIndex = 0;
-
-        const int icnId = Settings::Get().isEvilInterfaceEnabled() ? ICN::EDITBTNS_EVIL : ICN::EDITBTNS;
-
-        // Editor Instruments go in this order in ICN: TERRAIN, LANDSCAPE_OBJECTS, DETAIL, ADVENTURE_OBJECTS, KINGDOM_OBJECTS, MONSTERS, STREAM, ROAD, ERASE.
-        for ( size_t i = 0; i < Instrument::INSTRUMENTS_COUNT; ++i ) {
-            if ( i == Instrument::ADVENTURE_OBJECTS ) {
-                // Second row buttons ICN index starts from 53.
-                icnIndex = 35;
-            }
-            else if ( i == Instrument::STREAM ) {
-                // Third row buttons ICN index starts from 53.
-                icnIndex = 6;
-            }
-            _instrumentButtons[i].setICNInfo( icnId, icnIndex, icnIndex + 1 );
-            icnIndex += 2;
-        }
-
-        _buttonMagnify.setICNInfo( icnId, 12, 13 );
-        _buttonUndo.setICNInfo( icnId, 14, 15 );
-        _buttonNew.setICNInfo( icnId, 16, 17 );
-        _buttonSpecs.setICNInfo( icnId, 18, 19 );
-        _buttonFile.setICNInfo( icnId, 20, 21 );
-        _buttonSystem.setICNInfo( icnId, 22, 23 );
-
-        // Brush Size buttons go in this order in ICN: SMALL (1x), MEDIUM (2x), LARGE (4x), AREA.
-        icnIndex = 24;
-        for ( fheroes2::Button & button : _brushSizeButtons ) {
-            button.setICNInfo( icnId, icnIndex, icnIndex + 1 );
-            icnIndex += 2;
-        }
-
         _instrumentButtons[_selectedInstrument].press();
         _brushSizeButtons[_selectedBrushSize].press();
 
@@ -351,6 +319,38 @@ namespace Interface
         const int32_t instrumentPanelHeight = display.height() - displayY - fheroes2::AGG::GetICN( ICN::EDITBTNS, 0 ).height() * 5 - bottomBorderOffset;
 
         _instrumentPanelBackground = makeInstrumentPanelBackground( instrumentPanelWidth, instrumentPanelHeight );
+
+        uint32_t icnIndex = 0;
+
+        const int icnId = Settings::Get().isEvilInterfaceEnabled() ? ICN::EDITBTNS_EVIL : ICN::EDITBTNS;
+
+        // Editor Instruments go in this order in ICN: TERRAIN, LANDSCAPE_OBJECTS, DETAIL, ADVENTURE_OBJECTS, KINGDOM_OBJECTS, MONSTERS, STREAM, ROAD, ERASE.
+        for ( size_t i = 0; i < Instrument::INSTRUMENTS_COUNT; ++i ) {
+            if ( i == Instrument::ADVENTURE_OBJECTS ) {
+                // Second row buttons ICN index starts from 53.
+                icnIndex = 35;
+            }
+            else if ( i == Instrument::STREAM ) {
+                // Third row buttons ICN index starts from 53.
+                icnIndex = 6;
+            }
+            _instrumentButtons[i].setICNInfo( icnId, icnIndex, icnIndex + 1 );
+            icnIndex += 2;
+        }
+
+        _buttonMagnify.setICNInfo( icnId, 12, 13 );
+        _buttonUndo.setICNInfo( icnId, 14, 15 );
+        _buttonNew.setICNInfo( icnId, 16, 17 );
+        _buttonSpecs.setICNInfo( icnId, 18, 19 );
+        _buttonFile.setICNInfo( icnId, 20, 21 );
+        _buttonSystem.setICNInfo( icnId, 22, 23 );
+
+        // Brush Size buttons go in this order in ICN: SMALL (1x), MEDIUM (2x), LARGE (4x), AREA.
+        icnIndex = 24;
+        for ( fheroes2::Button & button : _brushSizeButtons ) {
+            button.setICNInfo( icnId, icnIndex, icnIndex + 1 );
+            icnIndex += 2;
+        }
 
         for ( size_t i = 0; i < _instrumentButtonsRect.size(); ++i ) {
             _instrumentButtons[i].setPosition( offsetX, displayY );
@@ -824,7 +824,7 @@ namespace Interface
                     [type = getSelectedObjectType(), group = getSelectedObjectGroup()]( const int32_t /*tileIndex*/ ) { setCustomCursor( group, type ); } );
                 return;
             case AdventureObjectBrush::MINES:
-                _interface.setCursorUpdater( [this]( const int32_t tileIndex ) {
+                _interface.setCursorUpdater( [this]( const int32_t /*tileIndex*/ ) {
                     int32_t type = -1;
                     int32_t color = -1;
                     getMineObjectProperties( type, color );
@@ -832,13 +832,6 @@ namespace Interface
                     if ( type == -1 || color == -1 ) {
                         // The object type is not set. We show the POINTER cursor for this case.
                         Cursor::Get().SetThemes( Cursor::POINTER );
-                        return;
-                    }
-
-                    if ( world.GetTiles( tileIndex ).GetGround() == Maps::Ground::WATER ) {
-                        // Mines cannot be placed on water.
-                        const fheroes2::Sprite & image = fheroes2::AGG::GetICN( ICN::SPELLS, 0 );
-                        Cursor::Get().setCustomImage( image, { -image.width() / 2, -image.height() / 2 } );
                         return;
                     }
 
@@ -1222,7 +1215,7 @@ namespace Interface
                                                Dialog::ZERO );
         }
         else if ( le.MousePressRight( _instrumentButtonsRect[Instrument::DETAIL] ) ) {
-            fheroes2::showStandardTextMessage( _( "Detail Mode" ), _( "Used for special editing of monsters, heroes and towns." ), Dialog::ZERO );
+            fheroes2::showStandardTextMessage( _( "Detail Mode" ), _( "Used for special editing of action objects." ), Dialog::ZERO );
         }
         else if ( le.MousePressRight( _instrumentButtonsRect[Instrument::ADVENTURE_OBJECTS] ) ) {
             fheroes2::showStandardTextMessage( _( "Adventure Objects Mode" ),
@@ -1250,7 +1243,9 @@ namespace Interface
             fheroes2::showStandardTextMessage( _( "Undo" ), _( "Undo your last action." ), Dialog::ZERO );
         }
         else if ( le.MousePressRight( _rectNew ) ) {
-            fheroes2::showStandardTextMessage( _( "New Map" ), _( "Create a new map either from scratch or using the random map generator." ), Dialog::ZERO );
+            // TODO: update this text once random map generator is ready.
+            //       The original text should be "Create a new map, either from scratch or using the random map generator."
+            fheroes2::showStandardTextMessage( _( "New Map" ), _( "Create a new map from scratch." ), Dialog::ZERO );
         }
         else if ( le.MousePressRight( _rectSpecs ) ) {
             fheroes2::showStandardTextMessage( _( "Specifications" ), _( "Edit map title, description, and other general information." ), Dialog::ZERO );

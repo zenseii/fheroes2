@@ -1,6 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2021 - 2024                                             *
+ *   Copyright (C) 2024                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,11 +19,14 @@
  ***************************************************************************/
 
 #pragma once
+#include <cstdint>
 
-#define MAJOR_VERSION 1
-#define MINOR_VERSION 1
-#define INTERMEDIATE_VERSION 0
+namespace Maps::Map_Format
+{
+    struct AdventureMapEventMetadata;
+}
 
-#ifndef BUILD_VERSION
-#define BUILD_VERSION 0
-#endif
+namespace Editor
+{
+    bool eventDetailsDialog( Maps::Map_Format::AdventureMapEventMetadata & eventMetadata, const uint8_t humanPlayerColors, const uint8_t computerPlayerColors );
+}
