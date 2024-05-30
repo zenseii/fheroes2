@@ -2757,9 +2757,9 @@ namespace
 
         // Random artifacts.
         addArtifactObject( Artifact::UNKNOWN, MP2::OBJ_RANDOM_ARTIFACT, 163U );
-        addArtifactObject( Artifact::UNKNOWN, MP2::OBJ_RANDOM_ARTIFACT_MINOR, 167U );
-        addArtifactObject( Artifact::UNKNOWN, MP2::OBJ_RANDOM_ARTIFACT_MAJOR, 169U );
-        addArtifactObject( Artifact::UNKNOWN, MP2::OBJ_RANDOM_ARTIFACT_TREASURE, 171U );
+        addArtifactObject( Artifact::UNKNOWN, MP2::OBJ_RANDOM_ARTIFACT_TREASURE, 167U );
+        addArtifactObject( Artifact::UNKNOWN, MP2::OBJ_RANDOM_ARTIFACT_MINOR, 169U );
+        addArtifactObject( Artifact::UNKNOWN, MP2::OBJ_RANDOM_ARTIFACT_MAJOR, 171U );
 
         // The random Ultimate artifact does not have a shadow in original assets.
         // We temporary use an empty shadow image from the Spell Scroll artifact for this case.
@@ -4330,6 +4330,7 @@ namespace
             object.groundLevelParts.emplace_back( MP2::OBJ_ICN_TYPE_OBJNDSRT, 86U, fheroes2::Point{ -1, 0 }, MP2::OBJ_NONE, Maps::SHADOW_LAYER );
 
             object.topLevelParts.emplace_back( MP2::OBJ_ICN_TYPE_OBJNDSRT, 85U, fheroes2::Point{ 0, -1 }, MP2::OBJ_NON_ACTION_SPHINX );
+            object.topLevelParts.emplace_back( MP2::OBJ_ICN_TYPE_OBJNDSRT, 131U, fheroes2::Point{ 1, -1 }, MP2::OBJ_NON_ACTION_SPHINX );
 
             objects.emplace_back( std::move( object ) );
         }
