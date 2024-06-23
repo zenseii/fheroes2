@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-20 15:03+0000\n"
+"POT-Creation-Date: 2024-06-23 11:28+0000\n"
 "PO-Revision-Date: 2022-09-23 16:01+0200\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: \n"
@@ -275,6 +275,9 @@ msgid ""
 "A\n"
 "R\n"
 "D"
+msgstr ""
+
+msgid "RUMORS"
 msgstr ""
 
 msgid "Warrior"
@@ -3280,10 +3283,6 @@ msgstr ""
 msgid "Accept the choice made."
 msgstr "Ухваліць выбар."
 
-#, fuzzy
-msgid "%{color} %{race} hero"
-msgstr "%{color} гулец"
-
 msgid "Terrain object"
 msgstr ""
 
@@ -3302,6 +3301,30 @@ msgstr ""
 msgid "Select Hero:"
 msgstr ""
 
+msgid "race|Random"
+msgstr ""
+"Выпад-\n"
+"ковы"
+
+#, fuzzy
+msgid "Click to start placing the selected hero."
+msgstr "Пстрыкні, каб ухваліць абранае раздзяленне."
+
+#, fuzzy
+msgid "%{color} %{race}"
+msgstr "%{color} гулец"
+
+msgid "You will place"
+msgstr ""
+
+#, fuzzy
+msgid "Click to select this class."
+msgstr "Пстрыкніце сюды, каб выбраць сцэнар"
+
+#, fuzzy
+msgid "Click to select this color."
+msgstr "Пстрыкніце сюды, каб выбраць сцэнар"
+
 #, fuzzy
 msgid "Select Treasure:"
 msgstr "Мова"
@@ -3316,11 +3339,6 @@ msgstr "Наладкі замка"
 
 msgid "doubleLinedRace|Neutral"
 msgstr ""
-
-msgid "race|Random"
-msgstr ""
-"Выпад-\n"
-"ковы"
 
 #, fuzzy
 msgid "Click to start placing the selected castle/town."
@@ -3340,17 +3358,6 @@ msgstr "%{color} гулец"
 
 msgid "race|Neutral"
 msgstr ""
-
-msgid "You will place"
-msgstr ""
-
-#, fuzzy
-msgid "Click to select this class."
-msgstr "Пстрыкніце сюды, каб выбраць сцэнар"
-
-#, fuzzy
-msgid "Click to select this color."
-msgstr "Пстрыкніце сюды, каб выбраць сцэнар"
 
 #, fuzzy
 msgid "Select Dwelling:"
@@ -3511,15 +3518,16 @@ msgstr ""
 msgid "Size Icon"
 msgstr "Іконка памеру"
 
+msgid "Map Type"
+msgstr "Тып мапы"
+
+#, fuzzy
 msgid ""
-"Indicates whether the map is made for \"The Succession Wars\" or \"The Price "
-"of Loyalty\" version of the game."
+"Indicates whether the map is made for \"The Succession Wars\", \"The Price "
+"of Loyalty\" or \"Resurrection\" version of the game."
 msgstr ""
 "Паказвае, для якой версіі гульні зроблена мапа: для \"The Succession Wars\" "
 "альбо \"The Price of Loyalty\""
-
-msgid "Map Type"
-msgstr "Тып мапы"
 
 msgid "Selected Name"
 msgstr "Назва мапы"
@@ -3670,6 +3678,9 @@ msgstr ""
 msgid "Random Castle Name"
 msgstr ""
 
+msgid "Random Town Name"
+msgstr ""
+
 #, fuzzy
 msgid "Allow Castle build"
 msgstr "Воблачны замак"
@@ -3684,6 +3695,10 @@ msgstr ""
 #, fuzzy
 msgid "Castle Army"
 msgstr "Замак"
+
+#, fuzzy
+msgid "Town Army"
+msgstr "Горад"
 
 msgid "Click to change the Castle name. Right-click to reset to default."
 msgstr ""
@@ -4211,6 +4226,13 @@ msgid "Click to accept the changes made."
 msgstr "Пстрыкніце сюды, каб выбраць сцэнар"
 
 #, fuzzy
+msgid "Click to edit custom rumors."
+msgstr "Назва абранай мапы."
+
+msgid "Rumors"
+msgstr ""
+
+#, fuzzy
 msgid "Click to change your map name."
 msgstr "Пстрыкніце сюды, каб выбраць сцэнар"
 
@@ -4249,6 +4271,37 @@ msgid "Toggle animation of the objects."
 msgstr ""
 
 msgid "Toggle display of objects' passability."
+msgstr ""
+
+msgid "Rumor:"
+msgstr ""
+
+msgid "Rumor"
+msgstr ""
+
+msgid "This rumor already exists in the list."
+msgstr ""
+
+#, fuzzy
+msgid "Click to save the rumors."
+msgstr "Назва абранай мапы."
+
+msgid "Add Rumor"
+msgstr ""
+
+msgid "Add an additional rumor."
+msgstr ""
+
+msgid "Edit Rumor"
+msgstr ""
+
+msgid "Edit an existing rumor."
+msgstr ""
+
+msgid "Delete Rumor"
+msgstr ""
+
+msgid "Delete an existing rumor."
 msgstr ""
 
 msgid ""

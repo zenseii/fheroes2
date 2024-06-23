@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-22 03:46+0000\n"
+"POT-Creation-Date: 2024-06-23 11:28+0000\n"
 "PO-Revision-Date: 2023-09-04 21:55+0200\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
@@ -312,6 +312,9 @@ msgstr ""
 "M\n"
 "Á\n"
 "L"
+
+msgid "RUMORS"
+msgstr ""
 
 msgid "Warrior"
 msgstr "Harcos"
@@ -3456,9 +3459,6 @@ msgstr "Fájl betöltése:"
 msgid "Accept the choice made."
 msgstr "A választás elfogadása."
 
-msgid "%{color} %{race} hero"
-msgstr "%{color} %{race} hős"
-
 msgid "Terrain object"
 msgstr "Szárazföldi objektum"
 
@@ -3477,6 +3477,26 @@ msgstr "Lény kiválasztása:"
 msgid "Select Hero:"
 msgstr "Hős kiválasztása:"
 
+msgid "race|Random"
+msgstr "Véletlen"
+
+#, fuzzy
+msgid "Click to start placing the selected hero."
+msgstr "Kattints a kiválasztott vár/város elhelyezéséhez."
+
+#, fuzzy
+msgid "%{color} %{race}"
+msgstr "%{color} %{race} hős"
+
+msgid "You will place"
+msgstr "El fogod helyezni"
+
+msgid "Click to select this class."
+msgstr "Kattints az osztály kiválasztásához."
+
+msgid "Click to select this color."
+msgstr "Kattints a szín kiválasztásához."
+
 msgid "Select Treasure:"
 msgstr "Kincs kiválasztása:"
 
@@ -3488,9 +3508,6 @@ msgstr "Vár/város elhelyezés"
 
 msgid "doubleLinedRace|Neutral"
 msgstr "Semleges"
-
-msgid "race|Random"
-msgstr "Véletlen"
 
 msgid "Click to start placing the selected castle/town."
 msgstr "Kattints a kiválasztott vár/város elhelyezéséhez."
@@ -3506,15 +3523,6 @@ msgstr "%{color} %{race} %{townOrCastle}"
 
 msgid "race|Neutral"
 msgstr "Semleges"
-
-msgid "You will place"
-msgstr "El fogod helyezni"
-
-msgid "Click to select this class."
-msgstr "Kattints az osztály kiválasztásához."
-
-msgid "Click to select this color."
-msgstr "Kattints a szín kiválasztásához."
 
 msgid "Select Dwelling:"
 msgstr "Toborzóhely kiválasztása:"
@@ -3663,15 +3671,16 @@ msgstr ""
 msgid "Size Icon"
 msgstr "Ikon méret"
 
+msgid "Map Type"
+msgstr "Térkép típusa"
+
+#, fuzzy
 msgid ""
-"Indicates whether the map is made for \"The Succession Wars\" or \"The Price "
-"of Loyalty\" version of the game."
+"Indicates whether the map is made for \"The Succession Wars\", \"The Price "
+"of Loyalty\" or \"Resurrection\" version of the game."
 msgstr ""
 "Azt jelzi, hogy a térkép az \"Örökösödési háborúk\" vagy a \"Hűség "
 "ára\"verzióhoz készült-e."
-
-msgid "Map Type"
-msgstr "Térkép típusa"
 
 msgid "Selected Name"
 msgstr "Kiválasztott név"
@@ -3823,6 +3832,10 @@ msgstr "Legerősebb lény:"
 msgid "Random Castle Name"
 msgstr "Véletlenszerű vár név"
 
+#, fuzzy
+msgid "Random Town Name"
+msgstr "Véletlenszerű város"
+
 msgid "Allow Castle build"
 msgstr "Vár építhetőség"
 
@@ -3834,6 +3847,10 @@ msgstr "Alapértelmezett sereg"
 
 msgid "Castle Army"
 msgstr "Várvédők"
+
+#, fuzzy
+msgid "Town Army"
+msgstr "Város"
 
 msgid "Click to change the Castle name. Right-click to reset to default."
 msgstr ""
@@ -4372,6 +4389,13 @@ msgstr ""
 msgid "Click to accept the changes made."
 msgstr "Kattints a változtatások elfogadásához."
 
+#, fuzzy
+msgid "Click to edit custom rumors."
+msgstr "Kattints az aktuális térkép mentéséhez."
+
+msgid "Rumors"
+msgstr ""
+
 msgid "Click to change your map name."
 msgstr "Kattints a térképed nevének megváltoztatásához."
 
@@ -4407,6 +4431,43 @@ msgstr "Objektumok animációjának kapcsolója."
 
 msgid "Toggle display of objects' passability."
 msgstr "Kattints az objektumok átjárhatóságának megjelenítéséhez."
+
+msgid "Rumor:"
+msgstr ""
+
+msgid "Rumor"
+msgstr ""
+
+#, fuzzy
+msgid "This rumor already exists in the list."
+msgstr "A válasz megtalálható a listában."
+
+#, fuzzy
+msgid "Click to save the rumors."
+msgstr "Kattints az esemény beállítások mentéséhez."
+
+msgid "Add Rumor"
+msgstr ""
+
+#, fuzzy
+msgid "Add an additional rumor."
+msgstr "További válasz hozzáadása a kérdéshez."
+
+#, fuzzy
+msgid "Edit Rumor"
+msgstr "Szerkesztő"
+
+#, fuzzy
+msgid "Edit an existing rumor."
+msgstr "Létező térkép betöltése."
+
+#, fuzzy
+msgid "Delete Rumor"
+msgstr "Válasz törlése"
+
+#, fuzzy
+msgid "Delete an existing rumor."
+msgstr "Meglévő válasz törlése."
 
 msgid ""
 "\n"

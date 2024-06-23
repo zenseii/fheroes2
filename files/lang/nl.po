@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-20 15:03+0000\n"
+"POT-Creation-Date: 2024-06-23 11:28+0000\n"
 "PO-Revision-Date: 2022-10-25 08:52+0200\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -252,6 +252,9 @@ msgid ""
 "A\n"
 "R\n"
 "D"
+msgstr ""
+
+msgid "RUMORS"
 msgstr ""
 
 msgid "Warrior"
@@ -3393,9 +3396,6 @@ msgstr ""
 msgid "Accept the choice made."
 msgstr ""
 
-msgid "%{color} %{race} hero"
-msgstr ""
-
 msgid "Terrain object"
 msgstr ""
 
@@ -3414,6 +3414,25 @@ msgstr ""
 msgid "Select Hero:"
 msgstr ""
 
+msgid "race|Random"
+msgstr ""
+
+msgid "Click to start placing the selected hero."
+msgstr ""
+
+#, fuzzy
+msgid "%{color} %{race}"
+msgstr "%{name} de %{race}"
+
+msgid "You will place"
+msgstr ""
+
+msgid "Click to select this class."
+msgstr ""
+
+msgid "Click to select this color."
+msgstr ""
+
 #, fuzzy
 msgid "Select Treasure:"
 msgstr "Selecteer spreuk doelwit"
@@ -3426,9 +3445,6 @@ msgid "Castle/town placing"
 msgstr ""
 
 msgid "doubleLinedRace|Neutral"
-msgstr ""
-
-msgid "race|Random"
 msgstr ""
 
 msgid "Click to start placing the selected castle/town."
@@ -3444,15 +3460,6 @@ msgid "%{color} %{race} %{townOrCastle}"
 msgstr ""
 
 msgid "race|Neutral"
-msgstr ""
-
-msgid "You will place"
-msgstr ""
-
-msgid "Click to select this class."
-msgstr ""
-
-msgid "Click to select this color."
 msgstr ""
 
 #, fuzzy
@@ -3603,12 +3610,12 @@ msgstr ""
 msgid "Size Icon"
 msgstr ""
 
-msgid ""
-"Indicates whether the map is made for \"The Succession Wars\" or \"The Price "
-"of Loyalty\" version of the game."
+msgid "Map Type"
 msgstr ""
 
-msgid "Map Type"
+msgid ""
+"Indicates whether the map is made for \"The Succession Wars\", \"The Price "
+"of Loyalty\" or \"Resurrection\" version of the game."
 msgstr ""
 
 msgid "Selected Name"
@@ -3755,6 +3762,9 @@ msgstr ""
 msgid "Random Castle Name"
 msgstr ""
 
+msgid "Random Town Name"
+msgstr ""
+
 msgid "Allow Castle build"
 msgstr ""
 
@@ -3766,6 +3776,10 @@ msgstr ""
 
 msgid "Castle Army"
 msgstr ""
+
+#, fuzzy
+msgid "Town Army"
+msgstr "Held Scherm"
 
 msgid "Click to change the Castle name. Right-click to reset to default."
 msgstr ""
@@ -4275,6 +4289,14 @@ msgid "Click to accept the changes made."
 msgstr ""
 "Weet je zeker dat je het gevecht in de automatische modus wilt beëindigen?"
 
+#, fuzzy
+msgid "Click to edit custom rumors."
+msgstr ""
+"Weet je zeker dat je het gevecht in de automatische modus wilt beëindigen?"
+
+msgid "Rumors"
+msgstr ""
+
 msgid "Click to change your map name."
 msgstr ""
 
@@ -4309,6 +4331,38 @@ msgid "Toggle animation of the objects."
 msgstr ""
 
 msgid "Toggle display of objects' passability."
+msgstr ""
+
+msgid "Rumor:"
+msgstr ""
+
+msgid "Rumor"
+msgstr ""
+
+msgid "This rumor already exists in the list."
+msgstr ""
+
+#, fuzzy
+msgid "Click to save the rumors."
+msgstr ""
+"Weet je zeker dat je het gevecht in de automatische modus wilt beëindigen?"
+
+msgid "Add Rumor"
+msgstr ""
+
+msgid "Add an additional rumor."
+msgstr ""
+
+msgid "Edit Rumor"
+msgstr ""
+
+msgid "Edit an existing rumor."
+msgstr ""
+
+msgid "Delete Rumor"
+msgstr ""
+
+msgid "Delete an existing rumor."
 msgstr ""
 
 msgid ""
