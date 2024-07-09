@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-23 11:28+0000\n"
+"POT-Creation-Date: 2024-07-03 03:05+0000\n"
 "PO-Revision-Date: 2022-09-23 16:01+0200\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: \n"
@@ -278,6 +278,9 @@ msgid ""
 msgstr ""
 
 msgid "RUMORS"
+msgstr ""
+
+msgid "EVENTS"
 msgstr ""
 
 msgid "Warrior"
@@ -1850,6 +1853,12 @@ msgstr ""
 msgid "Descendants"
 msgstr ""
 
+msgid "Cannot build. You have already built here today."
+msgstr "Вы ўжо будавалі сёння ў гэтым замку."
+
+msgid "For this action it is necessary to build a castle first."
+msgstr ""
+
 msgid "The %{building} produces %{monster}."
 msgstr "%{building} - пабудова, дзе штотыдзень падрыхтоўваюцца %{monster}."
 
@@ -1858,12 +1867,6 @@ msgstr "Неабходна:"
 
 msgid "Exit this menu without doing anything."
 msgstr "Выйсці з меню, нічога не змяняючы."
-
-msgid "Cannot build. You have already built here today."
-msgstr "Вы ўжо будавалі сёння ў гэтым замку."
-
-msgid "For this action it is necessary to build a castle first."
-msgstr ""
 
 #, fuzzy
 msgid "Cannot build %{name}. The castle is too far away from an ocean."
@@ -3728,7 +3731,7 @@ msgstr ""
 msgid "Message Text:"
 msgstr ""
 
-msgid "Cancel event after first visit"
+msgid "Reward:"
 msgstr ""
 
 msgid "Player colors allowed to get event:"
@@ -3737,7 +3740,10 @@ msgstr ""
 msgid "Computer colors allowed to get event:"
 msgstr ""
 
-msgid "Reward:"
+msgid "First day of occurrence:"
+msgstr ""
+
+msgid "Repeat period (days):"
 msgstr ""
 
 msgid "Allow %{color} human player to get event"
@@ -3763,6 +3769,53 @@ msgstr ""
 msgid "Click to save the Event properties."
 msgstr "Назва абранай мапы."
 
+msgid "No resources will be given as a reward."
+msgstr ""
+
+msgid "Resources"
+msgstr ""
+
+msgid "Resources will be given as a reward."
+msgstr ""
+
+#, fuzzy
+msgid "Click here to change the event message."
+msgstr "Назва абранай мапы."
+
+msgid "Event Message Text"
+msgstr ""
+
+msgid "Day: %{day}"
+msgstr "Дзень: %{day}"
+
+msgid "Daily Events"
+msgstr ""
+
+#, fuzzy
+msgid "Click to save the events."
+msgstr "Назва абранай мапы."
+
+msgid "Add Event"
+msgstr ""
+
+msgid "Add an additional event."
+msgstr ""
+
+msgid "Edit Event"
+msgstr ""
+
+msgid "Edit an existing event."
+msgstr ""
+
+msgid "Delete Event"
+msgstr ""
+
+msgid "Delete an existing event."
+msgstr ""
+
+msgid "Cancel event after first visit"
+msgstr ""
+
 msgid "Artifact"
 msgstr ""
 
@@ -3775,26 +3828,10 @@ msgstr ""
 msgid "Delete an artifact from the reward."
 msgstr ""
 
-msgid "No resources will be given as a reward."
-msgstr ""
-
-msgid "Resources"
-msgstr ""
-
-msgid "Resources will be given as a reward."
-msgstr ""
-
 msgid ""
 "If this checkbox is checked, the event will trigger only once. If not "
 "checked, the event will trigger every time one of the specified players "
 "crosses the event tile."
-msgstr ""
-
-#, fuzzy
-msgid "Click here to change the event message."
-msgstr "Назва абранай мапы."
-
-msgid "Event Message Text"
 msgstr ""
 
 msgid "%{objects} cannot be placed on water."
@@ -3883,6 +3920,9 @@ msgid "Failed to update player information."
 msgstr ""
 
 msgid "Only one Random Ultimate Artifact can be placed on the map."
+msgstr ""
+
+msgid "A maximum of %{count} obelisks can be placed on the map."
 msgstr ""
 
 msgid "The map is corrupted."
@@ -4194,20 +4234,30 @@ msgid "Run out of time."
 msgstr ""
 
 #, fuzzy
-msgid "Map Difficulty"
-msgstr "Складанасць мапы:"
-
-#, fuzzy
-msgid "Map Description"
-msgstr "Апісанне"
+msgid "Special Loss Condition"
+msgstr "Умова паразы"
 
 #, fuzzy
 msgid "Special Victory Condition"
 msgstr "Умова перамогі"
 
 #, fuzzy
-msgid "Special Loss Condition"
-msgstr "Умова паразы"
+msgid "Allow standard victory conditions"
+msgstr "Умова перамогі"
+
+msgid "Gold:"
+msgstr ""
+
+msgid "Days:"
+msgstr ""
+
+#, fuzzy
+msgid "Map Difficulty"
+msgstr "Складанасць мапы:"
+
+#, fuzzy
+msgid "Map Description"
+msgstr "Апісанне"
 
 msgid "Change Map Name"
 msgstr ""
@@ -4233,6 +4283,13 @@ msgid "Rumors"
 msgstr ""
 
 #, fuzzy
+msgid "Click to edit daily events."
+msgstr "Пстрыкні, каб ухваліць абранае раздзяленне."
+
+msgid "Events"
+msgstr ""
+
+#, fuzzy
 msgid "Click to change your map name."
 msgstr "Пстрыкніце сюды, каб выбраць сцэнар"
 
@@ -4242,6 +4299,14 @@ msgstr "Тып мапы"
 
 #, fuzzy
 msgid "Click to change the description of the current map."
+msgstr "Апісанне абранай мапы."
+
+#, fuzzy
+msgid "Click to change the victory condition of the current map."
+msgstr "Апісанне абранай мапы."
+
+#, fuzzy
+msgid "Click to change the loss condition of the current map."
 msgstr "Апісанне абранай мапы."
 
 msgid "Indicates the player types in the scenario. Click to change."
@@ -4360,6 +4425,9 @@ msgid "Delete Answer"
 msgstr ""
 
 msgid "Delete an existing answer for the question."
+msgstr ""
+
+msgid "Day: %{day} Week: %{week} Month: %{month}"
 msgstr ""
 
 msgid "difficulty|Easy"
@@ -4753,6 +4821,9 @@ msgstr "Наладкі замка"
 #, fuzzy
 msgid "hotkey|open game main menu"
 msgstr "Звычайная гульня"
+
+msgid "hotkey|toggle passability"
+msgstr ""
 
 msgid "hotkey|roland campaign"
 msgstr ""
@@ -5645,9 +5716,6 @@ msgstr ""
 
 msgid "Month: %{month} Week: %{week}"
 msgstr "Месяц: %{month} Тыдзень: %{week}"
-
-msgid "Day: %{day}"
-msgstr "Дзень: %{day}"
 
 msgid ""
 "You find a small\n"
@@ -9808,13 +9876,13 @@ msgid ""
 "say a word, he hands you a Magic Book."
 msgstr ""
 
-msgid "Dummy 1"
-msgstr ""
-
-msgid "The reserved artifact."
+msgid "Victory can be achieved by finding any Ultimate Artifact."
 msgstr ""
 
 msgid "Dummy 2"
+msgstr ""
+
+msgid "The reserved artifact."
 msgstr ""
 
 msgid "Dummy 3"
@@ -10565,7 +10633,7 @@ msgstr ""
 msgid "No spell to cast."
 msgstr ""
 
-msgid "Your hero has %{point} spell points remaining."
+msgid "Your hero has %{sp} spell points remaining out of %{max}."
 msgstr ""
 
 msgid "View Adventure Spells"
