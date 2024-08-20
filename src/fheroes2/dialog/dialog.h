@@ -23,16 +23,16 @@
 #ifndef H2DIALOG_H
 #define H2DIALOG_H
 
+#include <cstddef>
 #include <cstdint>
-#include <list>
 #include <memory>
 #include <optional>
 #include <string>
-#include <vector>
 
 #include "game_mode.h"
 #include "gamedefs.h"
 #include "image.h"
+#include "math_base.h"
 
 #define SHADOWWIDTH 16
 #define BOXAREA_WIDTH 244
@@ -45,7 +45,11 @@ class Monster;
 class Troop;
 
 struct ArtifactSetData;
-struct CapturedObject;
+
+namespace fheroes2
+{
+    class DialogElement;
+}
 
 namespace Skill
 {
@@ -113,7 +117,7 @@ namespace Dialog
     bool SelectGoldOrExp( const std::string &, const std::string &, uint32_t gold, uint32_t expr, const Heroes & );
     int SelectSkillFromArena();
     bool SelectCount( std::string header, const int32_t min, const int32_t max, int32_t & selectedValue, const int32_t step = 1,
-                      const fheroes2::Image & backgroundImage = {} );
+                      const fheroes2::DialogElement * uiElement = nullptr );
     bool inputString( std::string header, std::string & result, std::string title, const size_t charLimit, const bool isMultiLine,
                       const bool englishOnlyVirtualKeyboard );
     Troop RecruitMonster( const Monster & monster0, const uint32_t available, const bool allowDowngradedMonster, const int32_t windowOffsetY );

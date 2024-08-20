@@ -33,7 +33,7 @@
 #include "army.h"
 #include "army_troop.h"
 #include "battle_cell.h"
-#include "castle.h"
+#include "castle.h" // IWYU pragma: associated
 #include "cursor.h"
 #include "dialog.h"
 #include "game_delays.h"
@@ -97,7 +97,7 @@ namespace
         return count;
     }
 
-    building_t getPressedBuildingHotkey()
+    BuildingType getPressedBuildingHotkey()
     {
         if ( HotKeyPressEvent( Game::HotKeyEvent::TOWN_DWELLING_LEVEL_1 ) ) {
             return DWELLING_MONSTER1;
@@ -177,15 +177,14 @@ bool Castle::_recruitCastleMax( const Troops & currentCastleArmy )
         }
         if ( isCreaturePresent ) {
             if ( !canAffordOneCreature ) {
-                fheroes2::showMessage( fheroes2::Text( "", {} ), fheroes2::Text( _( "Not enough resources to recruit creatures." ), normalWhite ), Dialog::OK );
+                fheroes2::showStandardTextMessage( {}, _( "Not enough resources to recruit creatures." ), Dialog::OK );
             }
             else {
-                fheroes2::showMessage( fheroes2::Text( "", {} ), fheroes2::Text( _( "You are unable to recruit at this time, your ranks are full." ), normalWhite ),
-                                       Dialog::OK );
+                fheroes2::showStandardTextMessage( {}, _( "You are unable to recruit at this time, your ranks are full." ), Dialog::OK );
             }
         }
         else {
-            fheroes2::showMessage( fheroes2::Text( "", {} ), fheroes2::Text( _( "No creatures available for purchase." ), normalWhite ), Dialog::OK );
+            fheroes2::showStandardTextMessage( {}, _( "No creatures available for purchase." ), Dialog::OK );
         }
     }
     else if ( fheroes2::showResourceMessage( fheroes2::Text( _( "Recruit Creatures" ), fheroes2::FontType::normalYellow() ),
@@ -250,7 +249,7 @@ void Castle::OpenWell()
         le.isMouseLeftButtonPressedInArea( buttonExit.area() ) ? buttonExit.drawOnPress() : buttonExit.drawOnRelease();
 
         le.isMouseLeftButtonPressedInArea( buttonMax.area() ) ? buttonMax.drawOnPress() : buttonMax.drawOnRelease();
-        const building_t pressedHotkeyBuildingID = getPressedBuildingHotkey();
+        const BuildingType pressedHotkeyBuildingID = getPressedBuildingHotkey();
 
         if ( le.MouseClickLeft( buttonExit.area() ) || Game::HotKeyCloseWindow() ) {
             break;
@@ -297,13 +296,11 @@ void Castle::OpenWell()
         }
 
         if ( le.isMouseRightButtonPressedInArea( buttonExit.area() ) ) {
-            fheroes2::showMessage( fheroes2::Text( _( "Exit" ), fheroes2::FontType::normalYellow() ),
-                                   fheroes2::Text( _( "Exit this menu." ), fheroes2::FontType::normalWhite() ), Dialog::ZERO );
+            fheroes2::showStandardTextMessage( _( "Exit" ), _( "Exit this menu." ), Dialog::ZERO );
         }
 
         if ( le.isMouseRightButtonPressedInArea( buttonMax.area() ) ) {
-            fheroes2::showMessage( fheroes2::Text( _( "Max" ), fheroes2::FontType::normalYellow() ),
-                                   fheroes2::Text( _( "Hire all creatures in the town." ), fheroes2::FontType::normalWhite() ), Dialog::ZERO );
+            fheroes2::showStandardTextMessage( _( "Max" ), _( "Hire all creatures in the town." ), Dialog::ZERO );
         }
     }
 }

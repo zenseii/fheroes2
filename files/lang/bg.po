@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-03 03:05+0000\n"
+"POT-Creation-Date: 2024-08-18 01:49+0000\n"
 "PO-Revision-Date: 2022-11-08 16:44+0000\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: \n"
@@ -2861,11 +2861,11 @@ msgstr "Няма налични същества за покупка."
 msgid "Recruit Creatures"
 msgstr "Вербувай същества"
 
-msgid "Max"
-msgstr "Максимално"
-
 msgid "Hire all creatures in the town."
 msgstr "Наеми всички същества в града."
+
+msgid "Max"
+msgstr "Максимално"
 
 msgid "Available"
 msgstr "Налични"
@@ -3064,17 +3064,14 @@ msgstr "Общо: "
 msgid "Need: "
 msgstr "Още: "
 
-msgid "Load Game"
-msgstr "Зареди Игра"
-
-msgid "No save files to load."
-msgstr "Няма запазени файлове за зареждане."
-
 msgid "New Game"
 msgstr "Нова Игра"
 
 msgid "Start a single or multi-player game."
 msgstr "Започни игра за един или няколко играча."
+
+msgid "Load Game"
+msgstr "Зареди Игра"
 
 msgid "Load a previously saved game."
 msgstr "Зареди запазена игра."
@@ -3319,6 +3316,9 @@ msgstr ""
 "или\n"
 "%{skill2}"
 
+msgid "n/a"
+msgstr "без"
+
 msgid ""
 "Please inspect our fine wares. If you feel like offering a trade, click on "
 "the items you wish to trade with and for."
@@ -3354,9 +3354,6 @@ msgstr "Твоите ресурси"
 
 msgid "Available Trades"
 msgstr "Налични сделки"
-
-msgid "n/a"
-msgstr "без"
 
 msgid "guarded by %{count} %{monster}"
 msgstr "охранявано от %{count} %{monster}"
@@ -3533,12 +3530,12 @@ msgstr "Файл за запазване:"
 msgid "File to Load:"
 msgstr "Файл за зареждане:"
 
-msgid "Accept the choice made."
-msgstr "Приемете направения избор."
-
 #, fuzzy
 msgid "Terrain object"
 msgstr "Режим терен"
+
+msgid "Accept the choice made."
+msgstr "Приемете направения избор."
 
 msgid "Select Skill:"
 msgstr "Избери умение:"
@@ -3658,6 +3655,42 @@ msgstr "Океански обекти"
 msgid "Select Adventure Object:"
 msgstr "Океански обекти"
 
+msgid "Players Icon"
+msgstr "Брой на играчи"
+
+#, fuzzy
+msgid ""
+"Indicates how many players total are in the scenario. Any positions not "
+"occupied by human players will be occupied by computer players."
+msgstr ""
+"Показва колко общо играчи има в сценария. Всички позиции, които не са заети "
+"от хора, ще бъдат заети от компютърни играчи."
+
+msgid ""
+"Indicates whether the map\n"
+"is small (36 x 36), medium\n"
+"(72 x 72), large (108 x 108),\n"
+"or extra large (144 x 144)."
+msgstr ""
+"Показва дали картата\n"
+"е малък (36 x 36), среден\n"
+"(72 x 72), голям (108 x 108),\n"
+"или изключително голям размер (144 x 144)."
+
+msgid "Size Icon"
+msgstr "Размер на карта"
+
+msgid "Map Type"
+msgstr "Тип на карта"
+
+#, fuzzy
+msgid ""
+"Indicates whether the map is made for \"The Succession Wars\", \"The Price "
+"of Loyalty\" or \"Resurrection\" version of the game."
+msgstr ""
+"Показва дали картата е направена за версията на играта \"Наследените войни\" "
+"или за \"Цената на лоялността\"."
+
 msgid "Map Type:\n"
 msgstr "Тип на карта:\n"
 
@@ -3747,42 +3780,6 @@ msgstr "Всички карти"
 
 msgid "View all maps, regardless of size."
 msgstr "Виж всички карти, независимо от размера."
-
-msgid "Players Icon"
-msgstr "Брой на играчи"
-
-#, fuzzy
-msgid ""
-"Indicates how many players total are in the scenario. Any positions not "
-"occupied by human players will be occupied by computer players."
-msgstr ""
-"Показва колко общо играчи има в сценария. Всички позиции, които не са заети "
-"от хора, ще бъдат заети от компютърни играчи."
-
-msgid ""
-"Indicates whether the map\n"
-"is small (36 x 36), medium\n"
-"(72 x 72), large (108 x 108),\n"
-"or extra large (144 x 144)."
-msgstr ""
-"Показва дали картата\n"
-"е малък (36 x 36), среден\n"
-"(72 x 72), голям (108 x 108),\n"
-"или изключително голям размер (144 x 144)."
-
-msgid "Size Icon"
-msgstr "Размер на карта"
-
-msgid "Map Type"
-msgstr "Тип на карта"
-
-#, fuzzy
-msgid ""
-"Indicates whether the map is made for \"The Succession Wars\", \"The Price "
-"of Loyalty\" or \"Resurrection\" version of the game."
-msgstr ""
-"Показва дали картата е направена за версията на играта \"Наследените войни\" "
-"или за \"Цената на лоялността\"."
 
 msgid "Selected Name"
 msgstr "Избрано име"
@@ -4215,6 +4212,10 @@ msgid "Unable to create a directory to save the map."
 msgstr "Използва се за изтриване на обекти от картата."
 
 #, fuzzy
+msgid "Unable to locate a directory to save the map."
+msgstr "Използва се за изтриване на обекти от картата."
+
+#, fuzzy
 msgid "Are you sure you want to overwrite the existing map?"
 msgstr "Сигурен ли си че искаш да презапишеш запазената игра с това име?"
 
@@ -4529,6 +4530,30 @@ msgid "Warning"
 msgstr "Внимание"
 
 #, fuzzy
+msgid "[%{pos}]: %{race} hero"
+msgstr "%{color} %{race} герой"
+
+#, fuzzy
+msgid "[%{pos}]: %{name}, %{race} hero"
+msgstr "%{name1} среща %{name2}"
+
+#, fuzzy
+msgid "[%{pos}]: %{race} town"
+msgstr "%{color} %{race} герой"
+
+#, fuzzy
+msgid "[%{pos}]: %{race} castle"
+msgstr "%{color} %{race} герой"
+
+#, fuzzy
+msgid "[%{pos}]: %{name}, %{race} town"
+msgstr "%{name1} среща %{name2}"
+
+#, fuzzy
+msgid "[%{pos}]: %{name}, %{race} castle"
+msgstr "%{name1} среща %{name2}"
+
+#, fuzzy
 msgid "None."
 msgstr "Без"
 
@@ -4545,6 +4570,26 @@ msgid "Run out of time."
 msgstr "Излез от редактора на карти."
 
 #, fuzzy
+msgid "alliance|1st"
+msgstr " съюз"
+
+#, fuzzy
+msgid "alliance|2nd"
+msgstr " съюз"
+
+#, fuzzy
+msgid "alliance|3rd"
+msgstr " съюз"
+
+#, fuzzy
+msgid "alliance|4th"
+msgstr " съюз"
+
+#, fuzzy
+msgid "alliance|5th"
+msgstr " съюз"
+
+#, fuzzy
 msgid "Special Loss Condition"
 msgstr "Състояние на загуба"
 
@@ -4556,12 +4601,60 @@ msgstr "Условие за победа"
 msgid "Allow standard victory conditions"
 msgstr "Условие за победа"
 
+msgid "Allow this condition also for AI"
+msgstr ""
+
+#, fuzzy
+msgid "Set alliances:"
+msgstr " съюз"
+
+#, fuzzy
+msgid "{%number} alliance: "
+msgstr " съюз"
+
 #, fuzzy
 msgid "Gold:"
 msgstr "Злато"
 
+#, fuzzy
+msgid "Select a Town to capture to achieve victory"
+msgstr "Избери град за пристанище."
+
+#, fuzzy
+msgid "Click here to change the town needed to capture to achieve victory."
+msgstr "Кликни, за да запазиш текущата игра."
+
+msgid "Select a Hero to defeat to achieve victory"
+msgstr ""
+
+#, fuzzy
+msgid "Click here to change the hero needed to defeat to achieve victory."
+msgstr "Кликни, за да запазиш текущата игра."
+
+msgid "Put %{color} player in the %{alliance} alliance"
+msgstr ""
+
+msgid ""
+"If this checkbox is checked, the %{color} player will be in the %{alliance} "
+"alliance."
+msgstr ""
+
 msgid "Days:"
 msgstr ""
+
+msgid "Select a Town to lose to suffer defeat"
+msgstr ""
+
+#, fuzzy
+msgid "Click here to change the town whose loss would mean defeat."
+msgstr "Кликни, за да запазиш текущата игра."
+
+msgid "Select a Hero to lose to suffer defeat"
+msgstr ""
+
+#, fuzzy
+msgid "Click here to change the hero whose loss would mean defeat."
+msgstr "Кликни, за да запазиш текущата игра."
 
 #, fuzzy
 msgid "Map Difficulty"
@@ -5039,6 +5132,9 @@ msgstr "Дизайнери на картите"
 msgid "Package Design"
 msgstr "Дизайн на опаковката"
 
+msgid "High Scores"
+msgstr "Класиране"
+
 msgid "Your Name"
 msgstr "Твоето име"
 
@@ -5456,6 +5552,9 @@ msgstr "Запазената игра е локализирана на \""
 msgid "' language, but the current language of the game is '"
 msgstr "\" език, но текущият език на играта е \""
 
+msgid "No save files to load."
+msgstr "Няма запазени файлове за зареждане."
+
 msgid "Hot Seat"
 msgstr "Горещ стол"
 
@@ -5547,9 +5646,6 @@ msgstr "За играта"
 
 msgid "View the credits screen."
 msgstr "Виж екран за играта."
-
-msgid "High Scores"
-msgstr "Класиране"
 
 msgid "View the high scores screen."
 msgstr "Виж екрана с високи резултати."
@@ -11615,7 +11711,8 @@ msgstr "Свещен вик"
 msgid "Anti-Magic"
 msgstr "Антимагия"
 
-msgid "Prevents harmful magic against the selected creatures."
+#, fuzzy
+msgid "Prevents any magic against the selected creatures."
 msgstr "Предотвратява вредната магия срещу избраните същества."
 
 msgid "Dispel Magic"

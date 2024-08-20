@@ -27,14 +27,12 @@
 #include <array>
 #include <cassert>
 #include <limits>
-#include <memory>
 #include <ostream>
 #include <set>
 #include <tuple>
-#include <type_traits>
 #include <utility>
 
-#include "ai.h"
+#include "ai_planner.h"
 #include "artifact.h"
 #include "campaign_savedata.h"
 #include "campaign_scenariodata.h"
@@ -374,7 +372,7 @@ void World::generateBattleOnlyMap()
         fi.version = GameVersion::PRICE_OF_LOYALTY;
     }
 
-    conf.SetCurrentFileInfo( std::move( fi ) );
+    conf.setCurrentMapInfo( std::move( fi ) );
 
     Defaults();
 
@@ -409,7 +407,7 @@ void World::generateForEditor( const int32_t size )
 
     fi.version = GameVersion::PRICE_OF_LOYALTY;
 
-    conf.SetCurrentFileInfo( std::move( fi ) );
+    conf.setCurrentMapInfo( std::move( fi ) );
 
     Defaults();
 
@@ -988,7 +986,7 @@ void World::ActionForMagellanMaps( int color )
     for ( Maps::Tiles & tile : vec_tiles ) {
         if ( tile.isWater() ) {
             if ( isAIPlayer && tile.isFog( color ) ) {
-                AI::Get().revealFog( tile, kingdom );
+                AI::Planner::Get().revealFog( tile, kingdom );
             }
 
             tile.ClearFog( alliedColors );
@@ -1287,13 +1285,17 @@ std::list<Route::Step> World::getPath( const Heroes & hero, int targetIndex )
 void World::resetPathfinder()
 {
     _pathfinder.reset();
-    AI::Get().resetPathfinder();
+    AI::Planner::Get().resetPathfinder();
 }
 
 void World::updatePassabilities()
 {
     for ( Maps::Tiles & tile : vec_tiles ) {
-        tile.updateEmpty();
+        // If tile is empty then update tile's object type if needed.
+        if ( tile.isSameMainObject( MP2::OBJ_NONE ) ) {
+            tile.updateObjectType();
+        }
+
         tile.setInitialPassability();
     }
 

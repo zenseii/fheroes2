@@ -216,17 +216,19 @@ namespace Editor
 
         answerList.Redraw();
 
-        const fheroes2::Sprite & buttonImage = fheroes2::AGG::GetICN( ICN::CELLWIN, 13 );
+        const int minibuttonIcnId = isEvilInterface ? ICN::CELLWIN_EVIL : ICN::CELLWIN;
+
+        const fheroes2::Sprite & buttonImage = fheroes2::AGG::GetICN( minibuttonIcnId, 13 );
         const int32_t buttonWidth = buttonImage.width();
         const int32_t buttonOffset = ( answerArea.width - 3 * buttonWidth ) / 2 + buttonWidth;
 
-        fheroes2::Button buttonAdd( answerRoi.x, answerRoi.y + answerRoi.height + 5, ICN::CELLWIN, 13, 14 );
+        fheroes2::Button buttonAdd( answerRoi.x, answerRoi.y + answerRoi.height + 5, minibuttonIcnId, 13, 14 );
         buttonAdd.draw();
 
-        fheroes2::Button buttonEdit( answerRoi.x + buttonOffset, answerRoi.y + answerRoi.height + 5, ICN::CELLWIN, 15, 16 );
+        fheroes2::Button buttonEdit( answerRoi.x + buttonOffset, answerRoi.y + answerRoi.height + 5, minibuttonIcnId, 15, 16 );
         buttonEdit.draw();
 
-        fheroes2::Button buttonDelete( answerRoi.x + answerArea.width - buttonWidth, answerRoi.y + answerRoi.height + 5, ICN::CELLWIN, 17, 18 );
+        fheroes2::Button buttonDelete( answerRoi.x + answerArea.width - buttonWidth, answerRoi.y + answerRoi.height + 5, minibuttonIcnId, 17, 18 );
         buttonDelete.draw();
 
         offsetY += text.height() + riddleArea.height + elementOffset;
@@ -247,7 +249,7 @@ namespace Editor
 
         redrawArtifactImage( metadata.artifact );
 
-        fheroes2::Button buttonDeleteArtifact( artifactRoi.x + ( artifactRoi.width - buttonWidth ) / 2, artifactRoi.y + artifactRoi.height + 5, ICN::CELLWIN, 17, 18 );
+        fheroes2::Button buttonDeleteArtifact( artifactRoi.x + ( artifactRoi.width - buttonWidth ) / 2, artifactRoi.y + artifactRoi.height + 5, minibuttonIcnId, 17, 18 );
         buttonDeleteArtifact.draw();
 
         const fheroes2::Rect resourceRoi{ answerRoi.x, offsetY + text.height(), answerRoi.width, 99 };
@@ -428,12 +430,10 @@ namespace Editor
                 const Artifact artifact( metadata.artifact );
 
                 if ( artifact.isValid() ) {
-                    const fheroes2::Text header( artifact.GetName(), fheroes2::FontType::normalYellow() );
-                    const fheroes2::Text description( fheroes2::getArtifactData( metadata.artifact ).getDescription( metadata.artifactMetadata ),
-                                                      fheroes2::FontType::normalWhite() );
-
                     fheroes2::ArtifactDialogElement artifactUI( artifact );
-                    fheroes2::showMessage( header, description, Dialog::ZERO, { &artifactUI } );
+
+                    fheroes2::showStandardTextMessage( artifact.GetName(), fheroes2::getArtifactData( metadata.artifact ).getDescription( metadata.artifactMetadata ),
+                                                       Dialog::ZERO, { &artifactUI } );
                 }
                 else {
                     fheroes2::showStandardTextMessage( _( "Artifact" ), _( "No artifact will be given as a reward." ), Dialog::ZERO );

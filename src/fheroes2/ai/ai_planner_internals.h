@@ -1,9 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2019 - 2023                                             *
- *                                                                         *
- *   Free Heroes2 Engine: http://sourceforge.net/projects/fheroes2         *
- *   Copyright (C) 2009 by Andrey Afletdinov <fheroes2@gmail.com>          *
+ *   Copyright (C) 2024                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,14 +18,40 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef H2OBJSNOW_H
-#define H2OBJSNOW_H
+#pragma once
 
-#include <cstdint>
+#include "world_pathfinding.h"
 
-namespace ObjSnow
+namespace AI
 {
-    bool isShadow( const uint8_t index );
-}
+    const double ARMY_ADVANTAGE_DESPERATE = 0.8;
+    const double ARMY_ADVANTAGE_SMALL = 1.3;
+    const double ARMY_ADVANTAGE_MEDIUM = 1.5;
+    const double ARMY_ADVANTAGE_LARGE = 1.8;
 
-#endif
+    class AIWorldPathfinderStateRestorer
+    {
+    public:
+        explicit AIWorldPathfinderStateRestorer( AIWorldPathfinder & pathfinder )
+            : _pathfinder( pathfinder )
+            , _originalMinimalArmyStrengthAdvantage( _pathfinder.getMinimalArmyStrengthAdvantage() )
+            , _originalSpellPointsReserveRatio( _pathfinder.getSpellPointsReserveRatio() )
+        {}
+
+        AIWorldPathfinderStateRestorer( const AIWorldPathfinderStateRestorer & ) = delete;
+
+        ~AIWorldPathfinderStateRestorer()
+        {
+            _pathfinder.setMinimalArmyStrengthAdvantage( _originalMinimalArmyStrengthAdvantage );
+            _pathfinder.setSpellPointsReserveRatio( _originalSpellPointsReserveRatio );
+        }
+
+        AIWorldPathfinderStateRestorer & operator=( const AIWorldPathfinderStateRestorer & ) = delete;
+
+    private:
+        AIWorldPathfinder & _pathfinder;
+
+        const double _originalMinimalArmyStrengthAdvantage;
+        const double _originalSpellPointsReserveRatio;
+    };
+}

@@ -26,7 +26,6 @@
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
-#include <memory>
 #include <string>
 #include <utility>
 #include <vector>
@@ -36,7 +35,7 @@
 #include "battle.h"
 #include "battle_cell.h"
 #include "cursor.h"
-#include "dialog.h"
+#include "dialog.h" // IWYU pragma: associated
 #include "game_delays.h"
 #include "game_hotkeys.h"
 #include "icn.h"
@@ -48,6 +47,7 @@
 #include "monster_anim.h"
 #include "monster_info.h"
 #include "morale.h"
+#include "pal.h"
 #include "resource.h"
 #include "screen.h"
 #include "settings.h"
@@ -445,7 +445,14 @@ namespace
         fheroes2::Display & display = fheroes2::Display::instance();
 
         if ( fheroes2::FitToRoi( monsterSprite, inPos, display, outPos, inSize, roi ) ) {
-            fheroes2::Blit( monsterSprite, inPos, display, outPos, inSize, isReflected );
+            if ( troop.isModes( Battle::CAP_MIRRORIMAGE ) ) {
+                fheroes2::Sprite outMonsterSprite = monsterSprite;
+                fheroes2::ApplyPalette( outMonsterSprite, PAL::GetPalette( PAL::PaletteType::MIRROR_IMAGE ) );
+                fheroes2::Blit( outMonsterSprite, inPos, display, outPos, inSize, isReflected );
+            }
+            else {
+                fheroes2::Blit( monsterSprite, inPos, display, outPos, inSize, isReflected );
+            }
         }
 
         if ( isAnimated )
@@ -659,8 +666,7 @@ int Dialog::ArmyJoinFree( const Troop & troop )
     std::string message = _( "A group of %{monster} with a desire for greater glory wish to join you.\nDo you accept?" );
     StringReplaceWithLowercase( message, "%{monster}", troop.GetMultiName() );
 
-    return fheroes2::showMessage( fheroes2::Text( _( "Followers" ), fheroes2::FontType::normalYellow() ),
-                                  fheroes2::Text( std::move( message ), fheroes2::FontType::normalWhite() ), Dialog::YES | Dialog::NO );
+    return fheroes2::showStandardTextMessage( _( "Followers" ), std::move( message ), Dialog::YES | Dialog::NO );
 }
 
 int Dialog::ArmyJoinWithCost( const Troop & troop, const uint32_t join, const uint32_t gold )

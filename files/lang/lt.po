@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-03 03:05+0000\n"
+"POT-Creation-Date: 2024-08-18 01:49+0000\n"
 "PO-Revision-Date: 2022-09-23 16:14+0200\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
@@ -2654,12 +2654,12 @@ msgstr ""
 msgid "Recruit Creatures"
 msgstr "Pasamdyti %{name}"
 
-msgid "Max"
-msgstr ""
-
 #, fuzzy
 msgid "Hire all creatures in the town."
 msgstr "Prarasti visus savo herojus bei miestus."
+
+msgid "Max"
+msgstr ""
 
 msgid "Available"
 msgstr ""
@@ -2839,17 +2839,14 @@ msgstr ""
 msgid "Need: "
 msgstr ""
 
-msgid "Load Game"
-msgstr "Įkelti žaidimą"
-
-msgid "No save files to load."
-msgstr ""
-
 msgid "New Game"
 msgstr ""
 
 msgid "Start a single or multi-player game."
 msgstr ""
+
+msgid "Load Game"
+msgstr "Įkelti žaidimą"
 
 msgid "Load a previously saved game."
 msgstr "Atverti prieš tai įrašytą žaidimą"
@@ -3084,6 +3081,9 @@ msgid ""
 "%{skill2}"
 msgstr ""
 
+msgid "n/a"
+msgstr ""
+
 msgid ""
 "Please inspect our fine wares. If you feel like offering a trade, click on "
 "the items you wish to trade with and for."
@@ -3114,9 +3114,6 @@ msgid "Your Resources"
 msgstr "Tavo ištekliai"
 
 msgid "Available Trades"
-msgstr ""
-
-msgid "n/a"
 msgstr ""
 
 msgid "guarded by %{count} %{monster}"
@@ -3291,10 +3288,10 @@ msgstr "Įrašyti į failą:"
 msgid "File to Load:"
 msgstr "Failas įkėlimui:"
 
-msgid "Accept the choice made."
+msgid "Terrain object"
 msgstr ""
 
-msgid "Terrain object"
+msgid "Accept the choice made."
 msgstr ""
 
 #, fuzzy
@@ -3409,6 +3406,33 @@ msgstr "Magiškas artefaktas"
 msgid "Select Adventure Object:"
 msgstr "Magiškas artefaktas"
 
+msgid "Players Icon"
+msgstr ""
+
+msgid ""
+"Indicates how many players total are in the scenario. Any positions not "
+"occupied by human players will be occupied by computer players."
+msgstr ""
+
+msgid ""
+"Indicates whether the map\n"
+"is small (36 x 36), medium\n"
+"(72 x 72), large (108 x 108),\n"
+"or extra large (144 x 144)."
+msgstr ""
+
+msgid "Size Icon"
+msgstr ""
+
+#, fuzzy
+msgid "Map Type"
+msgstr "Pasaulio dydis"
+
+msgid ""
+"Indicates whether the map is made for \"The Succession Wars\", \"The Price "
+"of Loyalty\" or \"Resurrection\" version of the game."
+msgstr ""
+
 #, fuzzy
 msgid "Map Type:\n"
 msgstr "Pasaulio dydis"
@@ -3499,33 +3523,6 @@ msgid "All Maps"
 msgstr "Visi žemėlapiai"
 
 msgid "View all maps, regardless of size."
-msgstr ""
-
-msgid "Players Icon"
-msgstr ""
-
-msgid ""
-"Indicates how many players total are in the scenario. Any positions not "
-"occupied by human players will be occupied by computer players."
-msgstr ""
-
-msgid ""
-"Indicates whether the map\n"
-"is small (36 x 36), medium\n"
-"(72 x 72), large (108 x 108),\n"
-"or extra large (144 x 144)."
-msgstr ""
-
-msgid "Size Icon"
-msgstr ""
-
-#, fuzzy
-msgid "Map Type"
-msgstr "Pasaulio dydis"
-
-msgid ""
-"Indicates whether the map is made for \"The Succession Wars\", \"The Price "
-"of Loyalty\" or \"Resurrection\" version of the game."
 msgstr ""
 
 msgid "Selected Name"
@@ -3944,6 +3941,10 @@ msgid "Unable to create a directory to save the map."
 msgstr ""
 
 #, fuzzy
+msgid "Unable to locate a directory to save the map."
+msgstr "Įrašyti į failą:"
+
+#, fuzzy
 msgid "Are you sure you want to overwrite the existing map?"
 msgstr ""
 "Ar tikrai norite perrašyti anksčiau tuo pačiu pavadinimu įrašytą failą?"
@@ -4226,6 +4227,27 @@ msgstr ""
 msgid "Warning"
 msgstr ""
 
+msgid "[%{pos}]: %{race} hero"
+msgstr ""
+
+#, fuzzy
+msgid "[%{pos}]: %{name}, %{race} hero"
+msgstr "Žiūrėti %{name}"
+
+msgid "[%{pos}]: %{race} town"
+msgstr ""
+
+msgid "[%{pos}]: %{race} castle"
+msgstr ""
+
+#, fuzzy
+msgid "[%{pos}]: %{name}, %{race} town"
+msgstr "Žiūrėti %{name}"
+
+#, fuzzy
+msgid "[%{pos}]: %{name}, %{race} castle"
+msgstr "Žiūrėti %{name}"
+
 msgid "None."
 msgstr ""
 
@@ -4237,6 +4259,21 @@ msgid "Accumulate gold."
 msgstr "Sukaupti %{count} aukso"
 
 msgid "Run out of time."
+msgstr ""
+
+msgid "alliance|1st"
+msgstr ""
+
+msgid "alliance|2nd"
+msgstr ""
+
+msgid "alliance|3rd"
+msgstr ""
+
+msgid "alliance|4th"
+msgstr ""
+
+msgid "alliance|5th"
 msgstr ""
 
 #, fuzzy
@@ -4251,12 +4288,59 @@ msgstr "Pergalės salygos"
 msgid "Allow standard victory conditions"
 msgstr "Pergalės salygos"
 
+msgid "Allow this condition also for AI"
+msgstr ""
+
+#, fuzzy
+msgid "Set alliances:"
+msgstr "Drakonų miestas"
+
+#
+msgid "{%number} alliance: "
+msgstr ""
+
 #, fuzzy
 msgid "Gold:"
 msgstr "Auksas"
 
+msgid "Select a Town to capture to achieve victory"
+msgstr ""
+
+#, fuzzy
+msgid "Click here to change the town needed to capture to achieve victory."
+msgstr "Rodyti kitą miestą"
+
+msgid "Select a Hero to defeat to achieve victory"
+msgstr ""
+
+#, fuzzy
+msgid "Click here to change the hero needed to defeat to achieve victory."
+msgstr "Rodyti kitą miestą"
+
+msgid "Put %{color} player in the %{alliance} alliance"
+msgstr ""
+
+msgid ""
+"If this checkbox is checked, the %{color} player will be in the %{alliance} "
+"alliance."
+msgstr ""
+
 msgid "Days:"
 msgstr ""
+
+msgid "Select a Town to lose to suffer defeat"
+msgstr ""
+
+#, fuzzy
+msgid "Click here to change the town whose loss would mean defeat."
+msgstr "Rodyti kitą miestą"
+
+msgid "Select a Hero to lose to suffer defeat"
+msgstr ""
+
+#, fuzzy
+msgid "Click here to change the hero whose loss would mean defeat."
+msgstr "Rodyti kitą miestą"
 
 #, fuzzy
 msgid "Map Difficulty"
@@ -4698,6 +4782,9 @@ msgstr ""
 msgid "Package Design"
 msgstr ""
 
+msgid "High Scores"
+msgstr "Geriausi rezultatai"
+
 msgid "Your Name"
 msgstr ""
 
@@ -5124,6 +5211,9 @@ msgstr ""
 msgid "' language, but the current language of the game is '"
 msgstr ""
 
+msgid "No save files to load."
+msgstr ""
+
 msgid "Hot Seat"
 msgstr ""
 
@@ -5200,9 +5290,6 @@ msgstr ""
 
 msgid "View the credits screen."
 msgstr ""
-
-msgid "High Scores"
-msgstr "Geriausi rezultatai"
 
 msgid "View the high scores screen."
 msgstr ""
@@ -10374,7 +10461,7 @@ msgstr ""
 msgid "Anti-Magic"
 msgstr ""
 
-msgid "Prevents harmful magic against the selected creatures."
+msgid "Prevents any magic against the selected creatures."
 msgstr ""
 
 msgid "Dispel Magic"

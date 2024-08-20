@@ -26,7 +26,6 @@
 #include "color.h"
 #include "icn.h"
 #include "image.h"
-#include "pal.h"
 #include "resource.h"
 #include "screen.h"
 #include "tools.h"
@@ -40,12 +39,12 @@ namespace Editor
         : _color( boxColor )
         , _checkmark( fheroes2::AGG::GetICN( ICN::CELLWIN, 2 ) )
     {
-        const int32_t icnIndex = Color::GetIndex( _color ) + 43;
+        const int32_t icnIndex = ( _color == Color::NONE ) ? 1 : Color::GetIndex( _color ) + 43;
         const fheroes2::Sprite & playerIcon = fheroes2::AGG::GetICN( ICN::CELLWIN, icnIndex );
 
         _area = { x, y, playerIcon.width(), playerIcon.height() };
 
-        fheroes2::Copy( playerIcon, 0, 0, output, _area.x, _area.y, _area.width, _area.height );
+        fheroes2::Copy( playerIcon, 0, 0, output, _area );
 
         _checkmark.setPosition( _area.x + 2, _area.y + 2 );
 
@@ -66,17 +65,22 @@ namespace Editor
         return !_checkmark.isHidden();
     }
 
+    void createColorCheckboxes( std::vector<std::unique_ptr<Checkbox>> & list, const int32_t availableColors, const int32_t selectedColors, const int32_t boxOffsetX,
+                                const int32_t boxOffsetY, fheroes2::Image & output )
+    {
+        int32_t colorsAdded = 0;
+
+        for ( const int color : Colors( availableColors ) ) {
+            list.emplace_back( std::make_unique<Checkbox>( boxOffsetX + colorsAdded * 32, boxOffsetY, color, ( color & selectedColors ) != 0, output ) );
+            ++colorsAdded;
+        }
+    }
+
     fheroes2::Rect drawCheckboxWithText( fheroes2::MovableSprite & checkSprite, std::string str, fheroes2::Image & output, const int32_t posX, const int32_t posY,
                                          const bool isEvil )
     {
-        const fheroes2::Sprite & checkboxBackground = fheroes2::AGG::GetICN( ICN::CELLWIN, 1 );
-        if ( isEvil ) {
-            fheroes2::ApplyPalette( checkboxBackground, 0, 0, output, posX, posY, checkboxBackground.width(), checkboxBackground.height(),
-                                    PAL::CombinePalettes( PAL::GetPalette( PAL::PaletteType::GRAY ), PAL::GetPalette( PAL::PaletteType::DARKENING ) ) );
-        }
-        else {
-            fheroes2::Copy( checkboxBackground, 0, 0, output, posX, posY, checkboxBackground.width(), checkboxBackground.height() );
-        }
+        const fheroes2::Sprite & checkboxBackground = fheroes2::AGG::GetICN( isEvil ? ICN::CELLWIN_EVIL : ICN::CELLWIN, 1 );
+        fheroes2::Copy( checkboxBackground, 0, 0, output, posX, posY, checkboxBackground.width(), checkboxBackground.height() );
 
         fheroes2::addGradientShadow( checkboxBackground, output, { posX, posY }, { -4, 4 } );
         const fheroes2::Text checkboxText( std::move( str ), fheroes2::FontType::normalWhite() );

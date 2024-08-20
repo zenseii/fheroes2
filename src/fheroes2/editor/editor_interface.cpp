@@ -37,6 +37,7 @@
 #include "cursor.h"
 #include "dialog.h"
 #include "dialog_selectitems.h"
+#include "direction.h"
 #include "editor_castle_details_window.h"
 #include "editor_event_details_window.h"
 #include "editor_map_specs_window.h"
@@ -79,7 +80,6 @@
 #include "ui_button.h"
 #include "ui_dialog.h"
 #include "ui_map_object.h"
-#include "ui_monster.h"
 #include "ui_text.h"
 #include "ui_tool.h"
 #include "view_world.h"
@@ -459,7 +459,9 @@ namespace
 
             // River deltas are only objects that can be placed on water and on land.
             // Yes, the below code is very hacky but so far this is the best we can do.
-            if ( firstObjectPart.icnType == MP2::OBJ_ICN_TYPE_OBJNMUL2 && ( firstObjectPart.icnIndex == 2U || firstObjectPart.icnIndex == 11U ) ) {
+            if ( firstObjectPart.icnType == MP2::OBJ_ICN_TYPE_OBJNMUL2
+                 && ( firstObjectPart.icnIndex == 2U || firstObjectPart.icnIndex == 11U || firstObjectPart.icnIndex == 218 + 2U
+                      || firstObjectPart.icnIndex == 218 + 11U ) ) {
                 // This is a river delta. Just don't check the terrain type.
             }
             else if ( !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tiles & tileToCheck ) { return !tileToCheck.isWater(); } ) ) {
@@ -1122,6 +1124,9 @@ namespace Interface
         Maps::Tiles & tile = world.GetTiles( tileIndex );
 
         if ( _editorPanel.isDetailEdit() ) {
+            // Trigger an action only when metadata has been changed to avoid expensive computations and bloated list of actions.
+            // Comparing a metadata structure is much faster than restoring the whole map.
+
             for ( const auto & object : _mapFormat.tiles[tileIndex].objects ) {
                 const auto & objectGroupInfo = Maps::getObjectsByGroup( object.group );
                 assert( object.index <= objectGroupInfo.size() );
@@ -1147,10 +1152,10 @@ namespace Interface
                     hero.SetColor( color );
                     hero.applyHeroMetadata( _mapFormat.heroMetadata[object.id], objectType == MP2::OBJ_JAIL, true );
 
-                    fheroes2::ActionCreator action( _historyManager, _mapFormat );
                     hero.OpenDialog( false, false, true, true, true, true );
                     Maps::Map_Format::HeroMetadata heroNewMetadata = hero.getHeroMetadata();
                     if ( heroNewMetadata != _mapFormat.heroMetadata[object.id] ) {
+                        fheroes2::ActionCreator action( _historyManager, _mapFormat );
                         _mapFormat.heroMetadata[object.id] = std::move( heroNewMetadata );
                         action.commit();
                     }
@@ -1160,25 +1165,39 @@ namespace Interface
 
                     const int race = Race::IndexToRace( static_cast<int>( objectInfo.metadata[0] ) );
                     const int color = Color::IndexToColor( Maps::getTownColorIndex( _mapFormat, tileIndex, object.id ) );
-                    Editor::castleDetailsDialog( _mapFormat.castleMetadata[object.id], race, color );
+
+                    auto & castleMetadata = _mapFormat.castleMetadata[object.id];
+                    Maps::Map_Format::CastleMetadata newCastleMetadata = castleMetadata;
+
+                    Editor::castleDetailsDialog( newCastleMetadata, race, color );
+                    if ( castleMetadata != newCastleMetadata ) {
+                        fheroes2::ActionCreator action( _historyManager, _mapFormat );
+                        castleMetadata = std::move( newCastleMetadata );
+                        action.commit();
+                    }
                 }
                 else if ( objectType == MP2::OBJ_SIGN || objectType == MP2::OBJ_BOTTLE ) {
-                    fheroes2::ActionCreator action( _historyManager, _mapFormat );
-
                     std::string header = _( "Input %{object} text" );
                     StringReplace( header, "%{object}", MP2::StringObject( objectType ) );
 
-                    std::string signText = _mapFormat.signMetadata[object.id].message;
-                    if ( Dialog::inputString( std::move( header ), signText, {}, 0, true, true ) ) {
-                        _mapFormat.signMetadata[object.id].message = std::move( signText );
+                    auto & originalMessage = _mapFormat.signMetadata[object.id].message;
+                    std::string signText = originalMessage;
+
+                    if ( Dialog::inputString( std::move( header ), signText, {}, 0, true, true ) && originalMessage != signText ) {
+                        fheroes2::ActionCreator action( _historyManager, _mapFormat );
+                        originalMessage = std::move( signText );
                         action.commit();
                     }
                 }
                 else if ( objectType == MP2::OBJ_EVENT ) {
                     assert( _mapFormat.adventureMapEventMetadata.find( object.id ) != _mapFormat.adventureMapEventMetadata.end() );
 
-                    fheroes2::ActionCreator action( _historyManager, _mapFormat );
-                    if ( Editor::eventDetailsDialog( _mapFormat.adventureMapEventMetadata[object.id], _mapFormat.humanPlayerColors, _mapFormat.computerPlayerColors ) ) {
+                    auto & eventMetadata = _mapFormat.adventureMapEventMetadata[object.id];
+                    Maps::Map_Format::AdventureMapEventMetadata newEventData = eventMetadata;
+
+                    if ( Editor::eventDetailsDialog( newEventData, _mapFormat.humanPlayerColors, _mapFormat.computerPlayerColors ) && newEventData != eventMetadata ) {
+                        fheroes2::ActionCreator action( _historyManager, _mapFormat );
+                        eventMetadata = std::move( newEventData );
                         action.commit();
                     }
                 }
@@ -1189,21 +1208,24 @@ namespace Interface
                     if ( monsterMetadata != _mapFormat.standardMetadata.end() ) {
                         monsterCount = monsterMetadata->second.metadata[0];
                     }
+                    else {
+                        // This could be a corrupted map. Add missing metadata into it. This action should be outside action manager scope.
+                        _mapFormat.standardMetadata[object.id] = { 0, 0, Monster::JOIN_CONDITION_UNSET };
+                    }
 
                     const Monster tempMonster( static_cast<int>( object.index ) + 1 );
 
                     std::string str = _( "Set %{monster} Count" );
                     StringReplace( str, "%{monster}", tempMonster.GetName() );
 
-                    fheroes2::Sprite surface;
+                    std::unique_ptr<const fheroes2::MonsterDialogElement> monsterUi = nullptr;
 
                     if ( tempMonster.isValid() ) {
-                        surface = fheroes2::AGG::GetICN( ICN::STRIP, 12 );
-                        fheroes2::renderMonsterFrame( tempMonster, surface, { 6, 6 } );
+                        monsterUi = std::make_unique<const fheroes2::MonsterDialogElement>( tempMonster );
                     }
 
-                    fheroes2::ActionCreator action( _historyManager, _mapFormat );
-                    if ( Dialog::SelectCount( str, 0, 500000, monsterCount, 1, surface ) ) {
+                    if ( Dialog::SelectCount( str, 0, 500000, monsterCount, 1, monsterUi.get() ) && _mapFormat.standardMetadata[object.id].metadata[0] != monsterCount ) {
+                        fheroes2::ActionCreator action( _historyManager, _mapFormat );
                         _mapFormat.standardMetadata[object.id] = { monsterCount, 0, Monster::JOIN_CONDITION_UNSET };
                         action.commit();
                     }
@@ -1212,30 +1234,34 @@ namespace Interface
                     if ( objectInfo.objectType == MP2::OBJ_RANDOM_ULTIMATE_ARTIFACT ) {
                         assert( _mapFormat.standardMetadata.find( object.id ) != _mapFormat.standardMetadata.end() );
 
-                        int32_t radius = _mapFormat.standardMetadata[object.id].metadata[0];
+                        auto & originalRadius = _mapFormat.standardMetadata[object.id].metadata[0];
+                        int32_t radius = originalRadius;
 
-                        fheroes2::ActionCreator action( _historyManager, _mapFormat );
-                        if ( Dialog::SelectCount( _( "Set Random Ultimate Artifact Radius" ), 0, 100, radius ) ) {
-                            _mapFormat.standardMetadata[object.id].metadata[0] = radius;
+                        if ( Dialog::SelectCount( _( "Set Random Ultimate Artifact Radius" ), 0, 100, radius ) && radius != originalRadius ) {
+                            fheroes2::ActionCreator action( _historyManager, _mapFormat );
+                            originalRadius = radius;
                             action.commit();
                         }
                     }
                     else if ( objectInfo.objectType == MP2::OBJ_ARTIFACT && objectInfo.metadata[0] == Artifact::SPELL_SCROLL ) {
-                        // Find Spell Scroll object.
+                        // Find Artifact object.
                         assert( _mapFormat.standardMetadata.find( object.id ) != _mapFormat.standardMetadata.end() );
 
-                        const int spellId = Dialog::selectSpell( _mapFormat.standardMetadata[object.id].metadata[0], true ).GetID();
+                        auto & artifactSpellId = _mapFormat.standardMetadata[object.id].metadata[0];
 
-                        if ( spellId == Spell::NONE ) {
-                            // We do not place the Spell Scroll artifact if the spell for it was not selected.
+                        const int newSpellId = Dialog::selectSpell( artifactSpellId, true ).GetID();
+
+                        if ( newSpellId == Spell::NONE || artifactSpellId == newSpellId ) {
+                            // We do not place the Spell Scroll artifact if the spell for it was not selected
+                            // or when the same spell was chosen.
                             return;
                         }
 
                         fheroes2::ActionCreator action( _historyManager, _mapFormat );
 
-                        _mapFormat.standardMetadata[object.id].metadata[0] = spellId;
+                        artifactSpellId = newSpellId;
 
-                        Maps::setSpellOnTile( tile, spellId );
+                        Maps::setSpellOnTile( tile, newSpellId );
 
                         action.commit();
                     }
@@ -1248,8 +1274,12 @@ namespace Interface
                 else if ( objectType == MP2::OBJ_SPHINX ) {
                     assert( _mapFormat.sphinxMetadata.find( object.id ) != _mapFormat.sphinxMetadata.end() );
 
-                    fheroes2::ActionCreator action( _historyManager, _mapFormat );
-                    if ( Editor::openSphinxWindow( _mapFormat.sphinxMetadata[object.id] ) ) {
+                    auto & originalMetadata = _mapFormat.sphinxMetadata[object.id];
+                    Maps::Map_Format::SphinxMetadata newMetadata = originalMetadata;
+
+                    if ( Editor::openSphinxWindow( newMetadata ) && newMetadata != originalMetadata ) {
+                        fheroes2::ActionCreator action( _historyManager, _mapFormat );
+                        originalMetadata = std::move( newMetadata );
                         action.commit();
                     }
                 }
@@ -1568,11 +1598,29 @@ namespace Interface
             // For River Deltas we update the nearby Streams to properly connect to them.
             const Maps::ObjectInfo & objectInfo = Maps::getObjectInfo( groupType, objectType );
             std::for_each( objectInfo.groundLevelParts.begin(), objectInfo.groundLevelParts.end(), [&tile]( const Maps::LayeredObjectPartInfo & info ) {
-                if ( info.icnType != MP2::OBJ_ICN_TYPE_OBJNMUL2 && info.icnIndex != 0 && info.icnIndex != 13 ) {
+                if ( info.icnType != MP2::OBJ_ICN_TYPE_OBJNMUL2 ) {
                     return;
                 }
 
-                Maps::updateStreamsToDeltaConnection( tile, info.icnIndex == 13 );
+                int deltaDirection = Direction::UNKNOWN;
+                switch ( info.icnIndex ) {
+                case 0:
+                    deltaDirection = Direction::TOP;
+                    break;
+                case 13:
+                    deltaDirection = Direction::BOTTOM;
+                    break;
+                case 218:
+                    deltaDirection = Direction::LEFT;
+                    break;
+                case 218 + 13:
+                    deltaDirection = Direction::RIGHT;
+                    break;
+                default:
+                    return;
+                }
+
+                Maps::updateStreamsToDeltaConnection( tile, deltaDirection );
             } );
 
             action.commit();
@@ -1685,12 +1733,12 @@ namespace Interface
             return false;
         }
 
-        _loadedFileName = System::truncateFileExtensionAndPath( filePath );
+        _loadedFileName = System::GetStem( filePath );
 
         // Set the loaded map as a default map for the new Standard Game.
         Maps::FileInfo fi;
         if ( fi.loadResurrectionMap( _mapFormat, filePath ) ) {
-            Settings::Get().SetCurrentFileInfo( std::move( fi ) );
+            Settings::Get().setCurrentMapInfo( std::move( fi ) );
         }
         else {
             assert( 0 );
@@ -1712,11 +1760,23 @@ namespace Interface
             return;
         }
 
-        const std::string mapDirectory = System::concatPath( dataPath, "maps" );
+        std::string mapDirectory = System::concatPath( dataPath, "maps" );
 
         if ( !System::IsDirectory( mapDirectory ) && !System::MakeDirectory( mapDirectory ) ) {
             fheroes2::showStandardTextMessage( _( "Warning!" ), _( "Unable to create a directory to save the map." ), Dialog::OK );
             return;
+        }
+
+        // Since the name of the map directory can be in arbitrary case, we need to get its real case-sensitive name first
+        {
+            std::string correctedMapDirectory;
+
+            if ( !System::GetCaseInsensitivePath( mapDirectory, correctedMapDirectory ) ) {
+                fheroes2::showStandardTextMessage( _( "Warning!" ), _( "Unable to locate a directory to save the map." ), Dialog::OK );
+                return;
+            }
+
+            mapDirectory = std::move( correctedMapDirectory );
         }
 
         std::string fileName = _loadedFileName;
@@ -1743,17 +1803,13 @@ namespace Interface
             // Set the saved map as a default map for the new Standard Game.
             Maps::FileInfo fi;
             if ( fi.loadResurrectionMap( _mapFormat, fullPath ) ) {
-                Settings::Get().SetCurrentFileInfo( std::move( fi ) );
+                Settings::Get().setCurrentMapInfo( std::move( fi ) );
             }
             else {
                 assert( 0 );
             }
 
-            // On some OSes like Windows, the path may contain '\' symbols. This symbol doesn't exist in the resources.
-            // To avoid this we have to replace all '\' symbols with '/' symbols.
-            StringReplace( fullPath, "\\", "/" );
-
-            _warningMessage.reset( _( "Map saved to: " ) + fullPath );
+            _warningMessage.reset( _( "Map saved to: " ) + std::move( fullPath ) );
 
             return;
         }
@@ -1763,6 +1819,7 @@ namespace Interface
 
     void EditorInterface::openMapSpecificationsDialog()
     {
+        // TODO: avoid creation of an action for cases when no changes are being done in the map format.
         fheroes2::ActionCreator action( _historyManager, _mapFormat );
 
         if ( Editor::mapSpecificationsDialog( _mapFormat ) ) {

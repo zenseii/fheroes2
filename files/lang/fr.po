@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-03 03:05+0000\n"
+"POT-Creation-Date: 2024-08-18 01:49+0000\n"
 "PO-Revision-Date: 2024-03-16 00:13+0100\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -2859,11 +2859,11 @@ msgstr "Pas de créatures disponibles à l'achat."
 msgid "Recruit Creatures"
 msgstr "Recruter des créatures"
 
-msgid "Max"
-msgstr "Max"
-
 msgid "Hire all creatures in the town."
 msgstr "Recruter toutes les créatures disponibles dans le village."
+
+msgid "Max"
+msgstr "Max"
 
 msgid "Available"
 msgstr "Disponible"
@@ -3061,17 +3061,14 @@ msgstr "Total : "
 msgid "Need: "
 msgstr "Besoin : "
 
-msgid "Load Game"
-msgstr "Charger une partie"
-
-msgid "No save files to load."
-msgstr "Pas de sauvegarde disponible."
-
 msgid "New Game"
 msgstr "Nouvelle partie"
 
 msgid "Start a single or multi-player game."
 msgstr "Démarrer un jeu solo ou multijoueur."
+
+msgid "Load Game"
+msgstr "Charger une partie"
 
 msgid "Load a previously saved game."
 msgstr "Charger une partie sauvegardée."
@@ -3324,6 +3321,9 @@ msgstr ""
 "ou\n"
 "%{skill2}"
 
+msgid "n/a"
+msgstr "n/a"
+
 msgid ""
 "Please inspect our fine wares. If you feel like offering a trade, click on "
 "the items you wish to trade with and for."
@@ -3359,9 +3359,6 @@ msgstr "Vos ressources"
 
 msgid "Available Trades"
 msgstr "Échanges possibles"
-
-msgid "n/a"
-msgstr "n/a"
 
 # artifact is guarded by? (=gardé). A mine is guarded by? (=gardée). Ruins are guarded by? (=gardées).
 msgid "guarded by %{count} %{monster}"
@@ -3538,11 +3535,11 @@ msgstr "Fichier à sauvegarder :"
 msgid "File to Load:"
 msgstr "Fichier à charger :"
 
-msgid "Accept the choice made."
-msgstr "Confirmez le choix."
-
 msgid "Terrain object"
 msgstr "Objets généraux"
+
+msgid "Accept the choice made."
+msgstr "Confirmez le choix."
 
 msgid "Select Skill:"
 msgstr "Choisir compétence :"
@@ -3645,6 +3642,41 @@ msgstr "Choix d'élément (bonus) :"
 msgid "Select Adventure Object:"
 msgstr "Choix d'élément (aventure) :"
 
+msgid "Players Icon"
+msgstr "Icônes des joueurs"
+
+msgid ""
+"Indicates how many players total are in the scenario. Any positions not "
+"occupied by human players will be occupied by computer players."
+msgstr ""
+"Indique combien de joueurs au total sont dans le scenario. Toute position "
+"non occupée par un humain sera occupée par l'ordinateur."
+
+msgid ""
+"Indicates whether the map\n"
+"is small (36 x 36), medium\n"
+"(72 x 72), large (108 x 108),\n"
+"or extra large (144 x 144)."
+msgstr ""
+"Indique si la carte est\n"
+"petite (36x36), moyenne\n"
+"(72x72), grande (108x108)\n"
+"ou très grande (144x144)."
+
+msgid "Size Icon"
+msgstr "Taille de l'icône"
+
+msgid "Map Type"
+msgstr "Type de carte"
+
+#, fuzzy
+msgid ""
+"Indicates whether the map is made for \"The Succession Wars\", \"The Price "
+"of Loyalty\" or \"Resurrection\" version of the game."
+msgstr ""
+"Indique si la carte est faite pour la version du jeu \"The Succession Wars\" "
+"ou \"The Price of Loyalty\"."
+
 msgid "Map Type:\n"
 msgstr "Type de carte :\n"
 
@@ -3731,41 +3763,6 @@ msgstr "Toutes les cartes"
 
 msgid "View all maps, regardless of size."
 msgstr "Voir toutes les cartes, sans tenir compte de leur taille."
-
-msgid "Players Icon"
-msgstr "Icônes des joueurs"
-
-msgid ""
-"Indicates how many players total are in the scenario. Any positions not "
-"occupied by human players will be occupied by computer players."
-msgstr ""
-"Indique combien de joueurs au total sont dans le scenario. Toute position "
-"non occupée par un humain sera occupée par l'ordinateur."
-
-msgid ""
-"Indicates whether the map\n"
-"is small (36 x 36), medium\n"
-"(72 x 72), large (108 x 108),\n"
-"or extra large (144 x 144)."
-msgstr ""
-"Indique si la carte est\n"
-"petite (36x36), moyenne\n"
-"(72x72), grande (108x108)\n"
-"ou très grande (144x144)."
-
-msgid "Size Icon"
-msgstr "Taille de l'icône"
-
-msgid "Map Type"
-msgstr "Type de carte"
-
-#, fuzzy
-msgid ""
-"Indicates whether the map is made for \"The Succession Wars\", \"The Price "
-"of Loyalty\" or \"Resurrection\" version of the game."
-msgstr ""
-"Indique si la carte est faite pour la version du jeu \"The Succession Wars\" "
-"ou \"The Price of Loyalty\"."
 
 msgid "Selected Name"
 msgstr "Carte sélectionnée"
@@ -4206,6 +4203,10 @@ msgid "Unable to create a directory to save the map."
 msgstr "Permet d'effacer les éléments placés sur la carte."
 
 #, fuzzy
+msgid "Unable to locate a directory to save the map."
+msgstr "Permet d'effacer les éléments placés sur la carte."
+
+#, fuzzy
 msgid "Are you sure you want to overwrite the existing map?"
 msgstr "Voulez-vous vraiment remplacer la sauvegarde avec ce nom ?"
 
@@ -4511,6 +4512,30 @@ msgid "Warning"
 msgstr "Attention"
 
 #, fuzzy
+msgid "[%{pos}]: %{race} hero"
+msgstr "Héros %{race} %{color}"
+
+#, fuzzy
+msgid "[%{pos}]: %{name}, %{race} hero"
+msgstr "%{race1} %{name1} vs. %{race2} %{name2}"
+
+#, fuzzy
+msgid "[%{pos}]: %{race} town"
+msgstr "Héros %{race} %{color}"
+
+#, fuzzy
+msgid "[%{pos}]: %{race} castle"
+msgstr "%{townOrCastle} %{race} %{color}"
+
+#, fuzzy
+msgid "[%{pos}]: %{name}, %{race} town"
+msgstr "%{race1} %{name1} vs. %{race2} %{name2}"
+
+#, fuzzy
+msgid "[%{pos}]: %{name}, %{race} castle"
+msgstr "%{race1} %{name1} vs. %{race2} %{name2}"
+
+#, fuzzy
 msgid "None."
 msgstr "Aucune"
 
@@ -4527,6 +4552,26 @@ msgid "Run out of time."
 msgstr "Quitter l'éditeur de carte."
 
 #, fuzzy
+msgid "alliance|1st"
+msgstr " alliance"
+
+#, fuzzy
+msgid "alliance|2nd"
+msgstr " alliance"
+
+#, fuzzy
+msgid "alliance|3rd"
+msgstr " alliance"
+
+#, fuzzy
+msgid "alliance|4th"
+msgstr " alliance"
+
+#, fuzzy
+msgid "alliance|5th"
+msgstr " alliance"
+
+#, fuzzy
 msgid "Special Loss Condition"
 msgstr "Conditions de défaite"
 
@@ -4538,12 +4583,60 @@ msgstr "Conditions de victoire"
 msgid "Allow standard victory conditions"
 msgstr "Conditions de victoire"
 
+msgid "Allow this condition also for AI"
+msgstr ""
+
+#, fuzzy
+msgid "Set alliances:"
+msgstr " alliance"
+
+#, fuzzy
+msgid "{%number} alliance: "
+msgstr " alliance"
+
 #, fuzzy
 msgid "Gold:"
 msgstr "Or"
 
+#, fuzzy
+msgid "Select a Town to capture to achieve victory"
+msgstr "Sélectionnez la destination."
+
+#, fuzzy
+msgid "Click here to change the town needed to capture to achieve victory."
+msgstr "Enregistrer le jeu en cours."
+
+msgid "Select a Hero to defeat to achieve victory"
+msgstr ""
+
+#, fuzzy
+msgid "Click here to change the hero needed to defeat to achieve victory."
+msgstr "Enregistrer le jeu en cours."
+
+msgid "Put %{color} player in the %{alliance} alliance"
+msgstr ""
+
+msgid ""
+"If this checkbox is checked, the %{color} player will be in the %{alliance} "
+"alliance."
+msgstr ""
+
 msgid "Days:"
 msgstr ""
+
+msgid "Select a Town to lose to suffer defeat"
+msgstr ""
+
+#, fuzzy
+msgid "Click here to change the town whose loss would mean defeat."
+msgstr "Enregistrer le jeu en cours."
+
+msgid "Select a Hero to lose to suffer defeat"
+msgstr ""
+
+#, fuzzy
+msgid "Click here to change the hero whose loss would mean defeat."
+msgstr "Enregistrer le jeu en cours."
 
 #, fuzzy
 msgid "Map Difficulty"
@@ -5017,6 +5110,9 @@ msgstr "Concepteurs de cartes"
 msgid "Package Design"
 msgstr "Conception du conditionnement"
 
+msgid "High Scores"
+msgstr "Meilleurs scores"
+
 msgid "Your Name"
 msgstr "Votre nom"
 
@@ -5430,6 +5526,9 @@ msgstr "Cette partie a été sauvegardée en langue '"
 msgid "' language, but the current language of the game is '"
 msgstr "', mais la langue actuelle du jeu est '"
 
+msgid "No save files to load."
+msgstr "Pas de sauvegarde disponible."
+
 msgid "Hot Seat"
 msgstr "Jouer à plusieurs"
 
@@ -5522,9 +5621,6 @@ msgstr "Crédits"
 
 msgid "View the credits screen."
 msgstr "Voir l'écran des crédits."
-
-msgid "High Scores"
-msgstr "Meilleurs scores"
 
 msgid "View the high scores screen."
 msgstr "Voir l'écran des meilleurs scores."
@@ -11610,7 +11706,8 @@ msgstr "Saint cri"
 msgid "Anti-Magic"
 msgstr "Anti-magie"
 
-msgid "Prevents harmful magic against the selected creatures."
+#, fuzzy
+msgid "Prevents any magic against the selected creatures."
 msgstr "Protège la créature choisie de la magie néfaste."
 
 msgid "Dispel Magic"

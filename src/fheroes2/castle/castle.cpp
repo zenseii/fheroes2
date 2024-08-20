@@ -27,10 +27,10 @@
 #include <array>
 #include <cassert>
 #include <iterator>
-#include <ostream>
+#include <sstream>
 
 #include "agg_image.h"
-#include "ai.h"
+#include "ai_planner.h"
 #include "army_troop.h"
 #include "artifact.h"
 #include "audio_manager.h"
@@ -1011,7 +1011,7 @@ bool Castle::isFortificationBuilt() const
 
 const char * Castle::GetStringBuilding( uint32_t build, int race )
 {
-    return fheroes2::getBuildingName( race, static_cast<building_t>( build ) );
+    return fheroes2::getBuildingName( race, static_cast<BuildingType>( build ) );
 }
 
 bool Castle::AllowBuyHero( std::string * msg ) const
@@ -1310,7 +1310,7 @@ BuildingStatus Castle::CheckBuyBuilding( const uint32_t build ) const
         break;
     }
 
-    const uint32_t requirement = fheroes2::getBuildingRequirement( race, static_cast<building_t>( build ) );
+    const uint32_t requirement = fheroes2::getBuildingRequirement( race, static_cast<BuildingType>( build ) );
 
     for ( uint32_t itr = 0x00000001; itr; itr <<= 1 ) {
         if ( ( requirement & itr ) && !( _constructedBuildings & itr ) ) {
@@ -2064,7 +2064,7 @@ uint32_t Castle::GetUpgradeBuilding( const uint32_t buildingId ) const
         return fheroes2::getUpgradeForBuilding( race, DWELLING_UPGRADE6 );
     }
 
-    return fheroes2::getUpgradeForBuilding( race, static_cast<building_t>( buildingId ) );
+    return fheroes2::getUpgradeForBuilding( race, static_cast<BuildingType>( buildingId ) );
 }
 
 bool Castle::PredicateIsCastle( const Castle * castle )
@@ -2326,8 +2326,8 @@ void Castle::setName( const std::set<std::string, std::less<>> & usedNames )
 
 int Castle::GetControl() const
 {
-    /* gray towns: AI control */
-    return GetColor() & Color::ALL ? GetKingdom().GetControl() : CONTROL_AI;
+    // Neutral castles & towns are always controlled by AI
+    return ( GetColor() & Color::ALL ) ? GetKingdom().GetControl() : CONTROL_AI;
 }
 
 bool Castle::isNecromancyShrineBuild() const
@@ -2394,7 +2394,7 @@ void Castle::JoinRNDArmy()
 void Castle::ActionPreBattle()
 {
     if ( isControlAI() ) {
-        AI::Get().CastlePreBattle( *this );
+        AI::Planner::CastlePreBattle( *this );
 
         return;
     }
@@ -2413,9 +2413,6 @@ void Castle::ActionAfterBattle( bool attacker_wins )
         army.Clean();
         ResetModes( CUSTOM_ARMY );
     }
-
-    if ( isControlAI() )
-        AI::Get().CastleAfterBattle( *this, attacker_wins );
 }
 
 Castle * VecCastles::GetFirstCastle() const
@@ -2614,7 +2611,7 @@ std::string Castle::GetStringBuilding( uint32_t build ) const
 
 std::string Castle::GetDescriptionBuilding( uint32_t build ) const
 {
-    std::string res = fheroes2::getBuildingDescription( GetRace(), static_cast<building_t>( build ) );
+    std::string res = fheroes2::getBuildingDescription( GetRace(), static_cast<BuildingType>( build ) );
 
     switch ( build ) {
     case BUILD_WELL:
