@@ -42,7 +42,6 @@
 #include "game.h"
 #include "game_io.h"
 #include "game_over.h"
-#include "gamedefs.h"
 #include "ground.h"
 #include "heroes.h"
 #include "logging.h"
@@ -464,37 +463,37 @@ Heroes * World::GetHero( const Castle & castle ) const
 
 int World::GetDay() const
 {
-    return LastDay() ? DAYOFWEEK : day % DAYOFWEEK;
+    return LastDay() ? numOfDaysPerWeek : day % numOfDaysPerWeek;
 }
 
 int World::GetWeek() const
 {
-    return LastWeek() ? WEEKOFMONTH : week % WEEKOFMONTH;
+    return LastWeek() ? numOfWeeksPerMonth : week % numOfWeeksPerMonth;
 }
 
 bool World::BeginWeek() const
 {
-    return 1 == ( day % DAYOFWEEK );
+    return 1 == ( day % numOfDaysPerWeek );
 }
 
 bool World::BeginMonth() const
 {
-    return 1 == ( week % WEEKOFMONTH ) && BeginWeek();
+    return 1 == ( week % numOfWeeksPerMonth ) && BeginWeek();
 }
 
 bool World::LastDay() const
 {
-    return ( 0 == ( day % DAYOFWEEK ) );
+    return ( 0 == ( day % numOfDaysPerWeek ) );
 }
 
 bool World::FirstWeek() const
 {
-    return ( 1 == ( week % WEEKOFMONTH ) );
+    return ( 1 == ( week % numOfWeeksPerMonth ) );
 }
 
 bool World::LastWeek() const
 {
-    return ( 0 == ( week % WEEKOFMONTH ) );
+    return ( 0 == ( week % numOfWeeksPerMonth ) );
 }
 
 const Week & World::GetWeekType() const
@@ -1305,7 +1304,7 @@ void World::updatePassabilities()
     }
 }
 
-void World::PostLoad( const bool setTilePassabilities )
+void World::PostLoad( const bool setTilePassabilities, const bool updateUidCounterToMaximum )
 {
     if ( setTilePassabilities ) {
         updatePassabilities();
@@ -1327,6 +1326,30 @@ void World::PostLoad( const bool setTilePassabilities )
 
     resetPathfinder();
     ComputeStaticAnalysis();
+
+    // Find the maximum UID value.
+    uint32_t maxUid = 0;
+
+    for ( const Maps::Tiles & tile : vec_tiles ) {
+        maxUid = std::max( tile.getMainObjectPart()._uid, maxUid );
+
+        for ( const auto & addon : tile.getBottomLayerAddons() ) {
+            maxUid = std::max( addon._uid, maxUid );
+        }
+
+        for ( const auto & addon : tile.getTopLayerAddons() ) {
+            maxUid = std::max( addon._uid, maxUid );
+        }
+    }
+
+    if ( updateUidCounterToMaximum ) {
+        // And set the UID counter value with the found maximum.
+        Maps::setLastObjectUID( maxUid );
+    }
+    else {
+        // Check that 'getNewObjectUID()' will return values that will not match the existing ones on the started map.
+        assert( Maps::getLastObjectUID() >= maxUid );
+    }
 }
 
 uint32_t World::GetMapSeed() const
@@ -1473,7 +1496,7 @@ IStreamBase & operator>>( IStreamBase & stream, World & w )
 
     stream >> w.map_objects >> w._seed;
 
-    w.PostLoad( false );
+    w.PostLoad( false, true );
 
     return stream;
 }

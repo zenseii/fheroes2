@@ -45,7 +45,6 @@
 #include "direction.h"
 #include "game_io.h"
 #include "game_static.h"
-#include "gamedefs.h"
 #include "ground.h"
 #include "icn.h"
 #include "image.h"
@@ -885,7 +884,7 @@ double Heroes::getMeetingValue( const Heroes & receivingHero ) const
 
     // Magic Book is not transferable.
     const uint32_t artCount = bag_artifacts.CountArtifacts() - bag_artifacts.Count( Artifact::MAGIC_BOOK );
-    const uint32_t canFit = HEROESMAXARTIFACT - receivingHero.bag_artifacts.CountArtifacts();
+    const uint32_t canFit = BagArtifacts::maxCapacity - receivingHero.bag_artifacts.CountArtifacts();
 
     double artifactValue = bag_artifacts.getArtifactValue() * 5.0;
     if ( artCount > canFit ) {
@@ -904,7 +903,7 @@ int Heroes::GetAttack() const
 int Heroes::GetAttack( std::string * strs ) const
 {
     int result = attack + GetAttackModificator( strs );
-    return result < 0 ? 0 : ( result > 255 ? 255 : result );
+    return std::clamp( result, 0, 255 );
 }
 
 int Heroes::GetDefense() const
@@ -915,7 +914,7 @@ int Heroes::GetDefense() const
 int Heroes::GetDefense( std::string * strs ) const
 {
     int result = defense + GetDefenseModificator( strs );
-    return result < 0 ? 0 : ( result > 255 ? 255 : result );
+    return std::clamp( result, 0, 255 );
 }
 
 int Heroes::GetPower() const
@@ -926,7 +925,7 @@ int Heroes::GetPower() const
 int Heroes::GetPower( std::string * strs ) const
 {
     const int result = power + GetPowerModificator( strs );
-    return result < 1 ? 1 : ( result > 255 ? 255 : result );
+    return std::clamp( result, 1, 255 );
 }
 
 int Heroes::GetKnowledge() const
@@ -937,7 +936,7 @@ int Heroes::GetKnowledge() const
 int Heroes::GetKnowledge( std::string * strs ) const
 {
     int result = knowledge + GetKnowledgeModificator( strs );
-    return result < 0 ? 0 : ( result > 255 ? 255 : result );
+    return std::clamp( result, 0, 255 );
 }
 
 void Heroes::IncreasePrimarySkill( int skill )
@@ -1703,7 +1702,7 @@ uint32_t Heroes::GetSecondarySkillValue( int skill ) const
 
 bool Heroes::HasMaxSecondarySkill() const
 {
-    return HEROESMAXSKILL <= secondary_skills.Count();
+    return maxNumOfSecSkills <= secondary_skills.Count();
 }
 
 int Heroes::GetLevelSkill( int skill ) const

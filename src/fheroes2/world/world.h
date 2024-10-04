@@ -62,6 +62,11 @@ namespace Route
     class Step;
 }
 
+// Number of days in the game week
+inline constexpr int numOfDaysPerWeek{ 7 };
+// Number of weeks in the game month
+inline constexpr int numOfWeeksPerMonth{ 4 };
+
 struct MapObjects : public std::map<uint32_t, MapObjectSimple *>
 {
     MapObjects() = default;
@@ -385,7 +390,7 @@ private:
     void Reset();
     void MonthOfMonstersAction( const Monster & );
     bool ProcessNewMP2Map( const std::string & filename, const bool checkPoLObjects );
-    void PostLoad( const bool setTilePassabilities );
+    void PostLoad( const bool setTilePassabilities, const bool updateUidCounterToMaximum );
 
     bool updateTileMetadata( Maps::Tiles & tile, const MP2::MapObjectType objectType, const bool checkPoLObjects );
 
