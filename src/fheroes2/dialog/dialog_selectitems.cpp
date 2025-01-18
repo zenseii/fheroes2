@@ -1,6 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2019 - 2024                                             *
+ *   Copyright (C) 2019 - 2025                                             *
  *                                                                         *
  *   Free Heroes2 Engine: http://sourceforge.net/projects/fheroes2         *
  *   Copyright (C) 2011 by Andrey Afletdinov <fheroes2@gmail.com>          *
@@ -1057,8 +1057,8 @@ int Dialog::selectHeroType( const int heroType )
     }
 
     while ( le.HandleEvents() ) {
-        le.isMouseLeftButtonPressedInArea( buttonOk.area() ) ? buttonOk.drawOnPress() : buttonOk.drawOnRelease();
-        le.isMouseLeftButtonPressedInArea( buttonCancel.area() ) ? buttonCancel.drawOnPress() : buttonCancel.drawOnRelease();
+        buttonOk.drawOnState( le.isMouseLeftButtonPressedInArea( buttonOk.area() ) );
+        buttonCancel.drawOnState( le.isMouseLeftButtonPressedInArea( buttonCancel.area() ) );
 
         if ( le.MouseClickLeft( buttonOk.area() ) || Game::HotKeyPressEvent( Game::HotKeyEvent::DEFAULT_OKAY ) ) {
             return heroColor * 7 + heroRace;
@@ -1290,11 +1290,16 @@ void Dialog::selectTownType( int & type, int & color )
         townColor = color;
     }
 
-    isCastle ? buttonCastle.drawOnPress() : buttonTown.drawOnPress();
+    if ( isCastle ) {
+        buttonCastle.drawOnPress();
+    }
+    else {
+        buttonTown.drawOnPress();
+    }
 
     while ( le.HandleEvents() ) {
-        le.isMouseLeftButtonPressedInArea( buttonOk.area() ) ? buttonOk.drawOnPress() : buttonOk.drawOnRelease();
-        le.isMouseLeftButtonPressedInArea( buttonCancel.area() ) ? buttonCancel.drawOnPress() : buttonCancel.drawOnRelease();
+        buttonOk.drawOnState( le.isMouseLeftButtonPressedInArea( buttonOk.area() ) );
+        buttonCancel.drawOnState( le.isMouseLeftButtonPressedInArea( buttonCancel.area() ) );
 
         if ( isCastle ) {
             if ( le.isMouseLeftButtonPressedInArea( buttonTown.area() ) ) {
@@ -1476,7 +1481,7 @@ void Dialog::selectMineType( int32_t & type, int32_t & color )
     uint32_t selectedResourceType = 0;
 
     const std::vector<Maps::ObjectInfo> & allObjectInfo = Maps::getObjectsByGroup( Maps::ObjectGroup::ADVENTURE_MINES );
-    if ( type > 0 ) {
+    if ( type >= 0 ) {
         assert( static_cast<size_t>( type ) < allObjectInfo.size() );
 
         if ( allObjectInfo[type].objectType == MP2::OBJ_ABANDONED_MINE ) {
@@ -1642,8 +1647,8 @@ void Dialog::selectMineType( int32_t & type, int32_t & color )
     LocalEvent & le = LocalEvent::Get();
 
     while ( le.HandleEvents() ) {
-        le.isMouseLeftButtonPressedInArea( buttonOk.area() ) ? buttonOk.drawOnPress() : buttonOk.drawOnRelease();
-        le.isMouseLeftButtonPressedInArea( buttonCancel.area() ) ? buttonCancel.drawOnPress() : buttonCancel.drawOnRelease();
+        buttonOk.drawOnState( le.isMouseLeftButtonPressedInArea( buttonOk.area() ) );
+        buttonCancel.drawOnState( le.isMouseLeftButtonPressedInArea( buttonCancel.area() ) );
 
         bool needRedraw = listbox.QueueEventProcessing();
 

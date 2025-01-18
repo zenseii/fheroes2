@@ -47,6 +47,7 @@
 #include "spell_info.h"
 #include "ui_button.h"
 #include "ui_constants.h"
+#include "ui_keyboard.h"
 #include "ui_monster.h"
 #include "ui_text.h"
 
@@ -339,22 +340,33 @@ namespace fheroes2
         , _icnIndex( Resource::getIconIcnIndex( resourceType ) )
         , _text( std::move( text ) )
     {
-        const Text quantityText( _text, FontType::smallWhite() );
-
         const Sprite & icn = AGG::GetICN( ICN::RESOURCE, _icnIndex );
-        _area = { std::max( icn.width(), quantityText.width() ), icn.height() + textOffsetFromElement + quantityText.height() };
+
+        if ( _text.empty() ) {
+            _area = { icn.width(), icn.height() };
+        }
+        else {
+            const Text quantityText( _text, FontType::smallWhite() );
+            _area = { std::max( icn.width(), quantityText.width() ), icn.height() + textOffsetFromElement + quantityText.height() };
+        }
     }
 
     void ResourceDialogElement::draw( Image & output, const Point & offset ) const
     {
         const Sprite & icn = AGG::GetICN( ICN::RESOURCE, _icnIndex );
-        const Text quantityText( _text, FontType::smallWhite() );
 
-        const int32_t maxWidth = std::max( icn.width(), quantityText.width() );
+        if ( _text.empty() ) {
+            Blit( icn, 0, 0, output, offset.x, offset.y, icn.width(), icn.height() );
+        }
+        else {
+            const Text quantityText( _text, FontType::smallWhite() );
 
-        Blit( icn, 0, 0, output, offset.x + ( maxWidth - icn.width() ) / 2, offset.y, icn.width(), icn.height() );
+            const int32_t maxWidth = std::max( icn.width(), quantityText.width() );
 
-        quantityText.draw( offset.x + ( maxWidth - quantityText.width() ) / 2, offset.y + icn.height() + textOffsetFromElement, output );
+            Blit( icn, 0, 0, output, offset.x + ( maxWidth - icn.width() ) / 2, offset.y, icn.width(), icn.height() );
+
+            quantityText.draw( offset.x + ( maxWidth - quantityText.width() ) / 2, offset.y + icn.height() + textOffsetFromElement, output );
+        }
     }
 
     void ResourceDialogElement::processEvents( const Point & offset ) const
@@ -419,7 +431,7 @@ namespace fheroes2
         assert( spell.isValid() );
 
         std::string spellText( _spell.GetName() );
-        const uint32_t spellPoints = _spell.spellPoints( nullptr );
+        const uint32_t spellPoints = _spell.spellPoints( _hero );
         if ( spellPoints > 0 ) {
             spellText += " [" + std::to_string( spellPoints ) + ']';
         }
@@ -433,7 +445,7 @@ namespace fheroes2
     void SpellDialogElement::draw( Image & output, const Point & offset ) const
     {
         std::string spellText( _spell.GetName() );
-        const uint32_t spellPoints = _spell.spellPoints( nullptr );
+        const uint32_t spellPoints = _spell.spellPoints( _hero );
         if ( spellPoints > 0 ) {
             spellText += " [" + std::to_string( spellPoints ) + ']';
         }
@@ -905,6 +917,13 @@ namespace fheroes2
 
         if ( _value - _step >= _minimum && ( le.MouseClickLeft( _buttonDown.area() ) || _isMouseWheelDownEvent( le ) || _timedButtonDown.isDelayPassed() ) ) {
             _value -= _step;
+            return true;
+        }
+
+        if ( le.MouseClickLeft( _editBox ) ) {
+            openVirtualNumpad( _value, _minimum, _maximum );
+            assert( _value >= _minimum && _value <= _maximum );
+
             return true;
         }
 

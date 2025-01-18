@@ -65,6 +65,23 @@
 
 namespace
 {
+    void outputNewGameInTextSupportMode()
+    {
+        START_TEXT_SUPPORT_MODE
+        COUT( "Select Map for New Game\n" )
+
+        COUT( "Press " << Game::getHotKeyNameByEventId( Game::HotKeyEvent::MAIN_MENU_SELECT_MAP ) << " to select a map." )
+        COUT( "Press " << Game::getHotKeyNameByEventId( Game::HotKeyEvent::DEFAULT_CANCEL ) << " to close the dialog and return to the Main Menu." )
+        COUT( "Press " << Game::getHotKeyNameByEventId( Game::HotKeyEvent::DEFAULT_OKAY ) << " to start the chosen map." )
+    }
+
+    void showCurrentlySelectedMapInfoInTextSupportMode( const Maps::FileInfo & mapInfo )
+    {
+        START_TEXT_SUPPORT_MODE
+        COUT( "Currently selected map:\n" )
+        COUT( mapInfo.getSummary() )
+    }
+
     void updatePlayers( Players & players, const int humanPlayerCount )
     {
         if ( humanPlayerCount < 2 )
@@ -227,6 +244,7 @@ namespace
 
         Players & players = conf.GetPlayers();
 
+        showCurrentlySelectedMapInfoInTextSupportMode( mapInfo );
         conf.setCurrentMapInfo( mapInfo );
         updatePlayers( players, humanPlayerCount );
         Game::LoadPlayers( mapInfo.filename, players );
@@ -298,6 +316,8 @@ namespace
 
         fheroes2::GameMode result = fheroes2::GameMode::QUIT_GAME;
 
+        outputNewGameInTextSupportMode();
+
         LocalEvent & le = LocalEvent::Get();
 
         while ( true ) {
@@ -312,16 +332,21 @@ namespace
             }
 
             // press button
-            le.isMouseLeftButtonPressedInArea( buttonSelectMaps.area() ) ? buttonSelectMaps.drawOnPress() : buttonSelectMaps.drawOnRelease();
-            le.isMouseLeftButtonPressedInArea( buttonOk.area() ) ? buttonOk.drawOnPress() : buttonOk.drawOnRelease();
-            le.isMouseLeftButtonPressedInArea( buttonCancel.area() ) ? buttonCancel.drawOnPress() : buttonCancel.drawOnRelease();
+            buttonSelectMaps.drawOnState( le.isMouseLeftButtonPressedInArea( buttonSelectMaps.area() ) );
+            buttonOk.drawOnState( le.isMouseLeftButtonPressedInArea( buttonOk.area() ) );
+            buttonCancel.drawOnState( le.isMouseLeftButtonPressedInArea( buttonCancel.area() ) );
 
             // click select
             if ( HotKeyPressEvent( Game::HotKeyEvent::MAIN_MENU_SELECT_MAP ) || le.MouseClickLeft( buttonSelectMaps.area() ) ) {
                 const Maps::FileInfo * fi = Dialog::SelectScenario( lists, false );
+
+                // The previous dialog might still have a pressed button event. We have to clean the state.
+                le.reset();
+
                 const std::string currentMapName = conf.getCurrentMapInfo().filename;
 
                 if ( fi && fi->filename != currentMapName ) {
+                    showCurrentlySelectedMapInfoInTextSupportMode( *fi );
                     Game::SavePlayers( currentMapName, conf.GetPlayers() );
                     conf.setCurrentMapInfo( *fi );
 
@@ -345,12 +370,15 @@ namespace
                                              coordDifficulty[Game::getDifficulty()].y - levelCursorOffset ); // From 0 to 4, see: Difficulty enum
                 }
                 display.render();
+
+                outputNewGameInTextSupportMode();
             }
             else if ( Game::HotKeyPressEvent( Game::HotKeyEvent::DEFAULT_CANCEL ) || le.MouseClickLeft( buttonCancel.area() ) ) {
                 result = fheroes2::GameMode::MAIN_MENU;
                 break;
             }
-            else if ( Game::HotKeyPressEvent( Game::HotKeyEvent::DEFAULT_OKAY ) || le.MouseClickLeft( buttonOk.area() ) ) {
+
+            if ( Game::HotKeyPressEvent( Game::HotKeyEvent::DEFAULT_OKAY ) || le.MouseClickLeft( buttonOk.area() ) ) {
                 DEBUG_LOG( DBG_GAME, DBG_INFO, "select maps: " << conf.getCurrentMapInfo().filename << ", difficulty: " << Difficulty::String( Game::getDifficulty() ) )
                 result = fheroes2::GameMode::START_GAME;
 
@@ -358,7 +386,8 @@ namespace
                 fheroes2::fadeOutDisplay();
                 break;
             }
-            else if ( le.MouseClickLeft( roi ) ) {
+
+            if ( le.MouseClickLeft( roi ) ) {
                 const int32_t index = GetRectIndex( coordDifficulty, le.getMouseCursorPos() );
 
                 // select difficulty
@@ -437,6 +466,8 @@ namespace
                 return fheroes2::GameMode::START_GAME;
             }
 
+            fheroes2::drawMainMenuScreen();
+            fheroes2::showStandardTextMessage( _( "Warning" ), _( "The map is corrupted." ), Dialog::OK );
             return fheroes2::GameMode::MAIN_MENU;
         }
 
@@ -445,6 +476,8 @@ namespace
             return fheroes2::GameMode::START_GAME;
         }
 
+        fheroes2::drawMainMenuScreen();
+        fheroes2::showStandardTextMessage( _( "Warning" ), _( "The map is corrupted." ), Dialog::OK );
         return fheroes2::GameMode::MAIN_MENU;
     }
 }

@@ -25,7 +25,6 @@
 #include <cassert>
 #include <cstdint>
 #include <cstdlib>
-#include <initializer_list>
 #include <limits>
 #include <list>
 #include <optional>
@@ -40,6 +39,7 @@
 #include "castle.h"
 #include "color.h"
 #include "direction.h"
+#include "game_static.h"
 #include "ground.h"
 #include "logging.h"
 #include "map_object_info.h"
@@ -134,8 +134,7 @@ namespace
             uidArtifact = tile.getMainObjectPart()._uid;
         }
 
-        static_assert( std::is_same_v<decltype( Maps::Tile::updateTileObjectIcnIndex ), void( Maps::Tile &, uint32_t, uint8_t )>,
-                       "Type of updateTileObjectIcnIndex() has been changed, check the logic below" );
+        static_assert( std::is_same_v<decltype( Maps::Tile::updateTileObjectIcnIndex ), void( Maps::Tile &, uint32_t, uint8_t )> );
 
         // Please refer to ICN::OBJNARTI for artifact images. Since in the original game artifact UID start from 0 we have to deduct 1 from the current artifact ID.
         const uint32_t artSpriteIndex = ( art.GetID() - 1 ) * 2 + 1;
@@ -186,12 +185,12 @@ namespace
 
         tile.setMainObjectType( MP2::OBJ_MONSTER );
 
-        using TileImageIndexType = decltype( tile.getMainObjectPart().icnIndex );
-        static_assert( std::is_same_v<TileImageIndexType, uint8_t>, "Type of icnIndex has been changed, check the logic below" );
+        using IcnIndexType = decltype( tile.getMainObjectPart().icnIndex );
+        static_assert( std::is_same_v<IcnIndexType, uint8_t> );
 
-        assert( mons.GetID() > std::numeric_limits<TileImageIndexType>::min() && mons.GetID() <= std::numeric_limits<TileImageIndexType>::max() );
+        assert( mons.GetID() > std::numeric_limits<IcnIndexType>::min() && mons.GetID() <= std::numeric_limits<IcnIndexType>::max() );
 
-        tile.getMainObjectPart().icnIndex = static_cast<TileImageIndexType>( mons.GetID() - 1 ); // ICN::MONS32 starts from PEASANT
+        tile.getMainObjectPart().icnIndex = static_cast<IcnIndexType>( mons.GetID() - 1 ); // ICN::MONS32 starts from PEASANT
     }
 
     // Returns the direction vector bits from 'centerTileIndex' where the ground is 'groundId'.
@@ -241,32 +240,6 @@ namespace
         }
 
         return roadDirection;
-    }
-
-    // Returns the direction vector bits from 'centerTileIndex' to the around tiles with streams.
-    int getStreamDirecton( const Maps::Tile & tile )
-    {
-        const int32_t centerTileIndex = tile.GetIndex();
-        // Stream includes also the Deltas. Here we need to check only streams excluding Deltas.
-        int streamDirection = ( tile.containsAnyObjectIcnType( { MP2::OBJ_ICN_TYPE_STREAM } ) ) ? Direction::CENTER : 0;
-
-        // For streams we can check only the next four directions.
-        for ( const int direction : { Direction::LEFT, Direction::TOP, Direction::RIGHT, Direction::BOTTOM } ) {
-            if ( Maps::isValidDirection( centerTileIndex, direction ) ) {
-                const Maps::Tile & currentTile = world.getTile( Maps::GetDirectionIndex( centerTileIndex, direction ) );
-
-                // Check also for Deltas connection.
-                if ( currentTile.containsAnyObjectIcnType( { MP2::OBJ_ICN_TYPE_STREAM } )
-                     || ( direction == Direction::TOP && currentTile.containsSprite( MP2::OBJ_ICN_TYPE_OBJNMUL2, 13 ) )
-                     || ( direction == Direction::BOTTOM && currentTile.containsSprite( MP2::OBJ_ICN_TYPE_OBJNMUL2, 0 ) )
-                     || ( direction == Direction::RIGHT && currentTile.containsSprite( MP2::OBJ_ICN_TYPE_OBJNMUL2, 218 ) )
-                     || ( direction == Direction::LEFT && currentTile.containsSprite( MP2::OBJ_ICN_TYPE_OBJNMUL2, 218 + 13 ) ) ) {
-                    streamDirection |= direction;
-                }
-            }
-        }
-
-        return streamDirection;
     }
 
     bool hasBits( const int value, const int bits )
@@ -1075,91 +1048,6 @@ namespace
         updateRoadSpritesInArea( tile, 3, true );
     }
 
-    uint8_t getStreamImageForTile( const int streamDirection )
-    {
-        if ( hasNoBits( streamDirection, Direction::CENTER ) ) {
-            // This tile should not have a stream image.
-            return 255U;
-        }
-
-        if ( hasBits( streamDirection, Direction::LEFT | Direction::BOTTOM ) && hasNoBits( streamDirection, Direction::TOP | Direction::RIGHT ) ) {
-            // \ - stream from the left to the bottom.
-            return 0U;
-        }
-        if ( hasBits( streamDirection, Direction::RIGHT | Direction::BOTTOM ) && hasNoBits( streamDirection, Direction::TOP | Direction::LEFT ) ) {
-            // / - stream from the right to the bottom.
-            return 1U;
-        }
-        if ( hasBits( streamDirection, Direction::RIGHT | Direction::TOP ) && hasNoBits( streamDirection, Direction::BOTTOM | Direction::LEFT ) ) {
-            // \ - stream from the top to the right.
-            return 4U;
-        }
-        if ( hasBits( streamDirection, Direction::LEFT | Direction::TOP ) && hasNoBits( streamDirection, Direction::BOTTOM | Direction::RIGHT ) ) {
-            // / - stream from the top to the left.
-            return 7U;
-        }
-        if ( hasBits( streamDirection, Direction::LEFT | Direction::TOP | Direction::RIGHT ) && hasNoBits( streamDirection, Direction::BOTTOM ) ) {
-            // _|_ - stream from the top to the left and right.
-            return 8U;
-        }
-        if ( hasBits( streamDirection, Direction::BOTTOM | Direction::TOP | Direction::RIGHT ) && hasNoBits( streamDirection, Direction::LEFT ) ) {
-            // |- - stream from the top to the right and bottom.
-            return 9U;
-        }
-        if ( hasBits( streamDirection, Direction::BOTTOM | Direction::TOP | Direction::LEFT ) && hasNoBits( streamDirection, Direction::RIGHT ) ) {
-            // -| - stream from the top to the left and bottom.
-            return 10U;
-        }
-        if ( hasBits( streamDirection, Direction::BOTTOM | Direction::LEFT | Direction::RIGHT ) && hasNoBits( streamDirection, Direction::TOP ) ) {
-            // \/ - stream from the left and right to the bottom.
-            return 11U;
-        }
-        if ( hasBits( streamDirection, Direction::BOTTOM | Direction::LEFT | Direction::TOP | Direction::RIGHT ) ) {
-            // -|- - streams are all around.
-            return 6U;
-        }
-        if ( ( hasBits( streamDirection, Direction::LEFT ) || hasBits( streamDirection, Direction::RIGHT ) )
-             && hasNoBits( streamDirection, Direction::TOP | Direction::BOTTOM ) ) {
-            // - - horizontal stream.
-            return Rand::Get( 1 ) ? 2U : 5U;
-        }
-
-        // | - in all other cases are the vertical stream sprite, including the case when there are no other streams around.
-        return Rand::Get( 1 ) ? 3U : 12U;
-    }
-
-    void updateStreamSpriteOnTile( Maps::Tile & tile, const bool forceStreamOnTile )
-    {
-        const uint8_t imageIndex = getStreamImageForTile( getStreamDirecton( tile ) | ( forceStreamOnTile ? Direction::CENTER : Direction::UNKNOWN ) );
-
-        if ( imageIndex == 255U ) {
-            // After the check this tile should not contain a stream sprite.
-            return;
-        }
-
-        const uint32_t streamUid = tile.getObjectIdByObjectIcnType( MP2::OBJ_ICN_TYPE_STREAM );
-
-        if ( streamUid == 0 ) {
-            tile.pushGroundObjectPart( Maps::ObjectPart( Maps::TERRAIN_LAYER, Maps::getNewObjectUID(), MP2::OBJ_ICN_TYPE_STREAM, imageIndex ) );
-        }
-        else {
-            Maps::Tile::updateTileObjectIcnIndex( tile, streamUid, imageIndex );
-        }
-    }
-
-    // Update streams on the left, top, right and bottom tiles around.
-    void updateStreamSpritesAround( const Maps::Tile & centerTile )
-    {
-        const int32_t centerTileIndex = centerTile.GetIndex();
-
-        // For streams we should update only the next four directions.
-        for ( const int direction : { Direction::LEFT, Direction::TOP, Direction::RIGHT, Direction::BOTTOM } ) {
-            if ( Maps::isValidDirection( centerTileIndex, direction ) ) {
-                updateStreamSpriteOnTile( world.getTile( Maps::GetDirectionIndex( centerTileIndex, direction ) ), false );
-            }
-        }
-    }
-
     bool placeObjectOnTile( const Maps::Tile & tile, const Maps::ObjectInfo & info )
     {
         // If this assertion blows up then what kind of object you are trying to place if it's empty?
@@ -1400,49 +1288,6 @@ namespace Maps
         }
 
         return true;
-    }
-
-    bool updateStreamOnTile( Tile & tile, const bool setStream )
-    {
-        if ( setStream == tile.isStream() || ( tile.isWater() && setStream ) ) {
-            // We cannot place streams on the water or on already placed streams.
-            return false;
-        }
-
-        if ( setStream ) {
-            // Force set stream on this tile and update its sprite.
-            updateStreamSpriteOnTile( tile, true );
-
-            if ( !tile.isStream() ) {
-                // The stream was not set. How can it happen?
-                assert( 0 );
-
-                return false;
-            }
-
-            updateStreamSpritesAround( tile );
-
-            if ( Maps::Ground::doesTerrainImageIndexContainEmbeddedObjects( tile.getTerrainImageIndex() ) ) {
-                // We need to set terrain image without extra objects under the stream.
-                tile.setTerrain( Maps::Ground::getRandomTerrainImageIndex( tile.GetGround(), false ), false, false );
-            }
-        }
-        else {
-            // Remove all road object sprites from this tile.
-            tile.removeObjects( MP2::OBJ_ICN_TYPE_STREAM );
-
-            updateStreamSpritesAround( tile );
-        }
-
-        return true;
-    }
-
-    void updateStreamsToDeltaConnection( const Tile & tile, const int deltaDirection )
-    {
-        const int32_t tileIndex = tile.GetIndex();
-        if ( isValidDirection( tileIndex, deltaDirection ) ) {
-            updateStreamSpritesAround( world.getTile( GetDirectionIndex( tileIndex, deltaDirection ) ) );
-        }
     }
 
     int32_t getMineSpellIdFromTile( const Tile & tile )
@@ -2111,25 +1956,49 @@ namespace Maps
         case MP2::OBJ_WITCHS_HUT:
             assert( isFirstLoad );
 
-            tile.metadata()[0] = Skill::Secondary::RandForWitchsHut();
+            static_assert( Skill::Secondary::UNKNOWN == 0, "You are breaking the logic by changing the Skill::Secondary::UNKNOWN value!" );
+            if ( tile.metadata()[0] != Skill::Secondary::UNKNOWN ) {
+                // The skill has been set externally.
+                break;
+            }
+
+            tile.metadata()[0] = Rand::Get( GameStatic::getSecondarySkillsForWitchsHut() );
             break;
 
         case MP2::OBJ_SHRINE_FIRST_CIRCLE:
             assert( isFirstLoad );
 
-            tile.metadata()[0] = Rand::Get( 1 ) ? Spell::RandCombat( 1 ).GetID() : Spell::RandAdventure( 1 ).GetID();
+            static_assert( Spell::NONE == 0, "You are breaking the logic by changing the Spell::NONE value!" );
+            if ( tile.metadata()[0] != Spell::NONE ) {
+                // The spell has been set externally.
+                break;
+            }
+
+            setSpellOnTile( tile, Spell::getRandomSpell( 1 ).GetID() );
             break;
 
         case MP2::OBJ_SHRINE_SECOND_CIRCLE:
             assert( isFirstLoad );
 
-            tile.metadata()[0] = Rand::Get( 1 ) ? Spell::RandCombat( 2 ).GetID() : Spell::RandAdventure( 2 ).GetID();
+            static_assert( Spell::NONE == 0, "You are breaking the logic by changing the Spell::NONE value!" );
+            if ( tile.metadata()[0] != Spell::NONE ) {
+                // The spell has been set externally.
+                break;
+            }
+
+            setSpellOnTile( tile, Spell::getRandomSpell( 2 ).GetID() );
             break;
 
         case MP2::OBJ_SHRINE_THIRD_CIRCLE:
             assert( isFirstLoad );
 
-            tile.metadata()[0] = Rand::Get( 1 ) ? Spell::RandCombat( 3 ).GetID() : Spell::RandAdventure( 3 ).GetID();
+            static_assert( Spell::NONE == 0, "You are breaking the logic by changing the Spell::NONE value!" );
+            if ( tile.metadata()[0] != Spell::NONE ) {
+                // The spell has been set externally.
+                break;
+            }
+
+            setSpellOnTile( tile, Spell::getRandomSpell( 3 ).GetID() );
             break;
 
         case MP2::OBJ_SKELETON: {
@@ -2253,6 +2122,11 @@ namespace Maps
                         break;
                     }
                 }
+            }
+
+            if ( ( tile.metadata()[0] & Resource::ALL ) != 0 && tile.metadata()[1] > 0 ) {
+                // The resource was set externally.
+                break;
             }
 
             uint32_t count = 0;
@@ -2416,7 +2290,24 @@ namespace Maps
             assert( isFirstLoad );
 
             if ( tile.isWater() ) {
-                tile.setMainObjectType( MP2::OBJ_SEA_CHEST );
+                // On original map "Alteris 2" there is a treasure chest placed on the water and there might be other maps with such bug.
+                // If there is a bug then remove of the MP2::OBJ_TREASURE_CHEST will return 'true' and we can replace it with a Sea Chest object.
+                if ( removeObjectFromTileByType( tile, MP2::OBJ_TREASURE_CHEST ) ) {
+                    const auto & objects = Maps::getObjectsByGroup( Maps::ObjectGroup::ADVENTURE_WATER );
+
+                    for ( size_t i = 0; i < objects.size(); ++i ) {
+                        if ( objects[i].objectType == MP2::OBJ_SEA_CHEST ) {
+                            const auto & objectInfo = Maps::getObjectInfo( Maps::ObjectGroup::ADVENTURE_WATER, static_cast<int32_t>( i ) );
+                            setObjectOnTile( tile, objectInfo, true );
+
+                            break;
+                        }
+                    }
+                }
+                else {
+                    tile.setMainObjectType( MP2::OBJ_SEA_CHEST );
+                }
+
                 updateObjectInfoTile( tile, isFirstLoad );
                 return;
             }
@@ -2517,9 +2408,14 @@ namespace Maps
         case MP2::OBJ_PYRAMID: {
             assert( isFirstLoad );
 
+            static_assert( Spell::NONE == 0, "You are breaking the logic by changing the Spell::NONE value!" );
+            if ( tile.metadata()[0] != Spell::NONE ) {
+                // The spell has been set externally.
+                break;
+            }
+
             // Random spell of level 5.
-            const Spell & spell = Rand::Get( 1 ) ? Spell::RandCombat( 5 ) : Spell::RandAdventure( 5 );
-            setSpellOnTile( tile, spell.GetID() );
+            setSpellOnTile( tile, Spell::getRandomSpell( 5 ).GetID() );
             break;
         }
 
@@ -2770,13 +2666,13 @@ namespace Maps
             mainObjectPart.layerType = OBJECT_LAYER;
         }
 
-        using TileImageIndexType = decltype( mainObjectPart.icnIndex );
-        static_assert( std::is_same_v<TileImageIndexType, uint8_t>, "Type of icnIndex has been changed, check the logic below" );
+        using IcnIndexType = decltype( mainObjectPart.icnIndex );
+        static_assert( std::is_same_v<IcnIndexType, uint8_t> );
 
         const uint32_t monsSpriteIndex = mons.GetSpriteIndex();
-        assert( monsSpriteIndex >= std::numeric_limits<TileImageIndexType>::min() && monsSpriteIndex <= std::numeric_limits<TileImageIndexType>::max() );
+        assert( monsSpriteIndex >= std::numeric_limits<IcnIndexType>::min() && monsSpriteIndex <= std::numeric_limits<IcnIndexType>::max() );
 
-        mainObjectPart.icnIndex = static_cast<TileImageIndexType>( monsSpriteIndex );
+        mainObjectPart.icnIndex = static_cast<IcnIndexType>( monsSpriteIndex );
 
         const bool setDefinedCount = ( count > 0 );
 
@@ -3204,13 +3100,6 @@ namespace Maps
             setMonsterOnTile( tile, static_cast<int32_t>( info.metadata[0] ), 0 );
             // Since setMonsterOnTile() function interprets 0 as a random number of monsters it is important to set the correct value.
             setMonsterCountOnTile( tile, 0 );
-            return true;
-        case MP2::OBJ_RESOURCE:
-            // Setting just 1 resource is enough. It doesn't matter as we are not saving this value into the map format.
-            if ( !placeObjectOnTile( tile, info ) ) {
-                return false;
-            }
-            setResourceOnTile( tile, static_cast<int>( info.metadata[0] ), 1 );
             return true;
         case MP2::OBJ_ARTIFACT:
             if ( !placeObjectOnTile( tile, info ) ) {

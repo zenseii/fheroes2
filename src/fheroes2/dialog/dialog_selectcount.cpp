@@ -210,8 +210,9 @@ bool Dialog::inputString( const fheroes2::TextBase & title, const fheroes2::Text
     bool isCursorVisible = true;
     const fheroes2::FontType fontType( fheroes2::FontType::normalWhite() );
     fheroes2::Text text( insertCharToString( result, charInsertPos, isCursorVisible ? '_' : '\x7F' ), fontType, textLanguage );
+    text.keepLineTrailingSpaces();
     if ( !isMultiLine ) {
-        text.fitToOneRow( textInputArea.width, false );
+        text.fitToOneRow( textInputArea.width );
     }
     text.drawInRoi( textInputArea.x, textInputArea.y + 2, textInputArea.width, display, textInputArea );
 
@@ -251,6 +252,9 @@ bool Dialog::inputString( const fheroes2::TextBase & title, const fheroes2::Text
 
     display.render();
 
+    // We add extra 4 pixels to the click area width to help setting the cursor at the end of the line if it is fully filled with text characters.
+    const fheroes2::Rect textEditClickArea{ textInputArea.x, textInputArea.y, textInputArea.width + 4, textInputArea.height };
+
     LocalEvent & le = LocalEvent::Get();
 
     Game::AnimateResetDelay( Game::DelayType::CURSOR_BLINK_DELAY );
@@ -260,7 +264,10 @@ bool Dialog::inputString( const fheroes2::TextBase & title, const fheroes2::Text
     while ( le.HandleEvents( Game::isDelayNeeded( { Game::DelayType::CURSOR_BLINK_DELAY } ) ) ) {
         bool redraw = false;
 
-        buttonOk.drawOnState( buttonOk.isEnabled() && le.isMouseLeftButtonPressedInArea( buttonOk.area() ) );
+        if ( buttonOk.isEnabled() ) {
+            buttonOk.drawOnState( le.isMouseLeftButtonPressedInArea( buttonOk.area() ) );
+        }
+
         buttonCancel.drawOnState( le.isMouseLeftButtonPressedInArea( buttonCancel.area() ) );
         buttonVirtualKB.drawOnState( le.isMouseLeftButtonPressedInArea( buttonVirtualKB.area() ) );
 
@@ -274,13 +281,13 @@ bool Dialog::inputString( const fheroes2::TextBase & title, const fheroes2::Text
             return false;
         }
 
-        if ( le.MouseClickLeft( buttonVirtualKB.area() ) || ( isInGameKeyboardRequired && le.MouseClickLeft( textInputArea ) ) ) {
+        if ( le.MouseClickLeft( buttonVirtualKB.area() ) || ( isInGameKeyboardRequired && le.MouseClickLeft( textEditClickArea ) ) ) {
             if ( textLanguage.has_value() ) {
                 const fheroes2::LanguageSwitcher switcher( textLanguage.value() );
-                fheroes2::openVirtualKeyboard( result );
+                fheroes2::openVirtualKeyboard( result, charLimit );
             }
             else {
-                fheroes2::openVirtualKeyboard( result );
+                fheroes2::openVirtualKeyboard( result, charLimit );
             }
 
             if ( charLimit > 0 && result.size() > charLimit ) {
@@ -300,8 +307,14 @@ bool Dialog::inputString( const fheroes2::TextBase & title, const fheroes2::Text
             }
             redraw = true;
         }
-        else if ( le.MouseClickLeft( textInputArea ) ) {
-            charInsertPos = fheroes2::getTextInputCursorPosition( text, charInsertPos, le.getMouseCursorPos(), textInputArea );
+        else if ( le.MouseClickLeft( textEditClickArea ) ) {
+            if ( textLanguage.has_value() ) {
+                const fheroes2::LanguageSwitcher switcher( textLanguage.value() );
+                charInsertPos = fheroes2::getTextInputCursorPosition( text, charInsertPos, le.getMouseCursorPos(), textInputArea );
+            }
+            else {
+                charInsertPos = fheroes2::getTextInputCursorPosition( text, charInsertPos, le.getMouseCursorPos(), textInputArea );
+            }
 
             redraw = true;
         }
@@ -340,7 +353,7 @@ bool Dialog::inputString( const fheroes2::TextBase & title, const fheroes2::Text
             text.set( insertCharToString( result, charInsertPos, isCursorVisible ? '_' : '\x7F' ), fontType, textLanguage );
 
             if ( !isMultiLine ) {
-                text.fitToOneRow( textInputArea.width, false );
+                text.fitToOneRow( textInputArea.width );
             }
 
             textBackground.restore();
@@ -453,11 +466,11 @@ int Dialog::ArmySplitTroop( const int32_t freeSlots, const int32_t redistributeM
         bool redraw_count = false;
 
         if ( buttonMax.isVisible() ) {
-            le.isMouseLeftButtonPressedInArea( buttonMax.area() ) ? buttonMax.drawOnPress() : buttonMax.drawOnRelease();
+            buttonMax.drawOnState( le.isMouseLeftButtonPressedInArea( buttonMax.area() ) );
         }
 
         if ( buttonMin.isVisible() ) {
-            le.isMouseLeftButtonPressedInArea( buttonMin.area() ) ? buttonMin.drawOnPress() : buttonMin.drawOnRelease();
+            buttonMin.drawOnState( le.isMouseLeftButtonPressedInArea( buttonMin.area() ) );
         }
 
         if ( fheroes2::processIntegerValueTyping( redistributeMin, redistributeMax, redistributeCount ) ) {
@@ -465,13 +478,11 @@ int Dialog::ArmySplitTroop( const int32_t freeSlots, const int32_t redistributeM
             redraw_count = true;
         }
         else if ( buttonMax.isVisible() && le.MouseClickLeft( buttonMax.area() ) ) {
-            le.isMouseLeftButtonPressedInArea( buttonMax.area() ) ? buttonMax.drawOnPress() : buttonMax.drawOnRelease();
             redistributeCount = redistributeMax;
             valueSelectionElement.setValue( redistributeMax );
             redraw_count = true;
         }
         else if ( buttonMin.isVisible() && le.MouseClickLeft( buttonMin.area() ) ) {
-            le.isMouseLeftButtonPressedInArea( buttonMin.area() ) ? buttonMin.drawOnPress() : buttonMin.drawOnRelease();
             redistributeCount = redistributeMin;
             valueSelectionElement.setValue( redistributeMin );
             redraw_count = true;
@@ -486,7 +497,7 @@ int Dialog::ArmySplitTroop( const int32_t freeSlots, const int32_t redistributeM
                 if ( le.MouseClickLeft( *it ) ) {
                     ssp.setPosition( it->x, it->y );
                     ssp.show();
-                    display.render();
+                    display.render( pos );
                 }
             }
         }
@@ -506,7 +517,7 @@ int Dialog::ArmySplitTroop( const int32_t freeSlots, const int32_t redistributeM
                 buttonMin.draw();
             }
 
-            display.render();
+            display.render( pos );
         }
 
         bres = btnGroups.processEvents();
