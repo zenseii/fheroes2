@@ -27,7 +27,9 @@
 #include <array>
 #include <cassert>
 #include <limits>
+#include <optional>
 #include <ostream>
+#include <random>
 #include <set>
 #include <tuple>
 
@@ -88,7 +90,7 @@ namespace
         return false;
     }
 
-    int32_t findSuitableNeighbouringTile( const std::vector<Maps::Tile> & mapTiles, const int32_t tileId, const bool allDirections )
+    int32_t findSuitableNeighbouringTile( const std::vector<Maps::Tile> & mapTiles, const int32_t tileId, const bool allDirections, std::mt19937 & gen )
     {
         std::vector<int32_t> suitableIds;
 
@@ -122,7 +124,7 @@ namespace
             return -1;
         }
 
-        return Rand::Get( suitableIds );
+        return Rand::GetWithGen( suitableIds, gen );
     }
 
     int32_t getNeighbouringEmptyTileCount( const std::vector<Maps::Tile> & mapTiles, const int32_t tileId )
@@ -144,7 +146,7 @@ namespace
     }
 }
 
-MapObjectSimple * MapObjects::get( const uint32_t uid ) const
+MapBaseObject * MapObjects::get( const uint32_t uid ) const
 {
     if ( const auto iter = _objects.find( uid ); iter != _objects.end() ) {
         return iter->second.get();
@@ -153,9 +155,9 @@ MapObjectSimple * MapObjects::get( const uint32_t uid ) const
     return nullptr;
 }
 
-std::list<MapObjectSimple *> MapObjects::get( const fheroes2::Point & pos ) const
+std::list<MapBaseObject *> MapObjects::get( const fheroes2::Point & pos ) const
 {
-    std::list<MapObjectSimple *> result;
+    std::list<MapBaseObject *> result;
 
     for ( const auto & [dummy, obj] : _objects ) {
         assert( obj );
@@ -604,6 +606,8 @@ void World::MonthOfMonstersAction( const Monster & mons )
 
     std::set<int32_t> excludeTiles;
 
+    std::mt19937 seededGen( _seed + month );
+
     for ( const Maps::Tile & tile : vec_tiles ) {
         if ( tile.isWater() ) {
             // Monsters are not placed on water.
@@ -623,7 +627,7 @@ void World::MonthOfMonstersAction( const Monster & mons )
                 continue;
             }
 
-            const int32_t tileToSet = findSuitableNeighbouringTile( vec_tiles, tileId, ( tile.GetPassable() == DIRECTION_ALL ) );
+            const int32_t tileToSet = findSuitableNeighbouringTile( vec_tiles, tileId, ( tile.GetPassable() == DIRECTION_ALL ), seededGen );
             if ( tileToSet >= 0 ) {
                 primaryTargetTiles.emplace_back( tileToSet );
                 excludeTiles.emplace( tileId );
@@ -638,7 +642,7 @@ void World::MonthOfMonstersAction( const Monster & mons )
                 continue;
             }
 
-            const int32_t tileToSet = findSuitableNeighbouringTile( vec_tiles, tileId, true );
+            const int32_t tileToSet = findSuitableNeighbouringTile( vec_tiles, tileId, true, seededGen );
             if ( tileToSet >= 0 ) {
                 secondaryTargetTiles.emplace_back( tileToSet );
                 excludeTiles.emplace( tileId );
@@ -653,7 +657,7 @@ void World::MonthOfMonstersAction( const Monster & mons )
                 continue;
             }
 
-            const int32_t tileToSet = findSuitableNeighbouringTile( vec_tiles, tileId, true );
+            const int32_t tileToSet = findSuitableNeighbouringTile( vec_tiles, tileId, true, seededGen );
             if ( tileToSet >= 0 ) {
                 tetriaryTargetTiles.emplace_back( tileToSet );
                 excludeTiles.emplace( tileId );
@@ -662,9 +666,9 @@ void World::MonthOfMonstersAction( const Monster & mons )
     }
 
     // Shuffle all found tile IDs.
-    Rand::Shuffle( primaryTargetTiles );
-    Rand::Shuffle( secondaryTargetTiles );
-    Rand::Shuffle( tetriaryTargetTiles );
+    Rand::ShuffleWithGen( primaryTargetTiles, seededGen );
+    Rand::ShuffleWithGen( secondaryTargetTiles, seededGen );
+    Rand::ShuffleWithGen( tetriaryTargetTiles, seededGen );
 
     // Calculate the number of monsters to be placed.
     uint32_t monstersToBePlaced = static_cast<uint32_t>( primaryTargetTiles.size() / 3 );
@@ -674,7 +678,7 @@ void World::MonthOfMonstersAction( const Monster & mons )
         monstersToBePlaced = mapMinimum;
     }
     else {
-        monstersToBePlaced = Rand::GetWithSeed( monstersToBePlaced * 75 / 100, monstersToBePlaced * 125 / 100, _seed );
+        monstersToBePlaced = Rand::GetWithGen( monstersToBePlaced * 75 / 100, monstersToBePlaced * 125 / 100, seededGen );
     }
 
     // 85% of positions are for primary targets
@@ -708,7 +712,7 @@ void World::MonthOfMonstersAction( const Monster & mons )
     }
 }
 
-std::pair<std::string, std::optional<fheroes2::SupportedLanguage>> World::getCurrentRumor() const
+fheroes2::LocalizedString World::getCurrentRumor() const
 {
     const uint32_t standardRumorCount = 10;
     const uint32_t totalRumorCount = static_cast<uint32_t>( _customRumors.size() ) + standardRumorCount;
@@ -1029,7 +1033,7 @@ void World::ActionForMagellanMaps( int color )
 
 MapEvent * World::GetMapEvent( const fheroes2::Point & pos )
 {
-    std::list<MapObjectSimple *> res = map_objects.get( pos );
+    std::list<MapBaseObject *> res = map_objects.get( pos );
     if ( res.empty() ) {
         return nullptr;
     }
@@ -1037,12 +1041,12 @@ MapEvent * World::GetMapEvent( const fheroes2::Point & pos )
     return dynamic_cast<MapEvent *>( res.front() );
 }
 
-MapObjectSimple * World::GetMapObject( uint32_t uid )
+MapBaseObject * World::GetMapObject( uint32_t uid )
 {
     return uid ? map_objects.get( uid ) : nullptr;
 }
 
-void World::RemoveMapObject( const MapObjectSimple * obj )
+void World::RemoveMapObject( const MapBaseObject * obj )
 {
     if ( obj )
         map_objects.remove( obj->GetUID() );
@@ -1446,7 +1450,7 @@ IStreamBase & operator>>( IStreamBase & stream, CapturedObject & obj )
 
 OStreamBase & operator<<( OStreamBase & stream, const MapObjects & objs )
 {
-    const std::map<uint32_t, std::unique_ptr<MapObjectSimple>> & objectsRef = objs._objects;
+    const std::map<uint32_t, std::unique_ptr<MapBaseObject>> & objectsRef = objs._objects;
 
     stream.put32( static_cast<uint32_t>( objectsRef.size() ) );
 
@@ -1480,7 +1484,7 @@ OStreamBase & operator<<( OStreamBase & stream, const MapObjects & objs )
 
 IStreamBase & operator>>( IStreamBase & stream, MapObjects & objs )
 {
-    std::map<uint32_t, std::unique_ptr<MapObjectSimple>> & objectsRef = objs._objects;
+    std::map<uint32_t, std::unique_ptr<MapBaseObject>> & objectsRef = objs._objects;
 
     const uint32_t size = stream.get32();
 
@@ -1502,7 +1506,7 @@ IStreamBase & operator>>( IStreamBase & stream, MapObjects & objs )
             stream >> type;
         }
 
-        std::unique_ptr<MapObjectSimple> obj = [&stream, type]() -> std::unique_ptr<MapObjectSimple> {
+        std::unique_ptr<MapBaseObject> obj = [&stream, type]() -> std::unique_ptr<MapBaseObject> {
             switch ( type ) {
             case MP2::OBJ_EVENT: {
                 auto ptr = std::make_unique<MapEvent>();
@@ -1585,8 +1589,8 @@ IStreamBase & operator>>( IStreamBase & stream, World & w )
         ++w.heroIdAsLossCondition;
     }
 
-    static_assert( LAST_SUPPORTED_FORMAT_VERSION < FORMAT_VERSION_1106_RELEASE, "Remove the logic below." );
-    if ( Game::GetVersionOfCurrentSaveFile() < FORMAT_VERSION_1106_RELEASE ) {
+    static_assert( LAST_SUPPORTED_FORMAT_VERSION < FORMAT_VERSION_PPRE1_1106_RELEASE, "Remove the logic below." );
+    if ( Game::GetVersionOfCurrentSaveFile() < FORMAT_VERSION_PPRE1_1106_RELEASE ) {
         // Update flags for Mine and Lighthouse captured objects.
         for ( const auto & [tileIndex, object] : w.map_captureobj ) {
             if ( object.GetColor() == Color::NONE ) {

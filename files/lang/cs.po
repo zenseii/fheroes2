@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-18 04:54+0000\n"
+"POT-Creation-Date: 2025-02-09 14:16+0000\n"
 "PO-Revision-Date: 2024-12-21 23:01+0100\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: Czech <george.king@seznam.cz>\n"
@@ -17,13 +17,6 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Launchpad-Export-Date: 2010-05-27 09:12+0000\n"
 "X-Generator: Poedit 3.5\n"
-
-msgid ""
-"BATTLE\n"
-"ONLY"
-msgstr ""
-"VOLNÝ\n"
-"BOJ"
 
 msgid ""
 "NEW\n"
@@ -77,9 +70,6 @@ msgid "CANCEL"
 msgstr "ZRUŠIT"
 
 msgid "OKAY"
-msgstr "OK"
-
-msgid "smallerButton|OKAY"
 msgstr "OK"
 
 msgid "ACCEPT"
@@ -149,6 +139,13 @@ msgid ""
 msgstr ""
 "STANDARDNÍ\n"
 "HRA"
+
+msgid ""
+"BATTLE\n"
+"ONLY"
+msgstr ""
+"VOLNÝ\n"
+"BOJ"
 
 msgid ""
 "CAMPAIGN\n"
@@ -222,11 +219,11 @@ msgstr "RESET"
 msgid "START"
 msgstr "START"
 
-msgid "CASTLE"
-msgstr "HRAD"
-
 msgid "TOWN"
 msgstr "MĚSTO"
+
+msgid "CASTLE"
+msgstr "HRAD"
 
 msgid "RESTRICT"
 msgstr "OMEZIT"
@@ -3136,8 +3133,8 @@ msgstr "Nejprve vyber příjemce!"
 msgid "You cannot select %{resource}!"
 msgstr "Nemůžeš vybrat %{resource}!"
 
-msgid "Select count %{resource}:"
-msgstr "Vyberte množství %{resource}:"
+msgid "Set %{resource-type} Count"
+msgstr "Nastavit počet %{resource-type}"
 
 msgid "Select Recipients"
 msgstr "Vyber příjemce"
@@ -3201,15 +3198,6 @@ msgstr "Událost: "
 msgid "Hot Keys:"
 msgstr "Klávesové zkratky:"
 
-msgid "Evil"
-msgstr "Zlý"
-
-msgid "Good"
-msgstr "Dobrý"
-
-msgid "Interface Type"
-msgstr "Rozhraní"
-
 msgid "Hide"
 msgstr "Skrýt"
 
@@ -3219,26 +3207,17 @@ msgstr "Zobrazit"
 msgid "Interface"
 msgstr "Rozhraní"
 
-msgid "Slow"
-msgstr "Pomalá"
-
-msgid "Normal"
-msgstr "Normální"
-
-msgid "Fast"
-msgstr "Rychlá"
-
-msgid "Very Fast"
-msgstr "Velmi rychlá"
-
-msgid "Scroll Speed"
-msgstr "Rychlost posunu"
+msgid "Interface Type"
+msgstr "Rozhraní"
 
 msgid "Toggle the type of interface you want to use."
 msgstr "Přepněte typ rozhraní, které chcete používat."
 
 msgid "Toggle interface visibility."
 msgstr "Přepněte viditelnost rozhraní."
+
+msgid "Scroll Speed"
+msgstr "Rychlost posunu"
 
 msgid "Sets the speed at which you scroll the window."
 msgstr "Nastavit rychlost posouvání okna."
@@ -3280,6 +3259,9 @@ msgstr ""
 "%{skill1}\n"
 "nebo\n"
 "%{skill2}"
+
+msgid "Learn %{secondary-skill}"
+msgstr ""
 
 msgid "n/a"
 msgstr "n/a"
@@ -3382,8 +3364,8 @@ msgstr "Obránci:"
 msgid "Unknown"
 msgstr "Není známo"
 
-msgid "%{name} (Level %{level})"
-msgstr "%{name} (Úroveň %{level})"
+msgid "heroQuickInfo|(Level %{level})"
+msgstr "(Úroveň %{level})"
 
 msgid "Attack:"
 msgstr "Útok:"
@@ -4021,20 +4003,60 @@ msgstr "Smazat událost"
 msgid "Delete an existing event."
 msgstr "Smazat stávající událost."
 
+#, fuzzy
+msgid "Effects:"
+msgstr "Efekty"
+
+#, fuzzy
+msgid "Conditions:"
+msgstr ""
+"Podmínky\n"
+"prohry"
+
 msgid "Cancel event after first visit"
 msgstr "Zrušit událost po první návštěvě"
+
+#, fuzzy
+msgid "Computer colors allowed to get the event:"
+msgstr "Barvy počítačových hráčů, které mohou získat událost:"
+
+msgid "Set Experience value"
+msgstr "Nastavte hodnotu zkušeností"
 
 msgid "Artifact"
 msgstr "Artefakt"
 
-msgid "No artifact will be given as a reward."
+#, fuzzy
+msgid "No artifact will be given by the event."
 msgstr "Žádný artefakt nebude udělen jako odměna."
 
 msgid "Delete Artifact"
 msgstr "Odstranit artefakt"
 
-msgid "Delete an artifact from the reward."
+#, fuzzy
+msgid "Delete an artifact from the event."
 msgstr "Smazat artefakt z odměny."
+
+msgid "No Secondary Skill will be given by the event."
+msgstr ""
+
+#, fuzzy
+msgid "Secondary Skill"
+msgstr "Vybrat dovednost:"
+
+msgid "Delete Secondary Skill"
+msgstr ""
+
+msgid "Delete the Secondary Skill from the event."
+msgstr ""
+
+#, fuzzy
+msgid "No resources will be part of this event."
+msgstr "Žádné zdroje nebudou uděleny jako odměna."
+
+#, fuzzy
+msgid "These resources will be a part of the event."
+msgstr "Žádné zdroje nebudou uděleny jako odměna."
 
 msgid ""
 "If this checkbox is checked, the event will trigger only once. If not "
@@ -4086,6 +4108,58 @@ msgstr ""
 "Jste si jisti, že chcete vytvořit novou mapu? (Jakékoli neuložené změny v "
 "aktuální mapě budou ztraceny.)"
 
+msgid ""
+"MAIN\n"
+"MENU"
+msgstr ""
+
+#, fuzzy
+msgid ""
+"START\n"
+"MAP"
+msgstr "START"
+
+msgid "Main Menu"
+msgstr "Hlavní menu"
+
+#, fuzzy
+msgid ""
+"Do you wish to return to the game's Main Menu? (Any unsaved changes to the "
+"current map will be lost.)"
+msgstr ""
+"Přejete si se vrátit do hlavního menu hry? Všechny neuložené změny budou "
+"ztraceny."
+
+msgid "Unsaved Changes"
+msgstr ""
+
+msgid ""
+"This map has either terrain changes, undo history or has not yet been saved "
+"to a file.\n"
+"\n"
+"Do you wish to save the current map?"
+msgstr ""
+
+msgid "Unplayable Map"
+msgstr ""
+
+msgid ""
+"This map is not playable. You need at least one human player for the map to "
+"be playable."
+msgstr ""
+
+#, fuzzy
+msgid "Start Map"
+msgstr "Start"
+
+#, fuzzy
+msgid ""
+"Do you wish to leave the Editor and start the map? (Any unsaved changes to "
+"the current map will be lost.)"
+msgstr ""
+"Jste si jisti, že chcete načíst novou mapu? (Jakékoli neuložené změny v "
+"aktuální mapě budou ztraceny.)"
+
 msgid "Create a new map from scratch."
 msgstr "Vytvořit novou mapu od základu."
 
@@ -4107,11 +4181,15 @@ msgstr "Uložit aktuální mapu."
 msgid "Quit out of the map editor."
 msgstr "Ukončit editor map."
 
+#, fuzzy
+msgid "Return to the game's Main Menu."
+msgstr "Klikni pro návrat do hlavního menu."
+
+msgid "Leave the Editor and play the map in the Standard Game mode."
+msgstr ""
+
 msgid "Input %{object} text"
 msgstr "Zadejte text %{object}"
-
-msgid "Set %{resource-type} Count"
-msgstr "Nastavit počet %{resource-type}"
 
 msgid "Set Random Ultimate Artifact Radius"
 msgstr "Nastavit náhodný rádius Ultimátního artefaktu"
@@ -4121,6 +4199,9 @@ msgstr "%{object} nemá žádné vlastnosti k úpravě."
 
 msgid "This artifact"
 msgstr "Tento artefakt"
+
+msgid "The total number of obelisks is %{count}."
+msgstr ""
 
 msgid "Roads"
 msgstr "Cesty"
@@ -4394,6 +4475,13 @@ msgstr "Zpět"
 msgid "Undo your last action."
 msgstr "Zrušit poslední akci."
 
+msgid "Redo"
+msgstr ""
+
+#, fuzzy
+msgid "Redo the last undone action."
+msgstr "Zrušit poslední akci."
+
 msgid "Edit map title, description, and other general information."
 msgstr "Upravit název mapy, popis a další obecné informace."
 
@@ -4622,6 +4710,10 @@ msgstr ""
 "silnější nepřátele, méně zdrojů nebo jiné speciální podmínky, které ztěžují "
 "hru hráči."
 
+#, fuzzy
+msgid "editor|%{count} %{resource}"
+msgstr "Vyberte množství %{resource}:"
+
 msgid "Animation"
 msgstr "Animace"
 
@@ -4724,6 +4816,12 @@ msgstr "Odstranit odpověď"
 msgid "Delete an existing answer for the question."
 msgstr "Smazat stávající odpověď na tuto otázku."
 
+msgid "No artifact will be given as a reward."
+msgstr "Žádný artefakt nebude udělen jako odměna."
+
+msgid "Delete an artifact from the reward."
+msgstr "Smazat artefakt z odměny."
+
 msgid "Day: %{day} Week: %{week} Month: %{month}"
 msgstr "Den: %{day} Týden: %{week} Měsíc: %{month}"
 
@@ -4747,6 +4845,9 @@ msgstr "a víc..."
 
 msgid "Easy"
 msgstr "Lehká"
+
+msgid "Normal"
+msgstr "Normální"
 
 msgid "Hard"
 msgstr "Těžká"
@@ -5375,9 +5476,6 @@ msgstr "Výchozí akce"
 
 msgid "Global Actions"
 msgstr "Globální akce"
-
-msgid "Main Menu"
-msgstr "Hlavní menu"
 
 msgid "World Map"
 msgstr "Mapa světa"
@@ -6176,6 +6274,9 @@ msgstr ""
 "Výchozí\n"
 "dovednost"
 
+msgid "The available values range from %{min} to %{max}."
+msgstr ""
+
 msgid "Keyboard|123"
 msgstr "123"
 
@@ -6268,6 +6369,21 @@ msgstr "Slovenština"
 
 msgid "Vietnamese"
 msgstr "Větnamština"
+
+msgid "Slow"
+msgstr "Pomalá"
+
+msgid "Fast"
+msgstr "Rychlá"
+
+msgid "Very Fast"
+msgstr "Velmi rychlá"
+
+msgid "Evil"
+msgstr "Zlý"
+
+msgid "Good"
+msgstr "Dobrý"
 
 msgid ", FPS: "
 msgstr ", FPS: "
@@ -7930,9 +8046,6 @@ msgstr ""
 "Změňte hodnotu zkušeností. Klikněte pravým tlačítkem pro obnovení na výchozí "
 "hodnotu."
 
-msgid "Set Experience value"
-msgstr "Nastavte hodnotu zkušeností"
-
 msgid "View Experience Info"
 msgstr "Zobrazit informace o zkušenostech"
 
@@ -8052,6 +8165,9 @@ msgid ""
 msgstr ""
 "Aktuální zkušenosti %{exp1}.\n"
 " Další úroveň %{exp2}."
+
+msgid "million|M"
+msgstr ""
 
 msgid "Level %{level}"
 msgstr "Úroveň %{level}"
@@ -11383,11 +11499,14 @@ msgstr "Hromadné zpomalení"
 msgid "Slows all enemies to half movement rate."
 msgstr "Zpomalí všechny nepřátelské jednotky o polovinu."
 
-msgid "Clouds the affected creatures' eyes, preventing them from moving."
-msgstr "Zakryje oči zasažených tvorů a zabrání jim tím v pohybu."
-
 msgid "spell|Blind"
 msgstr "Slepota"
+
+#, fuzzy
+msgid ""
+"Clouds the affected creatures' eyes, preventing them from moving and reduces "
+"the damage when retaliating by %{count} percent."
+msgstr "Zakryje oči zasažených tvorů a zabrání jim tím v pohybu."
 
 msgid "Bless"
 msgstr "Požehnání"
@@ -11908,6 +12027,9 @@ msgstr ""
 "Nejnovější verzi hry nalezneš na\n"
 "https://github.com/ihhub/\n"
 "fheroes2/releases"
+
+#~ msgid "Select count %{resource}:"
+#~ msgstr "Vyberte množství %{resource}:"
 
 #~ msgid "Enable auto combat"
 #~ msgstr "Zapnout automatický boj"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-18 04:54+0000\n"
+"POT-Creation-Date: 2025-02-09 14:16+0000\n"
 "PO-Revision-Date: 2024-02-20 08:49+0700\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: \n"
@@ -16,13 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 3.4.2\n"
-
-msgid ""
-"BATTLE\n"
-"ONLY"
-msgstr ""
-"CHỈ\n"
-"CHIẾN ĐẤU"
 
 msgid ""
 "NEW\n"
@@ -79,9 +72,6 @@ msgid "CANCEL"
 msgstr "TỪ BỎ"
 
 msgid "OKAY"
-msgstr "ĐƯỢC"
-
-msgid "smallerButton|OKAY"
 msgstr "ĐƯỢC"
 
 msgid "ACCEPT"
@@ -151,6 +141,13 @@ msgid ""
 msgstr ""
 "GAME\n"
 "THƯỜNG"
+
+msgid ""
+"BATTLE\n"
+"ONLY"
+msgstr ""
+"CHỈ\n"
+"CHIẾN ĐẤU"
 
 msgid ""
 "CAMPAIGN\n"
@@ -224,11 +221,11 @@ msgstr "CÀI LẠI"
 msgid "START"
 msgstr "LÀM LẠI"
 
-msgid "CASTLE"
-msgstr "LÂU ĐÀI"
-
 msgid "TOWN"
 msgstr "THỊ TRẤN"
+
+msgid "CASTLE"
+msgstr "LÂU ĐÀI"
 
 #, fuzzy
 msgid "RESTRICT"
@@ -3205,8 +3202,9 @@ msgstr "Đầu tiên chọn người nhận!"
 msgid "You cannot select %{resource}!"
 msgstr "Ngươi không thể chọn %{resource}!"
 
-msgid "Select count %{resource}:"
-msgstr "Chọn số lượng %{resource}:"
+#, fuzzy
+msgid "Set %{resource-type} Count"
+msgstr "Bắn %{monster}"
 
 msgid "Select Recipients"
 msgstr "Chọn Người nhận"
@@ -3272,15 +3270,6 @@ msgstr "Sự kiện: "
 msgid "Hot Keys:"
 msgstr "Phím tắt:"
 
-msgid "Evil"
-msgstr "Xấu"
-
-msgid "Good"
-msgstr "Tốt"
-
-msgid "Interface Type"
-msgstr "Kiểu Giao diện"
-
 msgid "Hide"
 msgstr "Ẩn"
 
@@ -3290,26 +3279,17 @@ msgstr "Hiện"
 msgid "Interface"
 msgstr "Giao diện"
 
-msgid "Slow"
-msgstr "Chậm"
-
-msgid "Normal"
-msgstr "Thường"
-
-msgid "Fast"
-msgstr "Nhanh"
-
-msgid "Very Fast"
-msgstr "Rất nhanh"
-
-msgid "Scroll Speed"
-msgstr "Tốc độ Cuộn"
+msgid "Interface Type"
+msgstr "Kiểu Giao diện"
 
 msgid "Toggle the type of interface you want to use."
 msgstr "Chuyển đổi loại giao diện ngươi muốn sử dụng."
 
 msgid "Toggle interface visibility."
 msgstr "Chuyển đổi khả năng hiển thị giao diện."
+
+msgid "Scroll Speed"
+msgstr "Tốc độ Cuộn"
 
 msgid "Sets the speed at which you scroll the window."
 msgstr "Đặt tốc độ cuộn cửa sổ."
@@ -3352,6 +3332,9 @@ msgstr ""
 "%{skill1}\n"
 "hoặc\n"
 "%{skill2}"
+
+msgid "Learn %{secondary-skill}"
+msgstr ""
 
 msgid "n/a"
 msgstr "n/a"
@@ -3457,8 +3440,8 @@ msgstr "Bên thủ:"
 msgid "Unknown"
 msgstr "Không biết"
 
-msgid "%{name} (Level %{level})"
-msgstr "%{name} (Cấp độ %{level})"
+msgid "heroQuickInfo|(Level %{level})"
+msgstr "(Cấp độ %{level})"
 
 msgid "Attack:"
 msgstr "Tấn công:"
@@ -4121,20 +4104,57 @@ msgstr ""
 msgid "Delete an existing event."
 msgstr "Tải một bản đồ đã có."
 
+#, fuzzy
+msgid "Effects:"
+msgstr "Hiệu ứng"
+
+#, fuzzy
+msgid "Conditions:"
+msgstr ""
+"Điều kiện\n"
+"Thua"
+
 msgid "Cancel event after first visit"
 msgstr ""
+
+msgid "Computer colors allowed to get the event:"
+msgstr ""
+
+#, fuzzy
+msgid "Set Experience value"
+msgstr "Kinh nghiệm"
 
 msgid "Artifact"
 msgstr "Bảo vật"
 
-msgid "No artifact will be given as a reward."
+msgid "No artifact will be given by the event."
 msgstr ""
 
 #, fuzzy
 msgid "Delete Artifact"
 msgstr "Chọn Bảo vật:"
 
-msgid "Delete an artifact from the reward."
+#, fuzzy
+msgid "Delete an artifact from the event."
+msgstr "Tải một bản đồ đã có."
+
+msgid "No Secondary Skill will be given by the event."
+msgstr ""
+
+#, fuzzy
+msgid "Secondary Skill"
+msgstr "Chọn Kỹ năng:"
+
+msgid "Delete Secondary Skill"
+msgstr ""
+
+msgid "Delete the Secondary Skill from the event."
+msgstr ""
+
+msgid "No resources will be part of this event."
+msgstr ""
+
+msgid "These resources will be a part of the event."
 msgstr ""
 
 msgid ""
@@ -4189,6 +4209,58 @@ msgstr ""
 "Ngươi có chắc chắn muốn tạo bản đồ mới không? (Mọi thay đổi chưa được lưu "
 "đối với bản đồ hiện tại sẽ bị mất.)"
 
+msgid ""
+"MAIN\n"
+"MENU"
+msgstr ""
+
+#, fuzzy
+msgid ""
+"START\n"
+"MAP"
+msgstr "LÀM LẠI"
+
+msgid "Main Menu"
+msgstr "Trình đơn Chính"
+
+#, fuzzy
+msgid ""
+"Do you wish to return to the game's Main Menu? (Any unsaved changes to the "
+"current map will be lost.)"
+msgstr ""
+"Ngươi có chắc chắn muốn tạo bản đồ mới không? (Mọi thay đổi chưa được lưu "
+"đối với bản đồ hiện tại sẽ bị mất.)"
+
+msgid "Unsaved Changes"
+msgstr ""
+
+msgid ""
+"This map has either terrain changes, undo history or has not yet been saved "
+"to a file.\n"
+"\n"
+"Do you wish to save the current map?"
+msgstr ""
+
+msgid "Unplayable Map"
+msgstr ""
+
+msgid ""
+"This map is not playable. You need at least one human player for the map to "
+"be playable."
+msgstr ""
+
+#, fuzzy
+msgid "Start Map"
+msgstr "Chơi lại"
+
+#, fuzzy
+msgid ""
+"Do you wish to leave the Editor and start the map? (Any unsaved changes to "
+"the current map will be lost.)"
+msgstr ""
+"Ngươi có chắc chắn muốn tải bản đồ mới không? (Mọi thay đổi chưa được lưu "
+"đối với bản đồ hiện tại sẽ bị mất.)"
+
 #, fuzzy
 msgid "Create a new map from scratch."
 msgstr "bắt đầu bản đồ mới"
@@ -4211,12 +4283,15 @@ msgstr "Lưu bản đồ hiện tại."
 msgid "Quit out of the map editor."
 msgstr "Thoát khỏi biên tập bản đồ."
 
-msgid "Input %{object} text"
+#, fuzzy
+msgid "Return to the game's Main Menu."
+msgstr "Nhấp để quay lại màn hình chính."
+
+msgid "Leave the Editor and play the map in the Standard Game mode."
 msgstr ""
 
-#, fuzzy
-msgid "Set %{resource-type} Count"
-msgstr "Bắn %{monster}"
+msgid "Input %{object} text"
+msgstr ""
 
 #, fuzzy
 msgid "Set Random Ultimate Artifact Radius"
@@ -4228,6 +4303,9 @@ msgstr ""
 #, fuzzy
 msgid "This artifact"
 msgstr "với 1 bảo vật."
+
+msgid "The total number of obelisks is %{count}."
+msgstr ""
 
 msgid "Roads"
 msgstr "Đường"
@@ -4518,6 +4596,13 @@ msgstr "Hoàn tác"
 msgid "Undo your last action."
 msgstr "Hoàn tác thao tác cuối cùng."
 
+msgid "Redo"
+msgstr ""
+
+#, fuzzy
+msgid "Redo the last undone action."
+msgstr "Hoàn tác thao tác cuối cùng."
+
 msgid "Edit map title, description, and other general information."
 msgstr "Chỉnh sửa tiêu đề bản đồ, mô tả và thông tin chung khác."
 
@@ -4786,6 +4871,10 @@ msgstr ""
 "thứ trở nên khó khăn hơn đối với người chơi."
 
 #, fuzzy
+msgid "editor|%{count} %{resource}"
+msgstr "Chọn số lượng %{resource}:"
+
+#, fuzzy
 msgid "Animation"
 msgstr "Thôn tính"
 
@@ -4896,6 +4985,12 @@ msgstr ""
 msgid "Delete an existing answer for the question."
 msgstr ""
 
+msgid "No artifact will be given as a reward."
+msgstr ""
+
+msgid "Delete an artifact from the reward."
+msgstr ""
+
 msgid "Day: %{day} Week: %{week} Month: %{month}"
 msgstr ""
 
@@ -4919,6 +5014,9 @@ msgstr "và hơn thế nữa..."
 
 msgid "Easy"
 msgstr "Dễ"
+
+msgid "Normal"
+msgstr "Thường"
 
 msgid "Hard"
 msgstr "Khó"
@@ -5562,9 +5660,6 @@ msgstr "Hành động Mặc định"
 
 msgid "Global Actions"
 msgstr "Hành động Toàn cầu"
-
-msgid "Main Menu"
-msgstr "Trình đơn Chính"
 
 msgid "World Map"
 msgstr "Bản đồ Thế giới"
@@ -6369,6 +6464,9 @@ msgid ""
 "skill"
 msgstr "Phòng thủ"
 
+msgid "The available values range from %{min} to %{max}."
+msgstr ""
+
 msgid "Keyboard|123"
 msgstr ""
 
@@ -6459,6 +6557,21 @@ msgstr "Tiếng Slovak"
 
 msgid "Vietnamese"
 msgstr "Tiếng Việt"
+
+msgid "Slow"
+msgstr "Chậm"
+
+msgid "Fast"
+msgstr "Nhanh"
+
+msgid "Very Fast"
+msgstr "Rất nhanh"
+
+msgid "Evil"
+msgstr "Xấu"
+
+msgid "Good"
+msgstr "Tốt"
 
 msgid ", FPS: "
 msgstr ", FPS: "
@@ -8183,10 +8296,6 @@ msgstr ""
 msgid "Change Experience value. Right-click to reset to default value."
 msgstr ""
 
-#, fuzzy
-msgid "Set Experience value"
-msgstr "Kinh nghiệm"
-
 msgid "View Experience Info"
 msgstr "Xem Thông tin Kinh nghiệm"
 
@@ -8300,6 +8409,9 @@ msgid ""
 msgstr ""
 "Kinh nghiệm hiện có %{exp1}.\n"
 " Cấp tiếp theo %{exp2}."
+
+msgid "million|M"
+msgstr ""
 
 msgid "Level %{level}"
 msgstr "Cấp bậc %{level}"
@@ -11796,11 +11908,14 @@ msgstr "Chậm Rộng"
 msgid "Slows all enemies to half movement rate."
 msgstr "Làm chậm tất cả kẻ địch xuống một nửa tốc độ di chuyển."
 
-msgid "Clouds the affected creatures' eyes, preventing them from moving."
-msgstr "Che mờ mắt của sinh vật bị ảnh hưởng, ngăn chúng di chuyển."
-
 msgid "spell|Blind"
 msgstr "Mù"
+
+#, fuzzy
+msgid ""
+"Clouds the affected creatures' eyes, preventing them from moving and reduces "
+"the damage when retaliating by %{count} percent."
+msgstr "Che mờ mắt của sinh vật bị ảnh hưởng, ngăn chúng di chuyển."
 
 msgid "Bless"
 msgstr "Cầu nguyện"
@@ -12334,6 +12449,9 @@ msgstr ""
 "Kiểm tra phiên bản mới nhất của trò chơi tại\n"
 "https://github.com/ihhub/\n"
 "fheroes2/releases"
+
+#~ msgid "Select count %{resource}:"
+#~ msgstr "Chọn số lượng %{resource}:"
 
 #~ msgid "Enable auto combat"
 #~ msgstr "Kích hoạt tự động chiến đấu"

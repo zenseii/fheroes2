@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-18 04:54+0000\n"
+"POT-Creation-Date: 2025-02-09 14:16+0000\n"
 "PO-Revision-Date: 2024-11-07 12:48+0100\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: \n"
@@ -16,13 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.5\n"
-
-msgid ""
-"BATTLE\n"
-"ONLY"
-msgstr ""
-"NUR\n"
-"KAMPF"
 
 msgid ""
 "NEW\n"
@@ -79,9 +72,6 @@ msgid "CANCEL"
 msgstr "ABBRUCH"
 
 msgid "OKAY"
-msgstr "OKAY"
-
-msgid "smallerButton|OKAY"
 msgstr "OKAY"
 
 msgid "ACCEPT"
@@ -151,6 +141,13 @@ msgid ""
 msgstr ""
 "STANDARD\n"
 "SPIEL"
+
+msgid ""
+"BATTLE\n"
+"ONLY"
+msgstr ""
+"NUR\n"
+"KAMPF"
 
 msgid ""
 "CAMPAIGN\n"
@@ -226,11 +223,11 @@ msgstr ""
 msgid "START"
 msgstr "START"
 
-msgid "CASTLE"
-msgstr "BURG"
-
 msgid "TOWN"
 msgstr "STÄDT"
+
+msgid "CASTLE"
+msgstr "BURG"
 
 #, fuzzy
 msgid "RESTRICT"
@@ -3241,8 +3238,9 @@ msgstr "Zuerst die Empfänger auswählen!"
 msgid "You cannot select %{resource}!"
 msgstr "%{resource} nicht ausgewählt werden!"
 
-msgid "Select count %{resource}:"
-msgstr "Anzahl %{resource} wählen:"
+#, fuzzy
+msgid "Set %{resource-type} Count"
+msgstr "Schieße auf %{monster}"
 
 msgid "Select Recipients"
 msgstr "Empfänger auswählen"
@@ -3310,15 +3308,6 @@ msgstr "Ereignis"
 msgid "Hot Keys:"
 msgstr "Hotkeys:"
 
-msgid "Evil"
-msgstr "Böse"
-
-msgid "Good"
-msgstr "Gut"
-
-msgid "Interface Type"
-msgstr "Interface"
-
 msgid "Hide"
 msgstr "Ausblenden"
 
@@ -3328,26 +3317,17 @@ msgstr "Einblenden"
 msgid "Interface"
 msgstr "Interface"
 
-msgid "Slow"
-msgstr "Langsam"
-
-msgid "Normal"
-msgstr "Normal"
-
-msgid "Fast"
-msgstr "Schnell"
-
-msgid "Very Fast"
-msgstr "Sehr Schnell"
-
-msgid "Scroll Speed"
-msgstr "Scrollgeschw."
+msgid "Interface Type"
+msgstr "Interface"
 
 msgid "Toggle the type of interface you want to use."
 msgstr "Art der Schnittstelle umschalten, die verwenden soll."
 
 msgid "Toggle interface visibility."
 msgstr "Sichtbarkeit der Interface ändern."
+
+msgid "Scroll Speed"
+msgstr "Scrollgeschw."
 
 msgid "Sets the speed at which you scroll the window."
 msgstr "Geschwindigkeit festlegen, mit der das Fenster verschoben wird."
@@ -3390,6 +3370,9 @@ msgstr ""
 "%{skill1}\n"
 "oder\n"
 "%{skill2}"
+
+msgid "Learn %{secondary-skill}"
+msgstr ""
 
 msgid "n/a"
 msgstr "n/a"
@@ -3497,8 +3480,8 @@ msgstr "Verteidiger:"
 msgid "Unknown"
 msgstr "Unbekannt"
 
-msgid "%{name} (Level %{level})"
-msgstr "%{name} (Stufe %{level})"
+msgid "heroQuickInfo|(Level %{level})"
+msgstr "(Stufe %{level})"
 
 msgid "Attack:"
 msgstr "Angriff:"
@@ -4175,20 +4158,57 @@ msgstr ""
 msgid "Delete an existing event."
 msgstr "Eine vorhandene Karte laden."
 
+#, fuzzy
+msgid "Effects:"
+msgstr "Effekte"
+
+#, fuzzy
+msgid "Conditions:"
+msgstr ""
+"Verlust-\n"
+"bedingungen"
+
 msgid "Cancel event after first visit"
 msgstr ""
+
+msgid "Computer colors allowed to get the event:"
+msgstr ""
+
+#, fuzzy
+msgid "Set Experience value"
+msgstr "Erfahrung"
 
 msgid "Artifact"
 msgstr "Artefakt"
 
-msgid "No artifact will be given as a reward."
+msgid "No artifact will be given by the event."
 msgstr ""
 
 #, fuzzy
 msgid "Delete Artifact"
 msgstr "Artefakt auswählen:"
 
-msgid "Delete an artifact from the reward."
+#, fuzzy
+msgid "Delete an artifact from the event."
+msgstr "Eine vorhandene Karte laden."
+
+msgid "No Secondary Skill will be given by the event."
+msgstr ""
+
+#, fuzzy
+msgid "Secondary Skill"
+msgstr "Fähigkeit auswählen:"
+
+msgid "Delete Secondary Skill"
+msgstr ""
+
+msgid "Delete the Secondary Skill from the event."
+msgstr ""
+
+msgid "No resources will be part of this event."
+msgstr ""
+
+msgid "These resources will be a part of the event."
 msgstr ""
 
 msgid ""
@@ -4244,6 +4264,58 @@ msgstr ""
 "Seid Ihr sicher, dass Ihr eine neue Karte erstellen wollt? (Alle nicht "
 "gespeicherten Änderungen an der aktuellen Karte gehen verloren)."
 
+msgid ""
+"MAIN\n"
+"MENU"
+msgstr ""
+
+#, fuzzy
+msgid ""
+"START\n"
+"MAP"
+msgstr "START"
+
+msgid "Main Menu"
+msgstr ""
+
+#, fuzzy
+msgid ""
+"Do you wish to return to the game's Main Menu? (Any unsaved changes to the "
+"current map will be lost.)"
+msgstr ""
+"Seid Ihr sicher, dass Ihr eine neue Karte erstellen wollt? (Alle nicht "
+"gespeicherten Änderungen an der aktuellen Karte gehen verloren)."
+
+msgid "Unsaved Changes"
+msgstr ""
+
+msgid ""
+"This map has either terrain changes, undo history or has not yet been saved "
+"to a file.\n"
+"\n"
+"Do you wish to save the current map?"
+msgstr ""
+
+msgid "Unplayable Map"
+msgstr ""
+
+msgid ""
+"This map is not playable. You need at least one human player for the map to "
+"be playable."
+msgstr ""
+
+#, fuzzy
+msgid "Start Map"
+msgstr "Neustart"
+
+#, fuzzy
+msgid ""
+"Do you wish to leave the Editor and start the map? (Any unsaved changes to "
+"the current map will be lost.)"
+msgstr ""
+"Wollt Ihr wirklich eine neue Karte laden? (Nicht gespeicherte Änderungen an "
+"der aktuellen Karte gehen verloren)."
+
 #, fuzzy
 msgid "Create a new map from scratch."
 msgstr "Neue Karte von Beginn Menü"
@@ -4266,12 +4338,15 @@ msgstr "Speichern der aktuellen Karte."
 msgid "Quit out of the map editor."
 msgstr "Den Karteneditor verlassen."
 
-msgid "Input %{object} text"
+#, fuzzy
+msgid "Return to the game's Main Menu."
+msgstr "Klicken, um zum Hauptmenü zurückzukehren."
+
+msgid "Leave the Editor and play the map in the Standard Game mode."
 msgstr ""
 
-#, fuzzy
-msgid "Set %{resource-type} Count"
-msgstr "Schieße auf %{monster}"
+msgid "Input %{object} text"
+msgstr ""
 
 #, fuzzy
 msgid "Set Random Ultimate Artifact Radius"
@@ -4283,6 +4358,9 @@ msgstr ""
 #, fuzzy
 msgid "This artifact"
 msgstr "mit 1 Artefakt."
+
+msgid "The total number of obelisks is %{count}."
+msgstr ""
 
 #, fuzzy
 msgid "Roads"
@@ -4582,6 +4660,12 @@ msgstr "Rückgängig"
 msgid "Undo your last action."
 msgstr ""
 
+msgid "Redo"
+msgstr ""
+
+msgid "Redo the last undone action."
+msgstr ""
+
 msgid "Edit map title, description, and other general information."
 msgstr ""
 "Bearbeiten des Kartentitel, der Beschreibung und anderen allgemeinen "
@@ -4855,6 +4939,10 @@ msgstr ""
 "schwieriger machen."
 
 #, fuzzy
+msgid "editor|%{count} %{resource}"
+msgstr "Anzahl %{resource} wählen:"
+
+#, fuzzy
 msgid "Animation"
 msgstr "Annektion"
 
@@ -4963,6 +5051,12 @@ msgstr ""
 msgid "Delete an existing answer for the question."
 msgstr ""
 
+msgid "No artifact will be given as a reward."
+msgstr ""
+
+msgid "Delete an artifact from the reward."
+msgstr ""
+
 msgid "Day: %{day} Week: %{week} Month: %{month}"
 msgstr ""
 
@@ -4986,6 +5080,9 @@ msgstr "und mehr..."
 
 msgid "Easy"
 msgstr "Leicht"
+
+msgid "Normal"
+msgstr "Normal"
 
 msgid "Hard"
 msgstr "Schwer"
@@ -5636,9 +5733,6 @@ msgid "Default Actions"
 msgstr "Standardaktion"
 
 msgid "Global Actions"
-msgstr ""
-
-msgid "Main Menu"
 msgstr ""
 
 msgid "World Map"
@@ -6480,6 +6574,9 @@ msgid ""
 "skill"
 msgstr "Verteidigung"
 
+msgid "The available values range from %{min} to %{max}."
+msgstr ""
+
 msgid "Keyboard|123"
 msgstr "123"
 
@@ -6570,6 +6667,21 @@ msgstr "Slowakisch"
 
 msgid "Vietnamese"
 msgstr "Vietnamesisch"
+
+msgid "Slow"
+msgstr "Langsam"
+
+msgid "Fast"
+msgstr "Schnell"
+
+msgid "Very Fast"
+msgstr "Sehr Schnell"
+
+msgid "Evil"
+msgstr "Böse"
+
+msgid "Good"
+msgstr "Gut"
 
 msgid ", FPS: "
 msgstr ", FPS: "
@@ -8323,10 +8435,6 @@ msgstr ""
 msgid "Change Experience value. Right-click to reset to default value."
 msgstr ""
 
-#, fuzzy
-msgid "Set Experience value"
-msgstr "Erfahrung"
-
 msgid "View Experience Info"
 msgstr "Infos zur Erfahrung anzeigen"
 
@@ -8440,6 +8548,9 @@ msgid ""
 msgstr ""
 "Aktuelle Erfahrung %{exp1}.\n"
 " Nächste Stufe %{exp2}."
+
+msgid "million|M"
+msgstr ""
 
 msgid "Level %{level}"
 msgstr "Stufe %{level}"
@@ -11946,13 +12057,16 @@ msgstr "Massenverlangsamung"
 msgid "Slows all enemies to half movement rate."
 msgstr "Verlangsamt alle Feinde auf die halbe Bewegungsrate."
 
-msgid "Clouds the affected creatures' eyes, preventing them from moving."
+msgid "spell|Blind"
+msgstr "Blenden"
+
+#, fuzzy
+msgid ""
+"Clouds the affected creatures' eyes, preventing them from moving and reduces "
+"the damage when retaliating by %{count} percent."
 msgstr ""
 "Trübt die Augen der betroffenen Kreaturen und hindert sie daran, sich zu "
 "bewegen."
-
-msgid "spell|Blind"
-msgstr "Blenden"
 
 msgid "Bless"
 msgstr "Segen"
@@ -12499,6 +12613,9 @@ msgstr ""
 "Die neueste Version des Spiels finden Sie unter\n"
 "https://github.com/ihhub/\n"
 "fheroes2/releases"
+
+#~ msgid "Select count %{resource}:"
+#~ msgstr "Anzahl %{resource} wählen:"
 
 #~ msgid "Enable auto combat"
 #~ msgstr "Autokampf einschalten"
