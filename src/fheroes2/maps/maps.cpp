@@ -397,9 +397,9 @@ void Maps::ClearFog( const int32_t tileIndex, const int scoutingDistance, const 
         }
     }
 
-    // Small maps = 1288 ; Medium? maps = 20736; 
-    for ( int i = 0; i < 1288; i++ ) {
-        Maps::Tiles & tile = world.GetTiles( i );
+    // Small maps = 1288 ; Medium maps = 5184; 
+    for ( int i = 0; i < 5184; i++ ) {
+        Maps::Tile & tile = world.getTile( i );
          tile.ClearFog( alliedColors );
     }
 
