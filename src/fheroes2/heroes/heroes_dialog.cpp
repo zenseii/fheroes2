@@ -21,6 +21,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <algorithm>
 #include <cassert>
 #include <cstdint>
 #include <functional>
@@ -68,7 +69,7 @@
 namespace
 {
     const fheroes2::Size primarySkillIconSize{ 82, 93 };
-    const uint32_t spellPointsMaxValue{ 999 };
+    const int32_t spellPointsMaxValue{ 999 };
 }
 
 int Heroes::OpenDialog( const bool readonly, const bool fade, const bool disableDismiss, const bool disableSwitch, const bool renderBackgroundDialog, const bool isEditor,
@@ -460,7 +461,7 @@ int Heroes::OpenDialog( const bool readonly, const bool fade, const bool disable
 
         // Dismiss hero.
         else if ( buttonDismiss && buttonDismiss->isEnabled() ) {
-            buttonDismiss->drawOnState( ( le.isMouseLeftButtonPressedInArea( buttonDismiss->area() ) || HotKeyPressEvent( Game::HotKeyEvent::ARMY_DISMISS ) ) );
+            buttonDismiss->drawOnState( le.isMouseLeftButtonPressedInArea( buttonDismiss->area() ) || HotKeyPressEvent( Game::HotKeyEvent::ARMY_DISMISS ) );
 
             if ( ( le.MouseClickLeft( buttonDismiss->area() ) || Game::HotKeyPressEvent( Game::HotKeyEvent::ARMY_DISMISS ) )
                  && Dialog::YES == fheroes2::showStandardTextMessage( GetName(), _( "Are you sure you want to dismiss this Hero?" ), Dialog::YES | Dialog::NO ) ) {
@@ -534,7 +535,7 @@ int Heroes::OpenDialog( const bool readonly, const bool fade, const bool disable
 
                 if ( le.MouseClickLeft() ) {
                     int32_t value = static_cast<int32_t>( GetSpellPoints() );
-                    if ( Dialog::SelectCount( _( "Set Spell Points value" ), 0, spellPointsMaxValue, value ) ) {
+                    if ( Dialog::SelectCount( _( "Set Spell Points value" ), 0, std::max( spellPointsMaxValue, value ), value ) ) {
                         useDefaultSpellPoints = false;
                         SetSpellPoints( static_cast<uint32_t>( value ) );
                         spellPointsInfo.setDefaultState( useDefaultSpellPoints );

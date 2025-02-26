@@ -499,8 +499,17 @@ namespace
                 return false;
             }
 
-            if ( objectInfo.objectType == MP2::OBJ_RANDOM_ULTIMATE_ARTIFACT
-                 && !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tile & tileToCheck ) { return tileToCheck.GoodForUltimateArtifact(); } ) ) {
+            if ( objectInfo.objectType == MP2::OBJ_RANDOM_ULTIMATE_ARTIFACT && !checkConditionForUsedTiles( objectInfo, tilePos, []( const Maps::Tile & tileToCheck ) {
+                     // This check is being run for every action in the Editor.
+                     // Therefore, after the placement of an Ultimate Artifact on this tile the check would fail since the tile contains something on it.
+                     // So, before checking for correctness on placement an Ultimate Artifact we check whether the current tile already has one.
+                     // If this is true then we consider that the placement is allowed.
+                     if ( tileToCheck.getMainObjectType() == MP2::OBJ_RANDOM_ULTIMATE_ARTIFACT ) {
+                         return true;
+                     }
+
+                     return tileToCheck.GoodForUltimateArtifact();
+                 } ) ) {
                 errorMessage = _( "The Ultimate Artifact can only be placed on terrain where digging is possible." );
                 return false;
             }
@@ -1174,10 +1183,15 @@ namespace Interface
                                  fheroes2::StandardWindow::Padding::CENTER_LEFT );
         background.renderButton( buttonQuit, isEvilInterface ? ICN::BUTTON_QUIT_EVIL : ICN::BUTTON_QUIT_GOOD, 0, 1, { buttonOffsets.x, buttonOffsets.y },
                                  fheroes2::StandardWindow::Padding::CENTER_RIGHT );
-        background.renderButtonSprite( buttonMainMenu, gettext_noop( "MAIN\nMENU" ), { buttonSave.area().width - 10, buttonSave.area().height }, { 0, buttonOffsets.y },
-                                       isEvilInterface, fheroes2::StandardWindow::Padding::CENTER_CENTER );
-        background.renderButtonSprite( buttonPlayMap, gettext_noop( "START\nMAP" ), { buttonSave.area().width - 10, buttonSave.area().height },
-                                       { buttonOffsets.x, buttonOffsets.y }, isEvilInterface, fheroes2::StandardWindow::Padding::TOP_RIGHT );
+
+        const fheroes2::FontType releasedButtonFont{ fheroes2::FontSize::BUTTON_RELEASED, fheroes2::FontColor::WHITE };
+
+        background.renderCustomButtonSprite( buttonMainMenu, fheroes2::getSupportedText( gettext_noop( "MAIN\nMENU" ), releasedButtonFont ),
+                                             { buttonSave.area().width - 10, buttonSave.area().height }, { 0, buttonOffsets.y },
+                                             fheroes2::StandardWindow::Padding::CENTER_CENTER );
+        background.renderCustomButtonSprite( buttonPlayMap, fheroes2::getSupportedText( gettext_noop( "START\nMAP" ), releasedButtonFont ),
+                                             { buttonSave.area().width - 10, buttonSave.area().height }, { buttonOffsets.x, buttonOffsets.y },
+                                             fheroes2::StandardWindow::Padding::TOP_RIGHT );
         background.renderButton( buttonCancel, isEvilInterface ? ICN::BUTTON_SMALL_CANCEL_EVIL : ICN::BUTTON_SMALL_CANCEL_GOOD, 0, 1, { 0, 11 },
                                  fheroes2::StandardWindow::Padding::BOTTOM_CENTER );
 
