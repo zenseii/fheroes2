@@ -447,38 +447,8 @@ fheroes2::GameMode GameOver::Result::checkGameOver()
 #endif
         if ( HotKeyHoldEvent( Game::HotKeyEvent::WORLD_END_TURN ) ) {
             if ( kingdom.isControlHuman() || isAIAutoControlMode ) {
-                result = world.CheckKingdomWins( kingdom );
-			
-			
+                // First check loss conditions and then victory conditions.
 
-
-        if ( kingdom.isControlHuman() || isAIAutoControlMode ) {
-            // First check loss conditions and then victory conditions.
-
-            // If the player's kingdom has been vanquished, they loses regardless of other conditions.
-            if ( !kingdom.isPlay() ) {
-                result = GameOver::LOSS_ALL;
-            }
-            else {
-                result = world.CheckKingdomLoss( kingdom );
-            }
-
-            if ( result != GameOver::COND_NONE ) {
-                // Don't show the loss dialog if player's kingdom has been vanquished due to the expired countdown of days since the loss of the last town.
-                // This case was already handled at the end of the Interface::AdventureMap::HumanTurn().
-                if ( !( result == GameOver::LOSS_ALL && kingdom.GetCastles().empty() && kingdom.GetLostTownDays() == 0 ) ) {
-                    DialogLoss( result );
-                }
-
-                AudioManager::ResetAudio();
-                Video::ShowVideo( "LOSE.SMK", Video::VideoAction::LOOP_VIDEO );
-
-                return fheroes2::GameMode::MAIN_MENU;
-            }
-
-            result = world.CheckKingdomWins( kingdom );
-
-            if ( result != GameOver::COND_NONE ) {
                 DialogWins( result );
 
                 if ( conf.isCampaignGameType() ) {
