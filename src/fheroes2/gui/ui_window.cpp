@@ -1,6 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2021 - 2023                                             *
+ *   Copyright (C) 2021 - 2025                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,14 +24,14 @@
 #include <cassert>
 
 #include "agg_image.h"
-#include "gamedefs.h"
 #include "icn.h"
 #include "settings.h"
 #include "ui_button.h"
+#include "ui_constants.h"
 
 namespace
 {
-    const int32_t borderSize{ BORDERWIDTH };
+    const int32_t borderSize{ fheroes2::borderWidthPx };
 
     // Offset from border edges (size of evil interface corners is 43 pixels) - these edges (corners) will not be copied to fill the border.
     const int32_t borderEdgeOffset{ 43 };
@@ -71,7 +71,7 @@ namespace fheroes2
     {
         const bool isEvilInterface = Settings::Get().isEvilInterfaceEnabled();
 
-        // Notice: ICN::SURDRBKE and ICN::SURDRBKG has 16 (equals to BORDERWIDTH) pixels shadow from the left and the bottom sides.
+        // Notice: ICN::SURDRBKE and ICN::SURDRBKG has 16 (equals to borderWidthPx) pixels shadow from the left and the bottom sides.
         const Sprite & horizontalSprite = AGG::GetICN( ( isEvilInterface ? ICN::SURDRBKE : ICN::SURDRBKG ), 0 );
         const Sprite & verticalSprite = AGG::GetICN( ( isEvilInterface ? ICN::WINLOSEE : ICN::WINLOSE ), 0 );
 
@@ -192,7 +192,7 @@ namespace fheroes2
         CreateDitheringTransition( verticalSprite, rightCornerSpriteOffsetX, verticalSpriteBottomCornerEdgeY, _output, rightCornerOffsetX, optputBottomCornerEdgeY,
                                    cornerSize, transitionSize, false, false );
 
-        // Render horizontal borders. We have to remember that 'verticalSprite' has 16 (equals to BORDERWIDTH) pixels of shadow at the left and bottom sides.
+        // Render horizontal borders. We have to remember that 'verticalSprite' has 16 (equals to borderWidthPx) pixels of shadow at the left and bottom sides.
         const int32_t horizontalSpriteCopyWidth = std::min( _windowArea.width, horizontalSpriteWidth ) - doubleBorderEdgeOffset;
         const int32_t horizontalSpriteCopies
             = ( _windowArea.width - doubleBorderEdgeOffset - 1 - transitionSize ) / ( horizontalSpriteWidth - doubleBorderEdgeOffset - transitionSize );
@@ -278,32 +278,36 @@ namespace fheroes2
     {
         const Rect shadingRoi = roi ^ _activeArea;
 
+        applyTextBackgroundShading( _output, shadingRoi );
+    }
+
+    void StandardWindow::applyTextBackgroundShading( Image & output, const Rect & roi )
+    {
         // The text background is darker than original background. The shadow strength 2 is too much so we do two shading transforms: 3 and 5.
-        ApplyTransform( _output, shadingRoi.x + 2, shadingRoi.y + 2, shadingRoi.width - 4, shadingRoi.height - 4, 3 );
-        ApplyTransform( _output, shadingRoi.x + 2, shadingRoi.y + 2, shadingRoi.width - 4, shadingRoi.height - 4, 5 );
+        ApplyTransform( output, roi.x + 2, roi.y + 2, roi.width - 4, roi.height - 4, 3 );
+        ApplyTransform( output, roi.x + 2, roi.y + 2, roi.width - 4, roi.height - 4, 5 );
 
         // Make text background borders: it consists of rectangles with different transform shading.
-        auto applyRectTransform = [&shadingRoi]( Image & output, const int32_t offset, const int32_t size, const uint8_t transformId ) {
+        auto applyRectTransform = [&roi, &output]( const int32_t offset, const int32_t size, const uint8_t transformId ) {
             // Top horizontal line.
-            ApplyTransform( output, shadingRoi.x + offset, shadingRoi.y + offset, shadingRoi.width - 2 * offset, size, transformId );
+            ApplyTransform( output, roi.x + offset, roi.y + offset, roi.width - 2 * offset, size, transformId );
             // Left vertical line without pixels that are parts of horizontal lines.
-            ApplyTransform( output, shadingRoi.x + offset, shadingRoi.y + offset + size, size, shadingRoi.height - 2 * ( offset + size ), transformId );
+            ApplyTransform( output, roi.x + offset, roi.y + offset + size, size, roi.height - 2 * ( offset + size ), transformId );
             // Bottom horizontal line.
-            ApplyTransform( output, shadingRoi.x + offset, shadingRoi.y + shadingRoi.height - 1 - offset - size + 1, shadingRoi.width - 2 * offset, size, transformId );
+            ApplyTransform( output, roi.x + offset, roi.y + roi.height - offset - size, roi.width - 2 * offset, size, transformId );
             // Right vertical line without pixels that are parts of horizontal lines.
-            ApplyTransform( output, shadingRoi.x + shadingRoi.width - 1 - offset - size + 1, shadingRoi.y + offset + size, size,
-                            shadingRoi.height - 2 * ( offset + size ), transformId );
+            ApplyTransform( output, roi.x + roi.width - offset - size, roi.y + offset + size, size, roi.height - 2 * ( offset + size ), transformId );
         };
 
         // Outer rectangle is slightly bright.
-        applyRectTransform( _output, 0, 1, 9 );
+        applyRectTransform( 0, 1, 9 );
         // Next shaded rectangles have these shadow strengths: 4, 3, 2, 2, 2, 3, 4, 5.
-        applyRectTransform( _output, 1, 1, 4 );
-        applyRectTransform( _output, 2, 1, 3 );
-        applyRectTransform( _output, 3, 3, 2 );
-        applyRectTransform( _output, 6, 1, 3 );
-        applyRectTransform( _output, 7, 1, 4 );
-        applyRectTransform( _output, 8, 1, 5 );
+        applyRectTransform( 1, 1, 4 );
+        applyRectTransform( 2, 1, 3 );
+        applyRectTransform( 3, 3, 2 );
+        applyRectTransform( 6, 1, 3 );
+        applyRectTransform( 7, 1, 4 );
+        applyRectTransform( 8, 1, 5 );
     }
 
     void StandardWindow::renderScrollbarBackground( const Rect & roi, const bool isEvilInterface )
@@ -339,13 +343,32 @@ namespace fheroes2
         }
     }
 
-    void StandardWindow::renderButtonSprite( ButtonSprite & button, const std::string & buttonText, const int32_t buttonWidth, const Point & offset,
-                                             const bool isEvilInterface, const Padding padding )
+    void StandardWindow::renderTextAdaptedButtonSprite( ButtonSprite & button, const char * buttonText, const Point & offset, const Padding padding )
     {
         Sprite released;
         Sprite pressed;
 
-        makeButtonSprites( released, pressed, buttonText, buttonWidth, isEvilInterface, false );
+        const bool isEvilInterface = Settings::Get().isEvilInterfaceEnabled();
+
+        getTextAdaptedSprite( released, pressed, buttonText, isEvilInterface ? ICN::EMPTY_EVIL_BUTTON : ICN::EMPTY_GOOD_BUTTON,
+                              isEvilInterface ? ICN::STONEBAK_EVIL : ICN::STONEBAK );
+
+        const Point pos = _getRenderPos( offset, { released.width(), released.height() }, padding );
+        button.setSprite( released, pressed );
+        button.setPosition( pos.x, pos.y );
+        addGradientShadow( released, _output, button.area().getPosition(), { -5, 5 } );
+        button.draw();
+    }
+
+    void StandardWindow::renderCustomButtonSprite( ButtonSprite & button, const std::string & buttonText, const fheroes2::Size buttonSize, const Point & offset,
+                                                   const Padding padding )
+    {
+        Sprite released;
+        Sprite pressed;
+
+        const bool isEvilInterface = Settings::Get().isEvilInterfaceEnabled();
+
+        makeButtonSprites( released, pressed, buttonText, buttonSize, isEvilInterface, isEvilInterface ? ICN::STONEBAK_EVIL : ICN::STONEBAK );
 
         const Point pos = _getRenderPos( offset, { released.width(), released.height() }, padding );
 
@@ -368,9 +391,11 @@ namespace fheroes2
         button.draw();
     }
 
-    void StandardWindow::renderOkayCancelButtons( Button & buttonOk, Button & buttonCancel, const bool isEvilInterface )
+    void StandardWindow::renderOkayCancelButtons( Button & buttonOk, Button & buttonCancel )
     {
         const Point buttonOffset( 20, 7 );
+
+        const bool isEvilInterface = Settings::Get().isEvilInterfaceEnabled();
 
         const int buttonOkIcn = isEvilInterface ? ICN::BUTTON_SMALL_OKAY_EVIL : ICN::BUTTON_SMALL_OKAY_GOOD;
         renderButton( buttonOk, buttonOkIcn, 0, 1, buttonOffset, Padding::BOTTOM_LEFT );
