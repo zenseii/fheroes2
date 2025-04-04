@@ -1518,13 +1518,16 @@ namespace
                 const fheroes2::Sprite originalPressed = fheroes2::AGG::GetICN( buttonIcnID, icnIndex.second );
                 fheroes2::Sprite & released = _icnVsSprite[id][0];
                 fheroes2::Sprite & pressed = _icnVsSprite[id][1];
-                const int32_t removedShadowOffset = 5;
-                released.resize( originalReleased.width() - removedShadowOffset, originalReleased.height() - removedShadowOffset );
-                pressed.resize( originalPressed.width() - removedShadowOffset, originalPressed.height() - removedShadowOffset );
+                const int32_t removedShadowOffsetWidth = 5;
+                const int32_t removedShadowOffsetHeight = 6;
+                released.resize( originalReleased.width() - removedShadowOffsetWidth, originalReleased.height() - removedShadowOffsetHeight );
+                pressed.resize( originalPressed.width() - removedShadowOffsetWidth, originalPressed.height() - removedShadowOffsetHeight );
                 released.reset();
                 pressed.reset();
-                fheroes2::Copy( originalReleased, removedShadowOffset, 0, _icnVsSprite[id][0], 0, 0, originalReleased.width() - removedShadowOffset, originalReleased.height() - removedShadowOffset );
-                fheroes2::Copy( originalPressed, removedShadowOffset, 0, _icnVsSprite[id][1], 0, 0, originalPressed.width() - removedShadowOffset, originalPressed.height() - removedShadowOffset );
+                fheroes2::Copy( originalReleased, removedShadowOffsetWidth, 0, _icnVsSprite[id][0], 0, 0, originalReleased.width() - removedShadowOffsetWidth,
+                                originalReleased.height() - removedShadowOffsetHeight );
+                fheroes2::Copy( originalPressed, removedShadowOffsetWidth, 0, _icnVsSprite[id][1], 0, 0, originalPressed.width() - removedShadowOffsetWidth,
+                                originalPressed.height() - removedShadowOffsetHeight );
                 if ( id == ICN::BUTTON_CAMPAIGN_GAME ) {
                     // Fix the disabled state.
                     fheroes2::Image common = fheroes2::ExtractCommonPattern( { &released, &pressed } );
