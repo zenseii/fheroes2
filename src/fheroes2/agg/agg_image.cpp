@@ -1600,19 +1600,6 @@ namespace
 
             fheroes2::Sprite & released = _icnVsSprite[id][0];
             fheroes2::Sprite & pressed = _icnVsSprite[id][1];
-            // Add original shadow.
-            const fheroes2::Sprite & originalShadow = fheroes2::AGG::GetICN( ICN::BTNCOM, 0 );
-            fheroes2::Image temp( originalShadow.width(), originalShadow.height() );
-
-            Copy( released, 0, 0, temp, 5, 0, released.width(), released.height() );
-            fheroes2::Copy( originalShadow, 0, 0, temp, 0, 0, 5, originalShadow.height() );
-            fheroes2::Copy( originalShadow, 5, originalShadow.height() - 6, temp, 5, originalShadow.height() - 6, originalShadow.width() - 5, 6 );
-            fheroes2::Copy( temp, released );
-
-            Copy( pressed, 0, 0, temp, 5, 0, released.width(), released.height() );
-            fheroes2::Copy( originalShadow, 0, 0, temp, 0, 0, 5, originalShadow.height() );
-            fheroes2::Copy( originalShadow, 5, originalShadow.height() - 6, temp, 5, originalShadow.height() - 6, originalShadow.width() - 5, 6 );
-            fheroes2::Copy( temp, pressed );
 
             break;
         }
