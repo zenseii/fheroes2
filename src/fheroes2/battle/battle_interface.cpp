@@ -113,8 +113,6 @@ namespace
 
     const int32_t battleLogElementWidth{ fheroes2::Display::DEFAULT_WIDTH - 32 - 16 };
 
-    const fheroes2::Point damageImageShadowOffset{ -5, 5 };
-
     struct LightningPoint
     {
         explicit LightningPoint( const fheroes2::Point & p = fheroes2::Point(), const int32_t thick = 1 )
@@ -3224,18 +3222,11 @@ void Battle::Interface::EventShowOptions()
 
 bool Battle::Interface::EventStartAutoCombat( const Unit & unit, Actions & actions )
 {
-    // TODO: remove these temporary assertions
-    assert( arena.CanToggleAutoCombat() );
-    assert( !arena.AutoCombatInProgress() );
-
     if ( fheroes2::showStandardTextMessage( {}, _( "Are you sure you want to enable the auto combat mode?" ), Dialog::YES | Dialog::NO ) != Dialog::YES ) {
         return false;
     }
 
-    actions.emplace_back( Command::TOGGLE_AUTO_COMBAT, unit.GetCurrentOrArmyColor() );
-
-    humanturn_redraw = true;
-    humanturn_exit = true;
+    _startAutoCombat( unit, actions );
 
     return true;
 }
@@ -3247,12 +3238,28 @@ bool Battle::Interface::EventQuickCombat( Actions & actions )
         return false;
     }
 
+    _quickCombat( actions );
+
+    return true;
+}
+
+void Battle::Interface::_startAutoCombat( const Unit & unit, Actions & actions )
+{
+    // TODO: remove this temporary assertion
+    assert( arena.CanToggleAutoCombat() && !arena.AutoCombatInProgress() );
+
+    actions.emplace_back( Command::TOGGLE_AUTO_COMBAT, unit.GetCurrentOrArmyColor() );
+
+    humanturn_redraw = true;
+    humanturn_exit = true;
+}
+
+void Battle::Interface::_quickCombat( Actions & actions )
+{
     actions.emplace_back( Command::QUICK_COMBAT );
 
     humanturn_redraw = true;
     humanturn_exit = true;
-
-    return true;
 }
 
 void Battle::Interface::OpenAutoModeDialog( const Unit & unit, Actions & actions )
@@ -3296,11 +3303,12 @@ void Battle::Interface::OpenAutoModeDialog( const Unit & unit, Actions & actions
         if ( le.MouseClickLeft( buttonCancel.area() ) || Game::HotKeyPressEvent( Game::HotKeyEvent::DEFAULT_CANCEL ) ) {
             return;
         }
-        if ( ( le.MouseClickLeft( autoCombatButton.area() ) || Game::HotKeyPressEvent( Game::HotKeyEvent::BATTLE_TOGGLE_AUTO_COMBAT ) )
-             && EventStartAutoCombat( unit, actions ) ) {
+        if ( le.MouseClickLeft( autoCombatButton.area() ) || Game::HotKeyPressEvent( Game::HotKeyEvent::BATTLE_TOGGLE_AUTO_COMBAT ) ) {
+            _startAutoCombat( unit, actions );
             return;
         }
-        if ( ( le.MouseClickLeft( quickCombatButton.area() ) || Game::HotKeyPressEvent( Game::HotKeyEvent::BATTLE_QUICK_COMBAT ) ) && EventQuickCombat( actions ) ) {
+        if ( le.MouseClickLeft( quickCombatButton.area() ) || Game::HotKeyPressEvent( Game::HotKeyEvent::BATTLE_QUICK_COMBAT ) ) {
+            _quickCombat( actions );
             return;
         }
 
@@ -6773,32 +6781,24 @@ void Battle::PopupDamageInfo::_makeDamageImage()
 
     const fheroes2::Rect & unitRect = _defender->GetRectPosition();
 
-    const int32_t shadowOffsetX = std::abs( damageImageShadowOffset.x );
-    const int32_t shadowOffsetY = std::abs( damageImageShadowOffset.y );
     // Get the border width and set the popup parameters.
     const int32_t borderWidth = BorderWidth();
     const int32_t x = _battleUIRect.x + unitRect.x + unitRect.width;
     const int32_t y = _battleUIRect.y + unitRect.y;
-    const int32_t w = std::max( damageText.width(), killedText.width() ) + 2 * borderWidth + shadowOffsetX;
-    const int32_t h = damageText.height() + killedText.height() + 2 * borderWidth + shadowOffsetY;
+    const int32_t w = std::max( damageText.width(), killedText.width() ) + 2 * borderWidth;
+    const int32_t h = damageText.height() + killedText.height() + 2 * borderWidth;
 
     // If the damage info popup doesn't fit the battlefield draw surface, then try to place it on the left side of the cell
     const bool isLeftSidePopup = ( unitRect.x + unitRect.width + w ) > _battleUIRect.width;
     const fheroes2::Rect borderRect( isLeftSidePopup ? ( x - w - unitRect.width - borderWidth ) : x, y, w, h );
-    _damageImage.resize( borderRect.width, borderRect.height );
-    _damageImage.reset();
 
-    const fheroes2::Sprite & backgroundIcn = fheroes2::AGG::GetICN( ICN::CELLWIN, 1 );
-    fheroes2::Image backgroundImage
-        = fheroes2::Stretch( backgroundIcn, 0, 0, backgroundIcn.width(), backgroundIcn.height(), borderRect.width - shadowOffsetX, borderRect.height - shadowOffsetY );
-    damageText.draw( borderWidth, borderWidth + 2, backgroundImage );
-    killedText.draw( borderWidth, ( borderRect.height - shadowOffsetY ) / 2 + 2, backgroundImage );
-
-    fheroes2::Copy( backgroundImage, 0, 0, _damageImage, shadowOffsetX, 0, borderRect.width - shadowOffsetX, borderRect.height - shadowOffsetY );
-
+    const fheroes2::Sprite & backgroundImage = fheroes2::AGG::GetICN( ICN::CELLWIN, 1 );
+    _damageImage = fheroes2::Stretch( backgroundImage, 0, 0, backgroundImage.width(), backgroundImage.height(), borderRect.width, borderRect.height );
     _damageImage.setPosition( borderRect.x, borderRect.y );
+    _damageImage._disableTransformLayer();
 
-    fheroes2::addGradientShadow( backgroundImage, _damageImage, { shadowOffsetX, 0 }, damageImageShadowOffset );
+    damageText.draw( borderWidth, borderWidth + 2, _damageImage );
+    killedText.draw( borderWidth, borderRect.height / 2 + 2, _damageImage );
 }
 
 void Battle::PopupDamageInfo::redraw() const
@@ -6809,5 +6809,8 @@ void Battle::PopupDamageInfo::redraw() const
 
     assert( !_damageImage.empty() );
 
-    fheroes2::Blit( _damageImage, 0, 0, fheroes2::Display::instance(), _damageImage.x(), _damageImage.y(), _damageImage.width(), _damageImage.height() );
+    fheroes2::Display & display = fheroes2::Display::instance();
+
+    fheroes2::Copy( _damageImage, 0, 0, display, _damageImage.x(), _damageImage.y(), _damageImage.width(), _damageImage.height() );
+    fheroes2::addGradientShadowForArea( display, { _damageImage.x(), _damageImage.y() }, _damageImage.width(), _damageImage.height(), 5 );
 }
