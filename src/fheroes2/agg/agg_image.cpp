@@ -1513,13 +1513,20 @@ namespace
                     icnIndex = { 0, 1 };
                     break;
                 }
-
-                _icnVsSprite[id][0] = fheroes2::AGG::GetICN( buttonIcnID, icnIndex.first );
-                _icnVsSprite[id][1] = fheroes2::AGG::GetICN( buttonIcnID, icnIndex.second );
+                // Remove the shadows since we are adding our own in the dialog.
+                const fheroes2::Sprite originalReleased = fheroes2::AGG::GetICN( buttonIcnID, icnIndex.first );
+                const fheroes2::Sprite originalPressed = fheroes2::AGG::GetICN( buttonIcnID, icnIndex.second );
+                fheroes2::Sprite & released = _icnVsSprite[id][0];
+                fheroes2::Sprite & pressed = _icnVsSprite[id][1];
+                const int32_t removedShadowOffset = 5;
+                released.resize( originalReleased.width() - removedShadowOffset, originalReleased.height() - removedShadowOffset );
+                pressed.resize( originalPressed.width() - removedShadowOffset, originalPressed.height() - removedShadowOffset );
+                released.reset();
+                pressed.reset();
+                fheroes2::Copy( originalReleased, removedShadowOffset, 0, _icnVsSprite[id][0], 0, 0, originalReleased.width() - removedShadowOffset, originalReleased.height() - removedShadowOffset );
+                fheroes2::Copy( originalPressed, removedShadowOffset, 0, _icnVsSprite[id][1], 0, 0, originalPressed.width() - removedShadowOffset, originalPressed.height() - removedShadowOffset );
                 if ( id == ICN::BUTTON_CAMPAIGN_GAME ) {
                     // Fix the disabled state.
-                    const fheroes2::Sprite & released = fheroes2::AGG::GetICN( buttonIcnID, icnIndex.first );
-                    const fheroes2::Sprite & pressed = fheroes2::AGG::GetICN( buttonIcnID, icnIndex.second );
                     fheroes2::Image common = fheroes2::ExtractCommonPattern( { &released, &pressed } );
                     common = fheroes2::FilterOnePixelNoise( common );
                     common = fheroes2::FilterOnePixelNoise( common );
@@ -1597,9 +1604,6 @@ namespace
 
             text = fheroes2::getSupportedText( text, fheroes2::FontType::buttonReleasedWhite() );
             fheroes2::makeButtonSprites( _icnVsSprite[id][0], _icnVsSprite[id][1], text, { 117, 56 }, false, ICN::STONEBAK );
-
-            fheroes2::Sprite & released = _icnVsSprite[id][0];
-            fheroes2::Sprite & pressed = _icnVsSprite[id][1];
 
             break;
         }
