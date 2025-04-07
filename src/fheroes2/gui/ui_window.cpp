@@ -56,10 +56,10 @@ namespace
         const fheroes2::Rect & buttonArea = buttons.button( 0 ).area();
         const int32_t buttonCount = static_cast<int32_t>( buttons.getButtonsCount() );
 
-        const int32_t widthPadding = isSingleColumn ? 50 : 60;
+        const int32_t widthPadding = isSingleColumn ? 52 : 60;
         int32_t dialogWidth = widthPadding;
 
-        const int32_t heightPadding = isSingleColumn ? 39 : 26;
+        const int32_t heightPadding = isSingleColumn ? 43 : 26;
         // We assume that the cancel button height for multiple columns is 25 px because this button should contain only a single line of text.
         const int32_t cancelButtonAreaHeight = isSingleColumn ? buttonArea.height + buttonsVerticalGap : 25 + buttonsVerticalGap + 10 + 1;
         int32_t dialogHeight = cancelButtonAreaHeight + heightPadding + extraHeight;
@@ -77,8 +77,22 @@ namespace
             dialogWidth += ( buttonCount / 2 ) * buttonArea.width + ( ( buttonCount / 2 - 1 ) * buttonsHorizontalGap );
             dialogHeight += buttonArea.height * 2 + ( buttonsVerticalGap + 10 );
         }
+        fheroes2::Point placement;
+        if ( isSingleColumn ) {
+            const int32_t panelOffset = fheroes2::Display::DEFAULT_HEIGHT - dialogHeight;
+            const fheroes2::Sprite mainMenuBackground = fheroes2::AGG::GetICN( ICN::HEROES, 0 );
+            const int32_t backgroundWidth = mainMenuBackground.width();
+            const int32_t panelXPos = output.width() - mainMenuBackground.x() - ( dialogWidth + fheroes2::borderWidthPx ) - 8;
+            const int32_t panelYPos = mainMenuBackground.y() + fheroes2::borderWidthPx + 8;
+            placement.x = panelXPos;
+            placement.y = panelYPos;
+        }
+        else {
+            placement.x = ( output.width() - dialogWidth ) / 2;
+            placement.y = ( output.height() - dialogHeight ) / 2;
+        }
 
-        return { ( output.width() - dialogWidth ) / 2, ( output.height() - dialogHeight ) / 2, dialogWidth, dialogHeight };
+        return { placement.x, placement.y, dialogWidth, dialogHeight };
     }
 }
 
