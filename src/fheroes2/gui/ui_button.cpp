@@ -989,9 +989,14 @@ namespace fheroes2
             maxHeight = std::max( maxHeight, text.height( finalWidth ) );
         }
 
-        // Add extra vertical margin only if the button text is on two lines.
-        const bool isTwoLinesText = ( maxHeight == ( getFontHeight( buttonFontType.size ) * 2 ) );
-        maxHeight += isTwoLinesText ? 26 : 10;
+        // Add extra vertical margin depending on how many lines of text there are.
+        if ( maxHeight > getFontHeight( buttonFontType.size ) ) {
+            const int32_t maxAllowedHeight = 200;
+            maxHeight = std::clamp( maxHeight, 56, maxAllowedHeight );
+        }
+        else {
+            maxHeight += 10;
+        }
 
         const int backgroundIcnID = isEvilInterface ? ICN::STONEBAK_EVIL : ICN::STONEBAK;
 
