@@ -5868,7 +5868,23 @@ namespace
         fheroes2::Copy( released[85 - 32], 0, 0, released[220 - 32], 0, 2, released[85 - 32].width(), released[85 - 32].height() );
         fheroes2::SetPixel( released[220 - 32], offset + 4, offset + 0, buttonGoodReleasedColor );
         fheroes2::SetPixel( released[220 - 32], offset + 8, offset + 0, buttonGoodReleasedColor );
+
+        // Eszett.
+        released[223 - 32].resize( 12 + offset * 2, 10 + offset * 2 );
+        released[223 - 32].reset();
+        fheroes2::DrawLine( released[223 - 32], { offset + 0, offset + 9 }, { offset + 2, offset + 9 }, buttonGoodReleasedColor );
+        fheroes2::DrawLine( released[223 - 32], { offset + 2, offset + 9 }, { offset + 2, offset + 2 }, buttonGoodReleasedColor );
+        fheroes2::SetPixel( released[223 - 32], offset + 3, offset + 1, buttonGoodReleasedColor );
+        fheroes2::DrawLine( released[223 - 32], { offset + 4, offset + 0 }, { offset + 10, offset + 0 }, buttonGoodReleasedColor );
+        fheroes2::DrawLine( released[223 - 32], { offset + 11, offset + 1 }, { offset + 11, offset + 2 }, buttonGoodReleasedColor );
+        fheroes2::SetPixel( released[223 - 32], offset + 10, offset + 3, buttonGoodReleasedColor );
+        fheroes2::DrawLine( released[223 - 32], { offset + 9, offset + 4 }, { offset + 6, offset + 4 }, buttonGoodReleasedColor );
+        fheroes2::SetPixel( released[223 - 32], offset + 10, offset + 5, buttonGoodReleasedColor );
+        fheroes2::DrawLine( released[223 - 32], { offset + 11, offset + 6 }, { offset + 11, offset + 8 }, buttonGoodReleasedColor );
+        fheroes2::DrawLine( released[223 - 32], { offset + 10, offset + 9 }, { offset + 5, offset + 9 }, buttonGoodReleasedColor );
+        fheroes2::SetPixel( released[223 - 32], offset + 5, offset + 8, buttonGoodReleasedColor );
     }
+
     void generateGoodCP1254ButtonFont( std::vector<fheroes2::Sprite> & released )
     {
         // Increase size to fit full CP1254 set of characters. Fill with 1px transparent images.
@@ -6109,10 +6125,13 @@ namespace fheroes2
         icnVsSprite[75].setPosition( icnVsSprite[75].x(), icnVsSprite[75].y() );
         updateNormalFontLetterShadow( icnVsSprite[75] );
 
-        // System call 'DELETE' (0x7F) is never used as a text character in phrases.
-        // To make the blinking text cursor we have to make a transparent character with the width of the cursor '_'.
-        icnVsSprite[127 - 32].resize( icnVsSprite[95 - 32].width(), 1 );
-        icnVsSprite[127 - 32].reset();
+        // Add the vertical bar '|' character. It is also used for the text input cursor.
+        icnVsSprite[124 - 32].resize( 3, icnVsSprite[91 - 32].height() + 3 );
+        fheroes2::Copy( icnVsSprite[91 - 32], 0, 0, icnVsSprite[124 - 32], 0, 0, 3, icnVsSprite[91 - 32].height() - 4 );
+        fheroes2::Copy( icnVsSprite[91 - 32], 0, icnVsSprite[91 - 32].height() - 7, icnVsSprite[124 - 32], 0, icnVsSprite[91 - 32].height() - 4, 3, 7 );
+        icnVsSprite[124 - 32].setPosition( icnVsSprite[91 - 32].x(), icnVsSprite[91 - 32].y() );
+
+        // NOTICE: System call 'DELETE' (0x7F) is used as a text character in French translated assets.
     }
 
     void modifyBaseSmallFont( std::vector<fheroes2::Sprite> & icnVsSprite )
