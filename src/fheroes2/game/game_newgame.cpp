@@ -501,7 +501,7 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
             if ( !isPriceOfLoyaltyCampaignPresent() ) {
                 return fheroes2::GameMode::NEW_SUCCESSION_WARS_CAMPAIGN;
             }
-            for ( int i = 0; i < ( menuButtons.getButtonsCount() - 1 ); ++i ) {
+            for ( int i = 0; i < 5; ++i ) {
                 menuButtons.button( i ).disable();
                 menuButtons.button( i ).hide();
             }
@@ -528,8 +528,7 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
             return fheroes2::GameMode::NEW_PRICE_OF_LOYALTY_CAMPAIGN;
         }
         if ( buttonMultiGame.isEnabled() && ( HotKeyPressEvent( HotKeyEvent::MAIN_MENU_MULTI ) || le.MouseClickLeft( buttonMultiGame.area() ) ) ) {
-            // Disable all buttons except cancel and hot seat.
-            for ( int i = 0; i < ( menuButtons.getButtonsCount() - 2 ); ++i ) {
+            for ( int i = 0; i < 5; ++i ) {
                 menuButtons.button( i ).disable();
                 menuButtons.button( i ).hide();
             }
