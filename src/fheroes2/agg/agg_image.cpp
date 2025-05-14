@@ -1702,26 +1702,6 @@ namespace
     bool generateGermanSpecificImages( const int id )
     {
         switch ( id ) {
-        //case ICN::BUTTON_BATTLE_ONLY:
-        //    _icnVsSprite[id].resize( 2 );
-        //    for ( int32_t i = 0; i < static_cast<int32_t>( _icnVsSprite[id].size() ); ++i ) {
-        //        fheroes2::Sprite & out = _icnVsSprite[id][i];
-        //        out = fheroes2::AGG::GetICN( ICN::BTNNEWGM, 6 + i );
-        //        // Clean the button
-        //        Fill( out, 26 - i, 23 + i, 84, 11, getButtonFillingColor( i == 0 ) );
-        //        // Add 'K'
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNDCCFG, 4 + i ), 34 - i, 23, out, 40 - i, 23, 12, 14 );
-        //        //'Add 'A'
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNNEWGM, 4 + i ), 56 - i, 23, out, 52 - i, 23, 13, 14 );
-        //        Copy( out, 20, 20, out, 52 - i + 12, 25, 3, 3 );
-        //        // Add 'M'
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNNEWGM, 4 + i ), 39 - i, 8, out, 65 - i, 23, 14, 14 );
-        //        // Add 'F'
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNDCCFG, 4 + i ), 70 - i, 23, out, 87 - i, 23, 10, 14 );
-        //        // Add 'P'
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNNEWGM, 4 + i ), 36 - i, 23, out, 78 - i, 23, 10, 14 );
-        //    }
-        //    return true;
         case ICN::BUTTON_SMALL_DECLINE_GOOD:
         case ICN::BUTTON_SMALL_ACCEPT_GOOD: {
             _icnVsSprite[id].resize( 2 );
