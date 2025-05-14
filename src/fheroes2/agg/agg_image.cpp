@@ -234,7 +234,7 @@ namespace
     }
 
     // This class serves the purpose of preserving the original alphabet which is loaded from AGG files for cases when we generate new language alphabet.
-    class OriginalAlphabetPreserver
+    class OriginalAlphabetPreserver final
     {
     public:
         void preserve()
@@ -280,6 +280,10 @@ namespace
             _icnVsSprite[ICN::GRAY_FONT].clear();
             _icnVsSprite[ICN::GRAY_SMALL_FONT].clear();
             _icnVsSprite[ICN::WHITE_LARGE_FONT].clear();
+            _icnVsSprite[ICN::GOLDEN_GRADIENT_FONT].clear();
+            _icnVsSprite[ICN::GOLDEN_GRADIENT_LARGE_FONT].clear();
+            _icnVsSprite[ICN::SILVER_GRADIENT_FONT].clear();
+            _icnVsSprite[ICN::SILVER_GRADIENT_LARGE_FONT].clear();
         }
 
         bool isPreserved() const
@@ -2962,6 +2966,16 @@ namespace
                 Blit( fheroes2::AGG::GetICN( ICN::STREAM, 2 ), 0, 0, _icnVsSprite[id][17], 1, 8, 24, 11 );
             }
             return true;
+        case ICN::TEXTBAR:
+            LoadOriginalICN( id );
+            if ( _icnVsSprite[id].size() > 9 ) {
+                // Remove the slightly corrupted rightmost column from the text bar background image.
+                for ( size_t i = 8; i < 10; ++i )
+                    if ( _icnVsSprite[id][i].width() == 543 ) {
+                        _icnVsSprite[id][i] = Crop( _icnVsSprite[id][i], 0, 0, _icnVsSprite[id][i].width() - 1, _icnVsSprite[id][i].height() );
+                    }
+            }
+            return true;
         case ICN::TWNWUP_5:
         case ICN::EDITOR:
             LoadOriginalICN( id );
@@ -4467,7 +4481,7 @@ namespace
             }
 
             _icnVsSprite[id].resize( 2 );
-            // move dark border to new released state from original pressed state button
+            // Move dark border to new released state from original pressed state button
             const fheroes2::Sprite & originalReleased = fheroes2::AGG::GetICN( originalID, 4 );
             const fheroes2::Sprite & originalPressed = fheroes2::AGG::GetICN( originalID, 5 );
             if ( originalReleased.width() != 94 && originalPressed.width() != 94 && originalReleased.height() < 5 && originalPressed.height() < 5 ) {
@@ -4484,15 +4498,21 @@ namespace
             Copy( originalPressed, 0, originalPressed.height() - 1, releasedWithDarkBorder, 0, originalPressed.height(), originalPressed.width(), 1 );
             Copy( originalPressed, 0, 2, releasedWithDarkBorder, 1, 22, 1, 1 );
 
-            // pressed state
+            // Pressed state
             fheroes2::Sprite & pressed = _icnVsSprite[id][1];
-            pressed.resize( originalPressed.width() + 2, originalPressed.height() + 1 );
+            // Make sure the released and pressed states have the same size, because the original Czech's pressed state is 1 px less in height than the other versions'.
+            pressed.resize( originalReleased.width() + 2, originalReleased.height() + 1 );
             pressed.reset();
             Copy( originalPressed, 0, 0, pressed, 0, 1, originalPressed.width(), originalPressed.height() );
 
-            // the empty buttons need to be widened by 1 px so that they can be evenly divided by 3 in resizeButton() in ui_tools.cpp
+            // This fills the 1 px vertical gap in the Czech pressed state button.
+            if ( originalPressed.height() < 23 ) {
+                Copy( originalPressed, 0, originalPressed.height() - 10, pressed, 0, pressed.height() - 10, originalPressed.width(), 10 );
+            }
+
+            // The empty buttons need to be widened by 1 px so that they can be evenly divided by 3 in resizeButton() in ui_tools.cpp.
             Copy( originalReleased, originalReleased.width() - 5, 0, releasedWithDarkBorder, releasedWithDarkBorder.width() - 5, 0, 5, originalReleased.height() );
-            Copy( originalPressed, originalPressed.width() - 5, 0, pressed, pressed.width() - 6, 1, 5, originalPressed.height() );
+            Copy( originalPressed, originalPressed.width() - 5, 0, pressed, pressed.width() - 6, 1, 5, originalReleased.height() );
 
             const int32_t pixelPosition = 4 * 94 + 6;
             Fill( releasedWithDarkBorder, 5, 3, 88, 18, originalReleased.image()[pixelPosition] );
@@ -5082,26 +5102,47 @@ namespace fheroes2::AGG
 
     void updateLanguageDependentResources( const SupportedLanguage language, const bool loadOriginalAlphabet )
     {
-        if ( loadOriginalAlphabet || !isAlphabetSupported( language ) ) {
-            if ( !alphabetPreserver.isPreserved() ) {
+        static bool areOriginalResourcesInUse = false;
+        static CodePage currentCodePage{ CodePage::NONE };
+
+        const bool loadOriginalResources = loadOriginalAlphabet || !isAlphabetSupported( language );
+
+        if ( loadOriginalResources ) {
+            if ( alphabetPreserver.isPreserved() ) {
+                if ( areOriginalResourcesInUse ) {
+                    // Since we are already using the original resources, we don't need to do anything else.
+                    // This saves us a lot of time by not having to rebuild many of the images we use for fonts and buttons.
+                    return;
+                }
+
+                alphabetPreserver.restore();
+            }
+            else {
                 // This can happen when we try to change a language without loading assets.
                 alphabetPreserver.preserve();
             }
-            else {
-                alphabetPreserver.restore();
-            }
         }
         else {
+            if ( !areOriginalResourcesInUse && currentCodePage == getCodePage( language ) ) {
+                // We are trying to load resources for the same code page. We don't need to redo the same work again.
+                return;
+            }
+
             alphabetPreserver.preserve();
             // Restore original letters when changing language to avoid changes to them being carried over.
             alphabetPreserver.restore();
+
             generateAlphabet( language, _icnVsSprite );
         }
+
         generateButtonAlphabet( language, _icnVsSprite );
 
         // Clear language dependent resources.
         for ( const int id : languageDependentIcnId ) {
             _icnVsSprite[id].clear();
         }
+
+        currentCodePage = getCodePage( language );
+        areOriginalResourcesInUse = loadOriginalResources;
     }
 }
