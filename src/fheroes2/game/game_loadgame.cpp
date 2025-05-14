@@ -91,9 +91,9 @@ fheroes2::GameMode Game::LoadMulti()
 
     const fheroes2::Point buttonPos = fheroes2::drawButtonPanel();
 
-    fheroes2::Button buttonHotSeat( buttonPos.x, buttonPos.y, ICN::BUTTON_HOT_SEAT, 0, 1 );
-    fheroes2::Button buttonNetwork( buttonPos.x, buttonPos.y + buttonYStep * 1, ICN::BTNMP, 2, 3 );
-    fheroes2::Button buttonCancel( buttonPos.x, buttonPos.y + buttonYStep * 5, ICN::BUTTON_LARGE_CANCEL, 0, 1 );
+    fheroes2::Button buttonHotSeat( buttonPos.x, buttonPos.y, ICN::BUTTONS_NEW_GAME_MENU_GOOD, 0, 1 );
+    fheroes2::Button buttonNetwork( buttonPos.x, buttonPos.y + buttonYStep * 1, ICN::BUTTONS_NEW_GAME_MENU_GOOD, 2, 3 );
+    fheroes2::Button buttonCancel( buttonPos.x, buttonPos.y + buttonYStep * 5, ICN::BUTTONS_NEW_GAME_MENU_GOOD, 10, 11 );
 
     buttonHotSeat.draw();
     buttonCancel.draw();
@@ -151,34 +151,34 @@ fheroes2::GameMode Game::LoadGame()
 
     const fheroes2::Point buttonPos = fheroes2::drawButtonPanel();
 
-    fheroes2::Button buttonStandardGame( 0, 0, ICN::BUTTON_STANDARD_GAME, 0, 1 );
-    fheroes2::Button buttonCampaignGame( 0, 0, ICN::BUTTON_CAMPAIGN_GAME, 0, 1 );
-    fheroes2::Button buttonMultiplayerGame( 0, 0, ICN::BUTTON_MULTIPLAYER_GAME, 0, 1 );
-    fheroes2::Button buttonCancel( 0, 0, ICN::BUTTON_LARGE_CANCEL, 0, 1 );
+    fheroes2::ButtonGroup buttons;
+    for ( uint32_t i = 0; i < 3; ++i ) {
+        buttons.createButton( buttonPos.x, buttonPos.y + buttonYStep * static_cast<int32_t>( i ), ICN::BUTTONS_NEW_GAME_MENU_GOOD, i * 2, i * 2 + 1, i );
+        buttons.button( static_cast<uint32_t>(i) ).setPosition( buttonPos.x, buttonPos.y + buttonYStep * static_cast<int32_t>( i ) );
+    }
+    buttons.createButton( buttonPos.x, buttonPos.y + buttonYStep * 5, ICN::BUTTONS_NEW_GAME_MENU_GOOD, 10, 11, 3 );
 
-    const std::array<fheroes2::ButtonBase *, 4> buttons{ &buttonStandardGame, &buttonCampaignGame, &buttonMultiplayerGame, &buttonCancel };
+    fheroes2::ButtonBase & buttonStandardGame = buttons.button( 0 );
+    fheroes2::ButtonBase & buttonCampaignGame = buttons.button( 1 );
+    fheroes2::ButtonBase & buttonMultiplayerGame = buttons.button( 2 );
+    fheroes2::ButtonBase & buttonCancel = buttons.button( 3 );
 
     if ( !isSuccessionWarsCampaignPresent() ) {
-        buttonCampaignGame.disable();
+        buttons.button( 1 ).disable();
     }
 
-    static_assert( buttons.size() > 1, "The number of buttons in this dialog cannot be less than 2!" );
-    for ( size_t i = 0; i < buttons.size() - 1; ++i ) {
-        buttons[i]->setPosition( buttonPos.x, buttonPos.y + buttonYStep * static_cast<int32_t>( i ) );
-        buttons[i]->draw();
+    for ( size_t i = 0; i < buttons.getButtonsCount() - 1; ++i ) {
+        buttons.button( i ).setPosition( buttonPos.x, buttonPos.y + buttonYStep * static_cast<int32_t>( i ) );
     }
-
-    // following the cancel button in new game
-    buttonCancel.setPosition( buttonPos.x, buttonPos.y + buttonYStep * 5 );
-    buttonCancel.draw();
+    buttons.draw();
 
     fheroes2::validateFadeInAndRender();
 
     LocalEvent & le = LocalEvent::Get();
 
     while ( le.HandleEvents() ) {
-        for ( fheroes2::ButtonBase * button : buttons ) {
-            button->drawOnState( le.isMouseLeftButtonPressedInArea( button->area() ) );
+        for ( size_t i = 0; i < buttons.getButtonsCount() - 1; ++i ) {
+            buttons.button( i ).drawOnState( le.isMouseLeftButtonPressedInArea( buttons.button( i ).area() ) );
         }
 
         if ( le.MouseClickLeft( buttonStandardGame.area() ) || HotKeyPressEvent( HotKeyEvent::MAIN_MENU_STANDARD ) ) {

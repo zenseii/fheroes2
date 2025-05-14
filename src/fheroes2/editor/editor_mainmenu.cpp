@@ -122,7 +122,7 @@ namespace
             buttons[i].draw();
         }
 
-        fheroes2::Button buttonCancel( buttonPos.x, buttonPos.y + 5 * buttonYStep, ICN::BUTTON_LARGE_CANCEL, 0, 1 );
+        fheroes2::Button buttonCancel( buttonPos.x, buttonPos.y + 5 * buttonYStep, ICN::BUTTONS_NEW_GAME_MENU_GOOD, 10, 11 );
 
         buttonCancel.draw();
 
@@ -182,7 +182,7 @@ namespace Editor
 
         fheroes2::Button buttonNewMap( buttonPos.x, buttonPos.y, ICN::BUTTON_NEW_MAP, 0, 1 );
         fheroes2::Button buttonLoadMap( buttonPos.x, buttonPos.y + buttonYStep, ICN::BUTTON_LOAD_MAP, 0, 1 );
-        fheroes2::Button buttonCancel( buttonPos.x, buttonPos.y + 5 * buttonYStep, ICN::BUTTON_LARGE_CANCEL, 0, 1 );
+        fheroes2::Button buttonCancel( buttonPos.x, buttonPos.y + 5 * buttonYStep, ICN::BUTTONS_NEW_GAME_MENU_GOOD, 10, 11 );
 
         buttonNewMap.draw();
         buttonLoadMap.draw();
@@ -235,7 +235,7 @@ namespace Editor
 
         fheroes2::Button buttonScratchMap( buttonPos.x, buttonPos.y, ICN::BTNENEW, 0, 1 );
         fheroes2::Button buttonRandomMap( buttonPos.x, buttonPos.y + buttonYStep, ICN::BTNENEW, 2, 3 );
-        fheroes2::Button buttonCancel( buttonPos.x, buttonPos.y + 5 * buttonYStep, ICN::BUTTON_LARGE_CANCEL, 0, 1 );
+        fheroes2::Button buttonCancel( buttonPos.x, buttonPos.y + 5 * buttonYStep, ICN::BUTTONS_NEW_GAME_MENU_GOOD, 10, 11 );
 
         // TODO: enable it back once random map generator is ready.
         buttonRandomMap.disable();

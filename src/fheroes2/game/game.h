@@ -58,13 +58,8 @@ namespace Game
     fheroes2::GameMode LoadGame();
     fheroes2::GameMode Credits();
     fheroes2::GameMode NewStandard();
-    fheroes2::GameMode CampaignSelection();
     fheroes2::GameMode NewSuccessionWarsCampaign();
     fheroes2::GameMode NewPriceOfLoyaltyCampaign();
-    fheroes2::GameMode NewMulti();
-    fheroes2::GameMode NewHotSeat();
-    fheroes2::GameMode NewBattleOnly();
-    fheroes2::GameMode NewNetwork(); // To be utilized in future.
     fheroes2::GameMode LoadStandard();
     fheroes2::GameMode LoadCampaign();
     fheroes2::GameMode LoadMulti();
@@ -104,7 +99,6 @@ namespace Game
     uint32_t getGameOverScoreFactor();
     uint32_t GetLostTownDays();
     uint32_t GetWhirlpoolPercent();
-    uint8_t SelectCountPlayers();
 
     void PlayPickupSound();
 

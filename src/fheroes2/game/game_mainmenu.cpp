@@ -136,23 +136,11 @@ void Game::mainGameLoop( bool isFirstGameRun, bool isProbablyDemoVersion )
         case fheroes2::GameMode::NEW_STANDARD:
             result = Game::NewStandard();
             break;
-        case fheroes2::GameMode::NEW_CAMPAIGN_SELECTION:
-            result = Game::CampaignSelection();
-            break;
         case fheroes2::GameMode::NEW_SUCCESSION_WARS_CAMPAIGN:
             result = Game::NewSuccessionWarsCampaign();
             break;
         case fheroes2::GameMode::NEW_PRICE_OF_LOYALTY_CAMPAIGN:
             result = Game::NewPriceOfLoyaltyCampaign();
-            break;
-        case fheroes2::GameMode::NEW_MULTI:
-            result = Game::NewMulti();
-            break;
-        case fheroes2::GameMode::NEW_HOT_SEAT:
-            result = Game::NewHotSeat();
-            break;
-        case fheroes2::GameMode::NEW_BATTLE_ONLY:
-            result = Game::NewBattleOnly();
             break;
         case fheroes2::GameMode::LOAD_STANDARD:
             result = Game::LoadStandard();
@@ -172,6 +160,12 @@ void Game::mainGameLoop( bool isFirstGameRun, bool isProbablyDemoVersion )
         case fheroes2::GameMode::SELECT_SCENARIO_FOUR_HUMAN_PLAYERS:
         case fheroes2::GameMode::SELECT_SCENARIO_FIVE_HUMAN_PLAYERS:
         case fheroes2::GameMode::SELECT_SCENARIO_SIX_HUMAN_PLAYERS: {
+            Settings & conf = Settings::Get();
+            if ( conf.isCampaignGameType() ) {
+                conf.setCurrentMapInfo( {} );
+            }
+            conf.SetGameType( Game::TYPE_HOTSEAT );
+
             const uint8_t humanPlayerCount
                 = static_cast<uint8_t>( static_cast<int>( result ) - static_cast<int>( fheroes2::GameMode::SELECT_SCENARIO_ONE_HUMAN_PLAYER ) );
             // Add +1 since we don't have zero human player option.
