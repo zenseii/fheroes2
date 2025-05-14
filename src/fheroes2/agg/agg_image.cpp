@@ -1767,43 +1767,75 @@ namespace
     bool generateFrenchSpecificImages( const int id )
     {
         switch ( id ) {
-        //case ICN::BUTTON_BATTLE_ONLY: {
-        //    _icnVsSprite[id].resize( 2 );
-        //    for ( int32_t i = 0; i < static_cast<int32_t>( _icnVsSprite[id].size() ); ++i ) {
-        //        fheroes2::Sprite & out = _icnVsSprite[id][i];
-        //        out = fheroes2::AGG::GetICN( ICN::BTNNEWGM, 6 + i );
-        //        // Clean the button
-        //        Fill( out, 32 - i, 21 + i, 77, 14, getButtonFillingColor( i == 0 ) );
-        //        const int32_t secondLine = 28;
-        //        // Add 'MODE'
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNNEWGM, 4 + i ), 40 - i, 13, out, 45 - i, 13, 50, 15 );
-        //        // Clean up 'MODE'
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNEMAIN, 0 + i ), 114 - i, 18, out, 94 - i, 18, 1, 10 );
-        //        // Add 'BA'
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNBAUD, 2 + i ), 42 - i, 28, out, 28 - i, secondLine, 22, 15 );
-        //        // Clean up 'BA'
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNBAUD, 2 + i ), 42 - i, 31, out, 39 - i, secondLine, 1, 1 );
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNBAUD, 2 + i ), 39 - i, 31, out, 49 - i, secondLine + 4, 1, 2 );
-        //        // Add 'T'
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNDC, 2 + i ), 89 - i, 21, out, 49 - i, secondLine, 12, 15 );
-        //        // Clean up 'AT'
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNDC, 2 + i ), 89 - i, 18, out, 50 - i, secondLine, 1, 1 );
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNDC, 2 + i ), 92 - ( 5 * i ), 27 - i, out, 49 - i, secondLine + 4 + i, 1, 3 );
-        //        // Add 'AI'.
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNMP, 6 + i ), 56 - i, 13, out, 62 - i, secondLine, 18, 15 );
-        //        // Clean up 'TA'
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNBAUD, 2 + i ), 51 - i, 40, out, 60 - i, secondLine + 12, 3, 3 );
-        //        // Add 'LLE'
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNEMAIN, 0 + i ), 85 - i, 13, out, 81 - i, secondLine, 31, 15 );
-        //        // Clean up "IL"
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNEMAIN, 0 + i ), 85 - i, 18, out, 81 - i, secondLine + 7, 1, 1 );
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNEMAIN, 0 + i ), 94 - i, 17, out, 80 - i, secondLine + 4, 2, 2 );
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNEMAIN, 0 + i ), 93 - i, 25, out, 79 - i, secondLine + 12, 3, 3 );
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNDC, 4 + i ), 23 - i, 8, out, 79 - i, secondLine + 5, 1, 10 );
-        //        Copy( fheroes2::AGG::GetICN( ICN::BTNMP, 6 + i ), 73 - i, 22, out, 79 - i, secondLine + 9, 1, 1 );
-        //    }
-        //    return true;
-        //}
+        case ICN::BUTTONS_NEW_GAME_MENU_GOOD: {
+            const bool isPoLPresent = !::AGG::getDataFromAggFile( ICN::getIcnFileName( ICN::X_TRACK1 ), false ).empty();
+            if ( isPoLPresent ) {
+                _icnVsSprite[id].resize( 28 );
+            }
+            else {
+                _icnVsSprite[id].resize( 24 );
+            }
+
+            for ( int i = 0; i < 3; ++i ) {
+                _icnVsSprite[id][i * 2] = fheroes2::AGG::GetICN( ICN::BTNNEWGM, i * 2 );
+                _icnVsSprite[id][i * 2 + 1] = fheroes2::AGG::GetICN( ICN::BTNNEWGM, i * 2 + 1 );
+            }
+            // Add battle only button.
+            for ( int32_t i = 0; i < 2; ++i ) {
+                fheroes2::Sprite & out = _icnVsSprite[id][6 + i];
+                out = fheroes2::AGG::GetICN( ICN::BTNNEWGM, 6 + i );
+                // Clean the button
+                Fill( out, 27 - i, 21 + i, 77, 14, getButtonFillingColor( i == 0 ) );
+                const int32_t secondLine = 28;
+                // Add 'MODE'
+                Copy( fheroes2::AGG::GetICN( ICN::BTNNEWGM, 4 + i ), 35 - i, 13, out, 40 - i, 13, 50, 15 );
+                // Clean up 'MODE'
+                Copy( fheroes2::AGG::GetICN( ICN::BTNEMAIN, 0 + i ), 109 - i, 18, out, 89 - i, 18, 1, 10 );
+                // Add 'BA'
+                Copy( fheroes2::AGG::GetICN( ICN::BTNBAUD, 2 + i ), 42 - i, 28, out, 23 - i, secondLine, 22, 15 );
+                // Clean up 'BA'
+                Copy( fheroes2::AGG::GetICN( ICN::BTNBAUD, 2 + i ), 42 - i, 31, out, 34 - i, secondLine, 1, 1 );
+                Copy( fheroes2::AGG::GetICN( ICN::BTNBAUD, 2 + i ), 39 - i, 31, out, 44 - i, secondLine + 4, 1, 2 );
+                // Add 'T'
+                Copy( fheroes2::AGG::GetICN( ICN::BTNDC, 2 + i ), 89 - i, 21, out, 44 - i, secondLine, 12, 15 );
+                // Clean up 'AT'
+                Copy( fheroes2::AGG::GetICN( ICN::BTNDC, 2 + i ), 89 - i, 18, out, 45 - i, secondLine, 1, 1 );
+                Copy( fheroes2::AGG::GetICN( ICN::BTNDC, 2 + i ), 92 - ( 5 * i ), 27 - i, out, 44 - i, secondLine + 4 + i, 1, 3 );
+                // Add 'AI'.
+                Copy( fheroes2::AGG::GetICN( ICN::BTNMP, 6 + i ), 51 - i, 13, out, 57 - i, secondLine, 18, 15 );
+                // Clean up 'TA'
+                Copy( fheroes2::AGG::GetICN( ICN::BTNBAUD, 2 + i ), 51 - i, 40, out, 55 - i, secondLine + 12, 3, 3 );
+                // Add 'LLE'
+                Copy( fheroes2::AGG::GetICN( ICN::BTNEMAIN, 0 + i ), 80 - i, 13, out, 76 - i, secondLine, 31, 15 );
+                // Clean up "IL"
+                Copy( fheroes2::AGG::GetICN( ICN::BTNEMAIN, 0 + i ), 80 - i, 18, out, 76 - i, secondLine + 7, 1, 1 );
+                Copy( fheroes2::AGG::GetICN( ICN::BTNEMAIN, 0 + i ), 89 - i, 17, out, 75 - i, secondLine + 4, 2, 2 );
+                Copy( fheroes2::AGG::GetICN( ICN::BTNEMAIN, 0 + i ), 88 - i, 25, out, 74 - i, secondLine + 12, 3, 3 );
+                Copy( fheroes2::AGG::GetICN( ICN::BTNDC, 4 + i ), 23 - i, 8, out, 74 - i, secondLine + 5, 1, 10 );
+                Copy( fheroes2::AGG::GetICN( ICN::BTNMP, 6 + i ), 68 - i, 16, out, 74 - i, secondLine + 9, 1, 1 );
+            }
+            // Add config button.
+            _icnVsSprite[id][8] = fheroes2::AGG::GetICN( ICN::BTNDCCFG, 4 );
+            _icnVsSprite[id][9] = fheroes2::AGG::GetICN( ICN::BTNDCCFG, 5 );
+            // Add cancel button.
+            _icnVsSprite[id][10] = fheroes2::AGG::GetICN( ICN::BTNNEWGM, 6 );
+            _icnVsSprite[id][11] = fheroes2::AGG::GetICN( ICN::BTNNEWGM, 7 );
+            // Add hot seat button.
+            _icnVsSprite[id][12] = fheroes2::AGG::GetICN( ICN::BTNMP, 0 );
+            _icnVsSprite[id][13] = fheroes2::AGG::GetICN( ICN::BTNMP, 1 );
+            // Add player count buttons.
+            for ( int i = 0; i < 5; ++i ) {
+                _icnVsSprite[id][( i + 7 ) * 2] = fheroes2::AGG::GetICN( ICN::BTNHOTST, i * 2 );
+                _icnVsSprite[id][( i + 7 ) * 2 + 1] = fheroes2::AGG::GetICN( ICN::BTNHOTST, i * 2 + 1 );
+            }
+            if ( isPoLPresent ) {
+                _icnVsSprite[id][24] = fheroes2::AGG::GetICN( ICN::X_LOADCM, 0 );
+                _icnVsSprite[id][25] = fheroes2::AGG::GetICN( ICN::X_LOADCM, 1 );
+                _icnVsSprite[id][26] = fheroes2::AGG::GetICN( ICN::X_LOADCM, 2 );
+                _icnVsSprite[id][27] = fheroes2::AGG::GetICN( ICN::X_LOADCM, 3 );
+            }
+            return true;
+        }
         case ICN::BUTTON_GIFT_GOOD: {
             _icnVsSprite[id].resize( 2 );
             for ( int32_t i = 0; i < static_cast<int32_t>( _icnVsSprite[id].size() ); ++i ) {
@@ -2390,13 +2422,14 @@ namespace
                 ApplyPalette( out, indexes );
             }
             return true;
+        case ICN::BTNDCCFG:
         case ICN::BTNEMAIN:
         case ICN::BTNHOTST:
         case ICN::BTNMP:
         case ICN::BTNNEWGM:
         case ICN::X_LOADCM: {
             LoadOriginalICN( id );
-            // Remove embedded shadows and backgrounds because we generate our own.
+            // Remove embedded shadows and backgrounds because we generate our own. It's safe to divide by two because every button has 2 states.
             for ( uint32_t i = 0; i < ( _icnVsSprite[id].size() / 2 ); ++i ) {
                 fheroes2::Sprite & released = _icnVsSprite[id][i * 2];
                 fheroes2::Sprite & pressed = _icnVsSprite[id][i * 2 + 1];
