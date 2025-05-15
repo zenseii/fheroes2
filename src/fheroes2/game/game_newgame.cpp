@@ -439,12 +439,12 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
 
     const bool isPriceOfLoyaltyPresent = isPriceOfLoyaltyCampaignPresent();
     
-    fheroes2::ButtonSprite buttonSuccessionWars;
-    fheroes2::ButtonSprite buttonPriceOfLoyalty;
+    fheroes2::Button buttonSuccessionWars;
+    fheroes2::Button buttonPriceOfLoyalty;
 
     if ( isPriceOfLoyaltyPresent ) {
-        buttonSuccessionWars.setSprite( fheroes2::AGG::GetICN( menuButtonIcnIndex, 24 ), fheroes2::AGG::GetICN( menuButtonIcnIndex, 25 ) );
-        buttonPriceOfLoyalty.setSprite( fheroes2::AGG::GetICN( menuButtonIcnIndex, 26 ), fheroes2::AGG::GetICN( menuButtonIcnIndex, 27 ) );
+        buttonSuccessionWars.setICNInfo( menuButtonIcnIndex, 24, 25 );
+        buttonPriceOfLoyalty.setICNInfo( menuButtonIcnIndex, 26, 27 );
         buttonSuccessionWars.setPosition( menuButtons.button( 0 ).area().x, menuButtons.button( 0 ).area().y );
         buttonPriceOfLoyalty.setPosition( menuButtons.button( 1 ).area().x, menuButtons.button( 1 ).area().y );
         buttonSuccessionWars.disable();
