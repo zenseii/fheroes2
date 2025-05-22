@@ -62,7 +62,6 @@ namespace Game
     fheroes2::GameMode NewPriceOfLoyaltyCampaign();
     fheroes2::GameMode LoadStandard();
     fheroes2::GameMode LoadCampaign();
-    fheroes2::GameMode LoadMulti();
     fheroes2::GameMode LoadHotseat();
     fheroes2::GameMode SelectCampaignScenario( const fheroes2::GameMode prevMode, const bool allowToRestart );
     fheroes2::GameMode SelectScenario( const uint8_t humanPlayerCount );

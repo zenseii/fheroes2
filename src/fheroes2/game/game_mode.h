@@ -37,7 +37,6 @@ namespace fheroes2
         NEW_PRICE_OF_LOYALTY_CAMPAIGN,
         LOAD_STANDARD,
         LOAD_CAMPAIGN,
-        LOAD_MULTI,
         LOAD_HOT_SEAT,
         // Do NOT change the order of the below 6 entries!
         SELECT_SCENARIO_ONE_HUMAN_PLAYER,

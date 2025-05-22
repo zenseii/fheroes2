@@ -148,9 +148,6 @@ void Game::mainGameLoop( bool isFirstGameRun, bool isProbablyDemoVersion )
         case fheroes2::GameMode::LOAD_CAMPAIGN:
             result = Game::LoadCampaign();
             break;
-        case fheroes2::GameMode::LOAD_MULTI:
-            result = Game::LoadMulti();
-            break;
         case fheroes2::GameMode::LOAD_HOT_SEAT:
             result = Game::LoadHotseat();
             break;
