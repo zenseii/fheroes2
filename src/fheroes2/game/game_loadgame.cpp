@@ -94,16 +94,16 @@ fheroes2::GameMode Game::LoadGame()
 
     fheroes2::drawMainMenuScreen();
 
-    fheroes2::ButtonGroup buttons;
+    fheroes2::ButtonGroup gameModeButtons;
     for ( uint32_t i = 0; i < 3; ++i ) {
-        buttons.createButton( 0, 0, ICN::BUTTONS_NEW_GAME_MENU_GOOD, i * 2, i * 2 + 1, i );
+        gameModeButtons.createButton( 0, 0, ICN::BUTTONS_NEW_GAME_MENU_GOOD, i * 2, i * 2 + 1, i );
     }
 
-    fheroes2::ButtonBase & buttonStandardGame = buttons.button( 0 );
-    fheroes2::ButtonBase & buttonCampaignGame = buttons.button( 1 );
-    fheroes2::ButtonBase & buttonMultiplayerGame = buttons.button( 2 );
+    fheroes2::ButtonBase & buttonStandardGame = gameModeButtons.button( 0 );
+    fheroes2::ButtonBase & buttonCampaignGame = gameModeButtons.button( 1 );
+    fheroes2::ButtonBase & buttonMultiplayerGame = gameModeButtons.button( 2 );
 
-    fheroes2::StandardWindow background( buttons, true, buttons.button( 0 ).area().height * 3 + 10 * 3 );
+    fheroes2::StandardWindow background( gameModeButtons, true, gameModeButtons.button( 0 ).area().height * 3 + 10 * 3 );
 
     fheroes2::Display & display = fheroes2::Display::instance();
 
@@ -111,7 +111,7 @@ fheroes2::GameMode Game::LoadGame()
     fheroes2::ImageRestorer emptyDialog( display, background.activeArea().x, background.activeArea().y, background.activeArea().width,
                                          background.activeArea().height - buttonStandardGame.area().height - 22 );
 
-    background.renderSymmetricButtons( buttons, 0, true );
+    background.renderSymmetricButtons( gameModeButtons, 0, true );
 
     // Add the cancel button at the bottom of the dialog.
     fheroes2::Button buttonCancel( buttonStandardGame.area().x,
@@ -135,8 +135,8 @@ fheroes2::GameMode Game::LoadGame()
 
     while ( le.HandleEvents() ) {
         if ( buttonStandardGame.isEnabled() ) {
-            for ( size_t i = 0; i < buttons.getButtonsCount(); ++i ) {
-                buttons.button( i ).drawOnState( le.isMouseLeftButtonPressedInArea( buttons.button( i ).area() ) );
+            for ( size_t i = 0; i < gameModeButtons.getButtonsCount(); ++i ) {
+                gameModeButtons.button( i ).drawOnState( le.isMouseLeftButtonPressedInArea( gameModeButtons.button( i ).area() ) );
             }
             if ( le.MouseClickLeft( buttonStandardGame.area() ) || HotKeyPressEvent( HotKeyEvent::MAIN_MENU_STANDARD ) ) {
                 if ( ListFiles::IsEmpty( GetSaveDir(), GetSaveFileExtension( Game::TYPE_STANDARD ) ) ) {
@@ -156,7 +156,7 @@ fheroes2::GameMode Game::LoadGame()
             }
             else if ( le.MouseClickLeft( buttonMultiplayerGame.area() ) || HotKeyPressEvent( HotKeyEvent::MAIN_MENU_MULTI ) ) {
                 for ( size_t i = 0; i < 3; ++i ) {
-                    buttons.button( i ).disable();
+                    gameModeButtons.button( i ).disable();
                 }
                 emptyDialog.restore();
                 buttonHotSeat.enable();
