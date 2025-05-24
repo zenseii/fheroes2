@@ -624,7 +624,7 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
                 playerCountButtons.drawShadows( display );
                 display.render( emptyDialog.rect() );
             }
-            else if ( le.isMouseLeftButtonPressedAndHeldInArea( buttonHotSeat.area() ) ) {
+            else if ( le.isMouseRightButtonPressedInArea( buttonHotSeat.area() ) ) {
                 fheroes2::showStandardTextMessage(
                     _( "Hot Seat" ), _( "Play a Hot Seat game, where 2 to 6 players play on the same device, switching into the 'Hot Seat' when it is their turn." ),
                     Dialog::ZERO );
