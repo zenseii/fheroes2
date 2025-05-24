@@ -167,7 +167,8 @@ namespace AI
 
         // Implements the logic of transparent casting of the Summon Boat spell at the beginning of the hero's movement
         void HeroesBeginMovement( Heroes & hero );
-        // Implements the logic of transparent casting of the Summon Boat spell during the hero's movement
+        // Implements the logic of preparing for digging up of the Ultimate Artifact as well as the logic of transparent
+        // casting of the Summon Boat spell during the hero's movement
         void HeroesActionNewPosition( Heroes & hero );
 
         void HeroesActionComplete( Heroes & hero, const int32_t tileIndex, const MP2::MapObjectType objectType );
@@ -189,8 +190,6 @@ namespace AI
         static void CastlePreBattle( Castle & castle );
 
         static Skill::Secondary pickSecondarySkill( const Heroes & hero, const Skill::Secondary & left, const Skill::Secondary & right );
-
-        static void castAdventureSpellOnCapturedObject( Heroes & hero );
 
     private:
         Planner() = default;

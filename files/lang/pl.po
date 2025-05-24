@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 13:36+0000\n"
+"POT-Creation-Date: 2025-05-21 04:50+0000\n"
 "PO-Revision-Date: 2025-05-19 21:36+0200\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: \n"
@@ -3681,6 +3681,10 @@ msgstr "Wybierz artefakt:"
 msgid "Select Adventure Object:"
 msgstr "Wybierz artefakt:"
 
+#, fuzzy
+msgid "Select color"
+msgstr "Wybierz potwora:"
+
 msgid "Players Icon"
 msgstr "Ikona graczy"
 
@@ -4314,6 +4318,9 @@ msgstr "z jednym artefaktem."
 msgid "The total number of obelisks is %{count}."
 msgstr ""
 
+msgid "There are no players on the map, so no one can own this object."
+msgstr ""
+
 #, fuzzy
 msgid "Roads"
 msgstr "Droga"
@@ -4793,6 +4800,9 @@ msgstr ""
 msgid "LANGUAGE"
 msgstr ""
 
+msgid "ABOUT"
+msgstr ""
+
 msgid ""
 "The entered map description exceeds the maximum allowed 5 rows. It will be "
 "shortened to fit the map description field."
@@ -4810,6 +4820,9 @@ msgstr ""
 #, fuzzy
 msgid "Change Map Description"
 msgstr "Wybrany opis"
+
+msgid "About"
+msgstr ""
 
 #, fuzzy
 msgid "Click to accept the changes made."
@@ -4833,6 +4846,11 @@ msgstr "Zdarzenie"
 #, fuzzy
 msgid "Click to change the language of the map."
 msgstr "Zmień język gry."
+
+msgid ""
+"Click to edit notes from the map creator. These notes are optional and do "
+"not appear during gameplay."
+msgstr ""
 
 #, fuzzy
 msgid "Click to change your map name."
@@ -5965,6 +5983,14 @@ msgid ""
 "They are triumphant."
 msgstr "Wróg zdobył miasto %{name} i odnosi zwycięstwo."
 
+#, fuzzy
+msgid ""
+"The enemy has found the %{name}.\n"
+"Your quest is a failure."
+msgstr ""
+"Odnajdujesz artefakt (%{name}).\n"
+"Twoja misja zakończyła się sukcesem."
+
 msgid ""
 "The enemy has built up over %{count} gold in his treasury.\n"
 "You must bow done in defeat before his wealth and power."
@@ -6574,6 +6600,10 @@ msgstr "Słowacki"
 
 msgid "Vietnamese"
 msgstr "Wietnamski"
+
+#, fuzzy
+msgid "Greek"
+msgstr "Zielony"
 
 msgid "Slow"
 msgstr "Wolno"

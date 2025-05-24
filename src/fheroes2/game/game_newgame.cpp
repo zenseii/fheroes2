@@ -484,13 +484,13 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
 
     while ( le.HandleEvents() ) {
         if ( buttonStandardGame.isEnabled() ) {
-            buttonStandardGame.drawOnState( le.isMouseLeftButtonPressedInArea( buttonStandardGame.area() ) );
+            buttonStandardGame.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( buttonStandardGame.area() ) );
             if ( buttonCampaignGame.isEnabled() ) {
-                buttonCampaignGame.drawOnState( le.isMouseLeftButtonPressedInArea( buttonCampaignGame.area() ) );
+                buttonCampaignGame.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( buttonCampaignGame.area() ) );
             }
-            buttonMultiGame.drawOnState( le.isMouseLeftButtonPressedInArea( buttonMultiGame.area() ) );
-            buttonBattleGame.drawOnState( le.isMouseLeftButtonPressedInArea( buttonBattleGame.area() ) );
-            buttonSettings.drawOnState( le.isMouseLeftButtonPressedInArea( buttonSettings.area() ) );
+            buttonMultiGame.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( buttonMultiGame.area() ) );
+            buttonBattleGame.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( buttonBattleGame.area() ) );
+            buttonSettings.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( buttonSettings.area() ) );
 
             if ( HotKeyPressEvent( HotKeyEvent::MAIN_MENU_STANDARD ) || le.MouseClickLeft( buttonStandardGame.area() ) ) {
                 return fheroes2::GameMode::NEW_STANDARD;
@@ -551,7 +551,7 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
         }
         else if ( button2Players.isEnabled() ) {
             for ( size_t i = 0; i < mainModeButtons.getButtonsCount(); ++i ) {
-                playerCountButtons.button( i ).drawOnState( le.isMouseLeftButtonPressedInArea( playerCountButtons.button( i ).area() ) );
+                playerCountButtons.button( i ).drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( playerCountButtons.button( i ).area() ) );
             }
 
             if ( button2Players.isEnabled() && ( le.MouseClickLeft( button2Players.area() ) || le.isKeyPressed( fheroes2::Key::KEY_2 ) ) ) {
@@ -591,8 +591,8 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
             }
         }
         else if ( buttonSuccessionWars.isEnabled() ) {
-            buttonSuccessionWars.drawOnState( le.isMouseLeftButtonPressedInArea( buttonSuccessionWars.area() ) );
-            buttonPriceOfLoyalty.drawOnState( le.isMouseLeftButtonPressedInArea( buttonPriceOfLoyalty.area() ) );
+            buttonSuccessionWars.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( buttonSuccessionWars.area() ) );
+            buttonPriceOfLoyalty.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( buttonPriceOfLoyalty.area() ) );
 
             if ( buttonSuccessionWars.isEnabled()
                  && ( le.MouseClickLeft( buttonSuccessionWars.area() ) || HotKeyPressEvent( HotKeyEvent::MAIN_MENU_NEW_ORIGINAL_CAMPAIGN ) ) ) {
@@ -613,7 +613,7 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
             }
         }
         else {
-            buttonHotSeat.drawOnState( le.isMouseLeftButtonPressedInArea( buttonHotSeat.area() ) );
+            buttonHotSeat.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( buttonHotSeat.area() ) );
             if ( le.MouseClickLeft( buttonHotSeat.area() ) || HotKeyPressEvent( HotKeyEvent::MAIN_MENU_HOTSEAT ) ) {
                 buttonHotSeat.disable();
                 emptyDialog.restore();
@@ -624,13 +624,13 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
                 playerCountButtons.drawShadows( display );
                 display.render( emptyDialog.rect() );
             }
-            else if ( le.isMouseRightButtonPressedInArea( buttonHotSeat.area() ) ) {
+            else if ( le.isMouseLeftButtonPressedAndHeldInArea( buttonHotSeat.area() ) ) {
                 fheroes2::showStandardTextMessage(
                     _( "Hot Seat" ), _( "Play a Hot Seat game, where 2 to 6 players play on the same device, switching into the 'Hot Seat' when it is their turn." ),
                     Dialog::ZERO );
             }
         }
-        buttonCancel.drawOnState( le.isMouseLeftButtonPressedInArea( buttonCancel.area() ) );
+        buttonCancel.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( buttonCancel.area() ) );
 
         if ( HotKeyPressEvent( HotKeyEvent::DEFAULT_CANCEL ) || le.MouseClickLeft( buttonCancel.area() ) ) {
             return fheroes2::GameMode::MAIN_MENU;
@@ -642,3 +642,4 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
 
     return fheroes2::GameMode::QUIT_GAME;
 }
+
