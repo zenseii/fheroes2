@@ -378,6 +378,15 @@ fheroes2::GameMode Game::NewPriceOfLoyaltyCampaign()
     return gameChoice;
 }
 
+fheroes2::GameMode Game::NewBattleOnly()
+{
+    Settings & conf = Settings::Get();
+    conf.SetGameType( Game::TYPE_BATTLEONLY );
+    // Redraw the empty main menu screen to show it after the battle using screen restorer.
+    fheroes2::drawMainMenuScreen();
+    return fheroes2::GameMode::START_BATTLE_ONLY_MODE;
+}
+
 fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
 {
     outputNewMenuInTextSupportMode();
@@ -510,7 +519,7 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
                 return fheroes2::GameMode::MAIN_MENU;
             }
             if ( HotKeyPressEvent( HotKeyEvent::MAIN_MENU_BATTLEONLY ) || le.MouseClickLeft( buttonBattleGame.area() ) ) {
-                return fheroes2::GameMode::START_BATTLE_ONLY_MODE;
+                return fheroes2::GameMode::NEW_BATTLE_ONLY_MODE;
             }
             if ( buttonMultiGame.isEnabled() && ( HotKeyPressEvent( HotKeyEvent::MAIN_MENU_MULTI ) || le.MouseClickLeft( buttonMultiGame.area() ) ) ) {
                 for ( size_t i = 0; i < mainModeButtons.getButtonsCount(); ++i ) {

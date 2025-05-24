@@ -142,10 +142,8 @@ void Game::mainGameLoop( bool isFirstGameRun, bool isProbablyDemoVersion )
         case fheroes2::GameMode::NEW_PRICE_OF_LOYALTY_CAMPAIGN:
             result = Game::NewPriceOfLoyaltyCampaign();
             break;
-        case fheroes2::GameMode::START_BATTLE_ONLY_MODE:
-            // Redraw the empty main menu screen to show it after the battle using screen restorer.
-            fheroes2::drawMainMenuScreen();
-            result = Game::StartBattleOnly();
+        case fheroes2::GameMode::NEW_BATTLE_ONLY_MODE:
+            result = Game::NewBattleOnly();
             break;
         case fheroes2::GameMode::LOAD_STANDARD:
             result = Game::LoadStandard();
@@ -189,6 +187,8 @@ void Game::mainGameLoop( bool isFirstGameRun, bool isProbablyDemoVersion )
                 result = Game::SelectCampaignScenario( fheroes2::GameMode::LOAD_CAMPAIGN, false );
             }
             break;
+        case fheroes2::GameMode::START_BATTLE_ONLY_MODE:
+            result = Game::StartBattleOnly();
         case fheroes2::GameMode::EDITOR_MAIN_MENU:
             result = Editor::menuMain();
             break;

@@ -60,6 +60,7 @@ namespace Game
     fheroes2::GameMode NewStandard();
     fheroes2::GameMode NewSuccessionWarsCampaign();
     fheroes2::GameMode NewPriceOfLoyaltyCampaign();
+    fheroes2::GameMode NewBattleOnly();
     fheroes2::GameMode LoadStandard();
     fheroes2::GameMode LoadCampaign();
     fheroes2::GameMode LoadHotseat();
