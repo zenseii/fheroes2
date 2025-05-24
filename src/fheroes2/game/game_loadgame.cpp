@@ -136,7 +136,7 @@ fheroes2::GameMode Game::LoadGame()
     while ( le.HandleEvents() ) {
         if ( buttonStandardGame.isEnabled() ) {
             for ( size_t i = 0; i < gameModeButtons.getButtonsCount(); ++i ) {
-                gameModeButtons.button( i ).drawOnState( le.isMouseLeftButtonPressedInArea( gameModeButtons.button( i ).area() ) );
+                gameModeButtons.button( i ).drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( gameModeButtons.button( i ).area() ) );
             }
             if ( le.MouseClickLeft( buttonStandardGame.area() ) || HotKeyPressEvent( HotKeyEvent::MAIN_MENU_STANDARD ) ) {
                 if ( ListFiles::IsEmpty( GetSaveDir(), GetSaveFileExtension( Game::TYPE_STANDARD ) ) ) {
@@ -176,7 +176,7 @@ fheroes2::GameMode Game::LoadGame()
             }
         }
         if ( buttonHotSeat.isEnabled() ) {
-            buttonHotSeat.drawOnState( le.isMouseLeftButtonPressedInArea( buttonHotSeat.area() ) );
+            buttonHotSeat.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( buttonHotSeat.area() ) );
             if ( le.MouseClickLeft( buttonHotSeat.area() ) || HotKeyPressEvent( HotKeyEvent::MAIN_MENU_HOTSEAT ) ) {
                 if ( ListFiles::IsEmpty( GetSaveDir(), GetSaveFileExtension( Game::TYPE_HOTSEAT ) ) ) {
                     fheroes2::showStandardTextMessage( _( "Load Game" ), _( "No save files to load." ), Dialog::OK );
@@ -192,7 +192,7 @@ fheroes2::GameMode Game::LoadGame()
             }
         }
 
-        buttonCancel.drawOnState( le.isMouseLeftButtonPressedInArea( buttonCancel.area() ) );
+        buttonCancel.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( buttonCancel.area() ) );
 
         if ( le.MouseClickLeft( buttonCancel.area() ) || HotKeyPressEvent( HotKeyEvent::DEFAULT_CANCEL ) ) {
             return fheroes2::GameMode::MAIN_MENU;
