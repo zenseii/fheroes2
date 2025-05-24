@@ -95,8 +95,9 @@ fheroes2::GameMode Game::LoadGame()
     fheroes2::drawMainMenuScreen();
 
     fheroes2::ButtonGroup gameModeButtons;
+    const int menuButtonsIcnIndex = Settings::Get().isEvilInterfaceEnabled() ? ICN::BUTTONS_NEW_GAME_MENU_EVIL : ICN::BUTTONS_NEW_GAME_MENU_GOOD;
     for ( uint32_t i = 0; i < 3; ++i ) {
-        gameModeButtons.createButton( 0, 0, ICN::BUTTONS_NEW_GAME_MENU_GOOD, i * 2, i * 2 + 1, i );
+        gameModeButtons.createButton( 0, 0, menuButtonsIcnIndex, i * 2, i * 2 + 1, i );
     }
 
     fheroes2::ButtonBase & buttonStandardGame = gameModeButtons.button( 0 );
@@ -115,14 +116,13 @@ fheroes2::GameMode Game::LoadGame()
 
     // Add the cancel button at the bottom of the dialog.
     fheroes2::Button buttonCancel( buttonStandardGame.area().x,
-                                   background.activeArea().y + background.activeArea().height
-                                       - ( ( buttonStandardGame.area().y + buttonStandardGame.area().height ) - background.activeArea().y ),
-                                   ICN::BUTTONS_NEW_GAME_MENU_GOOD, 10, 11 );
+                                   background.activeArea().y * 2 + background.activeArea().height - buttonStandardGame.area().y - buttonStandardGame.area().height,
+                                   menuButtonsIcnIndex, 10, 11 );
     buttonCancel.draw();
     buttonCancel.drawShadow( fheroes2::Display::instance() );
 
     // Add hot seat button.
-    fheroes2::Button buttonHotSeat( buttonStandardGame.area().x, buttonStandardGame.area().y, ICN::BUTTONS_NEW_GAME_MENU_GOOD, 12, 13 );
+    fheroes2::Button buttonHotSeat( buttonStandardGame.area().x, buttonStandardGame.area().y, menuButtonsIcnIndex, 12, 13 );
     buttonHotSeat.disable();
 
     if ( !isSuccessionWarsCampaignPresent() ) {
