@@ -418,14 +418,15 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
     fheroes2::ButtonBase & buttonBattleGame = mainModeButtons.button( 3 );
     fheroes2::ButtonBase & buttonSettings = mainModeButtons.button( 4 );
 
-    // Generate dialog background with extra space for the cancel button.
-    fheroes2::StandardWindow background( mainModeButtons, true, mainModeButtons.button( 0 ).area().height + 10 );
+    // Generate dialog background with extra space added for the cancel button.
+    const uint32_t buttonIntervalSpace = 10;
+    fheroes2::StandardWindow background( mainModeButtons, true, mainModeButtons.button( 0 ).area().height + buttonIntervalSpace );
 
     fheroes2::Display & display = fheroes2::Display::instance();
 
     // We don't need to restore the cancel button area because every state of the dialog has this button.
     fheroes2::ImageRestorer emptyDialog( display, background.activeArea().x, background.activeArea().y, background.activeArea().width,
-                                         background.activeArea().height - buttonStandardGame.area().height - 22 );
+                                         background.activeArea().height - buttonStandardGame.area().height - buttonIntervalSpace * 2 - 2 );
 
     background.renderSymmetricButtons( mainModeButtons, 0, true );
 
@@ -434,7 +435,7 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
                                    background.activeArea().y * 2 + background.activeArea().height - buttonStandardGame.area().y - buttonStandardGame.area().height,
                                    menuButtonsIcnIndex, 10, 11 );
     buttonCancel.draw();
-    buttonCancel.drawShadow( fheroes2::Display::instance() );
+    buttonCancel.drawShadow( display );
 
     // Add extra buttons in disabled state.
     fheroes2::Button buttonHotSeat( buttonStandardGame.area().x, buttonStandardGame.area().y, menuButtonsIcnIndex, 12, 13 );
