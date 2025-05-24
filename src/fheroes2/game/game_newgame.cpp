@@ -443,7 +443,8 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
     fheroes2::ButtonGroup playerCountButtons;
 
     for ( int32_t i = 0; i < 5; ++i ) {
-        playerCountButtons.createButton( mainModeButtons.button( i ).area().x, mainModeButtons.button( i ).area().y, menuButtonsIcnIndex, ( i + 7 ) * 2, ( i + 7 ) * 2 + 1, i );
+        playerCountButtons.createButton( mainModeButtons.button( i ).area().x, mainModeButtons.button( i ).area().y, menuButtonsIcnIndex, ( i + 7 ) * 2,
+                                         ( i + 7 ) * 2 + 1, i );
         playerCountButtons.button( i ).disable();
     }
     fheroes2::ButtonBase & button2Players = playerCountButtons.button( 0 );
