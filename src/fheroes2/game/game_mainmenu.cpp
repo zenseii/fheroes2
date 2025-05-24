@@ -189,6 +189,7 @@ void Game::mainGameLoop( bool isFirstGameRun, bool isProbablyDemoVersion )
             break;
         case fheroes2::GameMode::START_BATTLE_ONLY_MODE:
             result = Game::StartBattleOnly();
+            break;
         case fheroes2::GameMode::EDITOR_MAIN_MENU:
             result = Editor::menuMain();
             break;
