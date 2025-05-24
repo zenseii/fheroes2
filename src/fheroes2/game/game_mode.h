@@ -35,7 +35,7 @@ namespace fheroes2
         NEW_STANDARD,
         NEW_SUCCESSION_WARS_CAMPAIGN,
         NEW_PRICE_OF_LOYALTY_CAMPAIGN,
-        NEW_BATTLE_ONLY_MODE,
+        NEW_BATTLE_ONLY,
         LOAD_STANDARD,
         LOAD_CAMPAIGN,
         LOAD_HOT_SEAT,
