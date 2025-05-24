@@ -191,6 +191,8 @@ namespace
 
 fheroes2::GameMode Game::StartBattleOnly()
 {
+    Settings & conf = Settings::Get();
+    conf.SetGameType( Game::TYPE_BATTLEONLY );
     static Battle::Only battleOnlySetup;
 
     world.generateBattleOnlyMap();
