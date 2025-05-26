@@ -407,7 +407,7 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
     // Setup dialog from buttons.
     const int menuButtonsIcnIndex = Settings::Get().isEvilInterfaceEnabled() ? ICN::BUTTONS_NEW_GAME_MENU_EVIL : ICN::BUTTONS_NEW_GAME_MENU_GOOD;
     fheroes2::ButtonGroup mainModeButtons;
-    // Only add the buttons for the initial state of the dialog from the ICN.
+    // Only add the buttons needed for the initial state of the dialog.
     for ( int32_t i = 0; i < 5; ++i ) {
         mainModeButtons.createButton( 0, 0, menuButtonsIcnIndex, i * 2, i * 2 + 1, i );
     }
@@ -419,17 +419,16 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
     fheroes2::ButtonBase & buttonSettings = mainModeButtons.button( 4 );
 
     // Generate dialog background with extra space added for the cancel button.
-    const uint32_t buttonIntervalSpace = 10;
-    fheroes2::StandardWindow background( mainModeButtons, true, mainModeButtons.button( 0 ).area().height + buttonIntervalSpace );
+    const uint32_t spaceBetweenButtons = 10;
+    fheroes2::StandardWindow background( mainModeButtons, true, buttonStandardGame.area().height + spaceBetweenButtons );
 
     // Make corners like in the original game.
     background.applyGemDecoratedCorners();
-    
 
     // We don't need to restore the cancel button area because every state of the dialog has this button.
     fheroes2::Display & display = fheroes2::Display::instance();
     fheroes2::ImageRestorer emptyDialog( display, background.activeArea().x, background.activeArea().y, background.activeArea().width,
-                                         background.activeArea().height - buttonStandardGame.area().height - buttonIntervalSpace * 2 - 2 );
+                                         background.activeArea().height - buttonStandardGame.area().height - spaceBetweenButtons * 2 - 2 );
 
     background.renderSymmetricButtons( mainModeButtons, 0, true );
 
@@ -457,12 +456,12 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
     fheroes2::ButtonBase & button5Players = playerCountButtons.button( 3 );
     fheroes2::ButtonBase & button6Players = playerCountButtons.button( 4 );
 
-    const bool isPriceOfLoyaltyPresent = isPriceOfLoyaltyCampaignPresent();
-
     fheroes2::Button buttonSuccessionWars;
     fheroes2::Button buttonPriceOfLoyalty;
     buttonSuccessionWars.disable();
     buttonPriceOfLoyalty.disable();
+
+    const bool isPriceOfLoyaltyPresent = isPriceOfLoyaltyCampaignPresent();
 
     if ( isPriceOfLoyaltyPresent ) {
         buttonSuccessionWars.setICNInfo( menuButtonsIcnIndex, 24, 25 );

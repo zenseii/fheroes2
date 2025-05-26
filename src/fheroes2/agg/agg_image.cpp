@@ -1444,8 +1444,8 @@ namespace
                 _icnVsSprite[id][13] = fheroes2::AGG::GetICN( ICN::BTNMP, 1 );
                 // Add player count buttons.
                 for ( int i = 0; i < 5; ++i ) {
-                    _icnVsSprite[id][ ( i + 7 ) * 2] = fheroes2::AGG::GetICN( ICN::BTNHOTST, i * 2 );
-                    _icnVsSprite[id][ ( i + 7 ) * 2 + 1] = fheroes2::AGG::GetICN( ICN::BTNHOTST, i * 2 + 1 );
+                    _icnVsSprite[id][( i + 7 ) * 2] = fheroes2::AGG::GetICN( ICN::BTNHOTST, i * 2 );
+                    _icnVsSprite[id][( i + 7 ) * 2 + 1] = fheroes2::AGG::GetICN( ICN::BTNHOTST, i * 2 + 1 );
                 }
 
                 if ( isPoLPresent ) {

@@ -104,7 +104,9 @@ fheroes2::GameMode Game::LoadGame()
     fheroes2::ButtonBase & buttonCampaignGame = gameModeButtons.button( 1 );
     fheroes2::ButtonBase & buttonMultiplayerGame = gameModeButtons.button( 2 );
 
-    fheroes2::StandardWindow background( gameModeButtons, true, gameModeButtons.button( 0 ).area().height * 3 + 10 * 3 );
+    const uint32_t spaceBetweenButtons = 10;
+
+    fheroes2::StandardWindow background( gameModeButtons, true, buttonStandardGame.area().height * 3 + spaceBetweenButtons * 3 );
 
     // Make corners like in the original game.
     background.applyGemDecoratedCorners();
@@ -112,7 +114,7 @@ fheroes2::GameMode Game::LoadGame()
     // We don't need to restore the cancel button area because every state of the dialog has this button.
     fheroes2::Display & display = fheroes2::Display::instance();
     fheroes2::ImageRestorer emptyDialog( display, background.activeArea().x, background.activeArea().y, background.activeArea().width,
-                                         background.activeArea().height - buttonStandardGame.area().height - 22 );
+                                         background.activeArea().height - buttonStandardGame.area().height - spaceBetweenButtons * 2 - 2 );
 
     background.renderSymmetricButtons( gameModeButtons, 0, true );
 
@@ -121,7 +123,7 @@ fheroes2::GameMode Game::LoadGame()
                                    background.activeArea().y * 2 + background.activeArea().height - buttonStandardGame.area().y - buttonStandardGame.area().height,
                                    menuButtonsIcnIndex, 10, 11 );
     buttonCancel.draw();
-    buttonCancel.drawShadow( fheroes2::Display::instance() );
+    buttonCancel.drawShadow( display );
 
     // Add hot seat button.
     fheroes2::Button buttonHotSeat( buttonStandardGame.area().x, buttonStandardGame.area().y, menuButtonsIcnIndex, 12, 13 );
@@ -163,7 +165,7 @@ fheroes2::GameMode Game::LoadGame()
                 emptyDialog.restore();
                 buttonHotSeat.enable();
                 buttonHotSeat.draw();
-                buttonHotSeat.drawShadow( fheroes2::Display::instance() );
+                buttonHotSeat.drawShadow( display );
                 display.render( emptyDialog.rect() );
             }
             if ( le.isMouseRightButtonPressedInArea( buttonStandardGame.area() ) ) {
