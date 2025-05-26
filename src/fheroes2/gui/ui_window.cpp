@@ -61,7 +61,7 @@ namespace
 
         const int32_t heightPadding = isSingleColumn ? 43 : 26;
         // We assume that the cancel button height for multiple columns is 25 px because this button should contain only a single line of text.
-        const int32_t cancelButtonAreaHeight = isSingleColumn ? 0: 25 + buttonsVerticalGap + 10 + 1;
+        const int32_t cancelButtonAreaHeight = isSingleColumn ? 0 : 25 + buttonsVerticalGap + 10 + 1;
         int32_t dialogHeight = cancelButtonAreaHeight + heightPadding + extraHeight;
 
         // When there's an odd number of buttons we always make a dialog for a single column of buttons.

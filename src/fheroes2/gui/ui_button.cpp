@@ -956,7 +956,8 @@ namespace fheroes2
         renderTextOnButton( released, pressed, text, releasedOffset, pressedOffset, buttonSize, buttonFontColor );
     }
 
-    void makeSymmetricBackgroundSprites( std::vector<Sprite> & backgroundSprites, const std::vector<const char *> & texts, const bool isEvilInterface, const int32_t minWidth )
+    void makeSymmetricBackgroundSprites( std::vector<Sprite> & backgroundSprites, const std::vector<const char *> & texts, const bool isEvilInterface,
+                                         const int32_t minWidth )
     {
         if ( texts.size() < 2 ) {
             // You are trying to make a group of buttons with 0 or only one text.

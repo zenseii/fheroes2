@@ -1302,7 +1302,7 @@ namespace
             for ( uint32_t i = 0; i < ( icnSize / 2 ); ++i ) {
                 convertToEvilButtonBackground( _icnVsSprite[id][i * 2], _icnVsSprite[id][i * 2 + 1], goodButtonIcnID, i * 2 );
             }
-            
+
             break;
         }
         case ICN::BUTTONS_FILE_DIALOG_EVIL:
@@ -1486,7 +1486,7 @@ namespace
                 // Remove the shadows since we are adding our own in the dialog. Should be moved to just LoadModifiedICN?
                 const fheroes2::Sprite originalReleased = fheroes2::AGG::GetICN( buttonIcnID, id == ICN::BUTTON_NEW_MAP ? 0 : 2 );
                 const fheroes2::Sprite originalPressed = fheroes2::AGG::GetICN( buttonIcnID, id == ICN::BUTTON_NEW_MAP ? 1 : 3 );
-                
+
                 fheroes2::Sprite & released = _icnVsSprite[id][0];
                 fheroes2::Sprite & pressed = _icnVsSprite[id][1];
 
