@@ -363,7 +363,8 @@ namespace fheroes2
         const uint32_t gemSideLength = 9;
         gem.resize( gemSideLength, gemSideLength );
         gem.reset();
-        if ( !Settings::Get().isEvilInterfaceEnabled() ) {
+        const bool isEvilInterface = Settings::Get().isEvilInterfaceEnabled();
+        if ( !isEvilInterface ) {
             const fheroes2::Sprite & gemDialog = fheroes2::AGG::GetICN( ICN::REDBACK, 0 );
             Copy( gemDialog, 20, 2, gem, 0, 0, gemSideLength, gemSideLength );
         }
@@ -388,7 +389,6 @@ namespace fheroes2
         Blit( gem, 0, 0, _output, _windowArea.x + 4, _windowArea.y + _windowArea.height - gemSideLength - 4, gemSideLength, gemSideLength );
         Blit( gem, 0, 0, _output, _windowArea.x + _windowArea.width - 2 - gemSideLength, _windowArea.y + _windowArea.height - gemSideLength - 4, gemSideLength,
               gemSideLength );
-        
     }
 
     void StandardWindow::renderScrollbarBackground( const Rect & roi, const bool isEvilInterface )

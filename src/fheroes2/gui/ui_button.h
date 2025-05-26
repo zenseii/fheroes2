@@ -383,7 +383,7 @@ namespace fheroes2
 
     // Generates multiple button backgrounds that have the same dimensions according to the widest and tallest texts provided.
     // backgroundSprites will be resized according to the number of button texts.
-    void makeSymmetricBackgroundSprites( std::vector<Sprite> & backgroundSprites, const std::vector<const char *> & buttonTexts, const int32_t minWidth );
+    void makeSymmetricBackgroundSprites( std::vector<Sprite> & backgroundSprites, const std::vector<const char *> & buttonTexts, const bool isEvilInterface, const int32_t minWidth );
 
     void renderTextOnButton( Image & releasedState, Image & pressedState, const std::string & text, const Point & releasedTextOffset, const Point & pressedTextOffset,
                              const Size & buttonSize, const FontColor fontColor );

@@ -604,9 +604,10 @@ namespace fheroes2
     ButtonGroup::ButtonGroup( const std::vector<const char *> & texts )
     {
         const size_t textCount = texts.size();
+        const bool isEvilInterface = Settings::Get().isEvilInterfaceEnabled();
 
         std::vector<Sprite> sprites;
-        makeSymmetricBackgroundSprites( sprites, texts, 86 );
+        makeSymmetricBackgroundSprites( sprites, texts, isEvilInterface, 86 );
 
         for ( size_t i = 0; i < textCount; ++i ) {
             createButton( 0, 0, std::move( sprites[i * 2] ), std::move( sprites[i * 2 + 1] ), static_cast<int>( i ) );
@@ -955,7 +956,7 @@ namespace fheroes2
         renderTextOnButton( released, pressed, text, releasedOffset, pressedOffset, buttonSize, buttonFontColor );
     }
 
-    void makeSymmetricBackgroundSprites( std::vector<Sprite> & backgroundSprites, const std::vector<const char *> & texts, const int32_t minWidth )
+    void makeSymmetricBackgroundSprites( std::vector<Sprite> & backgroundSprites, const std::vector<const char *> & texts, const bool isEvilInterface, const int32_t minWidth )
     {
         if ( texts.size() < 2 ) {
             // You are trying to make a group of buttons with 0 or only one text.
@@ -965,7 +966,6 @@ namespace fheroes2
 
         backgroundSprites.resize( texts.size() * 2 );
 
-        const bool isEvilInterface = Settings::Get().isEvilInterfaceEnabled();
         const FontType buttonFontType = { FontSize::BUTTON_RELEASED, ( isEvilInterface ? fheroes2::FontColor::GRAY : fheroes2::FontColor::WHITE ) };
 
         std::vector<Text> buttonTexts;

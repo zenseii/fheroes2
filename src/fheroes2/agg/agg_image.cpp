@@ -1323,7 +1323,7 @@ namespace
                                                         fheroes2::getSupportedText( gettext_noop( "LOAD\nGAME" ), buttonFontType ),
                                                         fheroes2::getSupportedText( gettext_noop( "SAVE\nGAME" ), buttonFontType ),
                                                         fheroes2::getSupportedText( gettext_noop( "QUIT" ), buttonFontType ) },
-                                                      80 );
+                                                      false, 80 );
 
             break;
         }
@@ -1474,7 +1474,7 @@ namespace
                 texts.emplace_back( fheroes2::getSupportedText( gettext_noop( "EXPANSION\nCAMPAIGN" ), buttonFontType ) );
             }
 
-            fheroes2::makeSymmetricBackgroundSprites( _icnVsSprite[id], texts, 80 );
+            fheroes2::makeSymmetricBackgroundSprites( _icnVsSprite[id], texts, false, 80 );
             break;
         }
         case ICN::BUTTON_NEW_MAP:
