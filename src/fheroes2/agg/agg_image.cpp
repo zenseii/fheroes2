@@ -1298,7 +1298,7 @@ namespace
                 goodButtonIcnID = ICN::BUTTONS_NEW_GAME_MENU_GOOD;
             }
             _icnVsSprite[id].resize( fheroes2::AGG::GetICNCount( goodButtonIcnID ) );
-            const size_t icnSize = static_cast<uint32_t>(_icnVsSprite[id].size());
+            const size_t icnSize = _icnVsSprite[id].size();
             for ( uint32_t i = 0; i < ( icnSize / 2 ); ++i ) {
                 convertToEvilButtonBackground( _icnVsSprite[id][i * 2], _icnVsSprite[id][i * 2 + 1], goodButtonIcnID, i * 2 );
             }
@@ -1425,7 +1425,6 @@ namespace
             }
 
             if ( useOriginalResources() ) {
-                // Can't add all the buttons in one go because in the middle we add the battle only and settings buttons. Could make a map?
                 for ( int i = 0; i < 3; ++i ) {
                     _icnVsSprite[id][i * 2] = fheroes2::AGG::GetICN( ICN::BTNNEWGM, i * 2 );
                     _icnVsSprite[id][i * 2 + 1] = fheroes2::AGG::GetICN( ICN::BTNNEWGM, i * 2 + 1 );
@@ -1448,9 +1447,7 @@ namespace
                     _icnVsSprite[id][ ( i + 7 ) * 2] = fheroes2::AGG::GetICN( ICN::BTNHOTST, i * 2 );
                     _icnVsSprite[id][ ( i + 7 ) * 2 + 1] = fheroes2::AGG::GetICN( ICN::BTNHOTST, i * 2 + 1 );
                 }
-                // I replaced the config button with a settings button. Need to replace Polish and French buttons with the old CONFIG.
-                /*_icnVsSprite[id][8] = fheroes2::AGG::GetICN( ICN::BTNDCCFG, 4 );
-                _icnVsSprite[id][9] = fheroes2::AGG::GetICN( ICN::BTNDCCFG, 5 );*/
+
                 if ( isPoLPresent ) {
                     _icnVsSprite[id][24] = fheroes2::AGG::GetICN( ICN::X_LOADCM, 0 );
                     _icnVsSprite[id][25] = fheroes2::AGG::GetICN( ICN::X_LOADCM, 1 );
