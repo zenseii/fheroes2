@@ -422,9 +422,12 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
     const uint32_t buttonIntervalSpace = 10;
     fheroes2::StandardWindow background( mainModeButtons, true, mainModeButtons.button( 0 ).area().height + buttonIntervalSpace );
 
-    fheroes2::Display & display = fheroes2::Display::instance();
+    // Make corners like in the original game.
+    background.applyGemDecoratedCorners();
+    
 
     // We don't need to restore the cancel button area because every state of the dialog has this button.
+    fheroes2::Display & display = fheroes2::Display::instance();
     fheroes2::ImageRestorer emptyDialog( display, background.activeArea().x, background.activeArea().y, background.activeArea().width,
                                          background.activeArea().height - buttonStandardGame.area().height - buttonIntervalSpace * 2 - 2 );
 
@@ -641,4 +644,3 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
 
     return fheroes2::GameMode::QUIT_GAME;
 }
-

@@ -101,6 +101,8 @@ namespace fheroes2
 
         void applyTextBackgroundShading( const Rect & roi );
         static void applyTextBackgroundShading( Image & output, const Rect & roi );
+        // Apply corners with gems.
+        void applyGemDecoratedCorners();
 
         static void renderBackgroundImage( fheroes2::Image & output, const Rect & roi, const int32_t borderOffset, const bool isEvilInterface );
 

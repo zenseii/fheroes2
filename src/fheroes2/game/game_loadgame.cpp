@@ -106,9 +106,11 @@ fheroes2::GameMode Game::LoadGame()
 
     fheroes2::StandardWindow background( gameModeButtons, true, gameModeButtons.button( 0 ).area().height * 3 + 10 * 3 );
 
-    fheroes2::Display & display = fheroes2::Display::instance();
+    // Make corners like in the original game.
+    background.applyGemDecoratedCorners();
 
     // We don't need to restore the cancel button area because every state of the dialog has this button.
+    fheroes2::Display & display = fheroes2::Display::instance();
     fheroes2::ImageRestorer emptyDialog( display, background.activeArea().x, background.activeArea().y, background.activeArea().width,
                                          background.activeArea().height - buttonStandardGame.area().height - 22 );
 

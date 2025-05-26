@@ -357,6 +357,40 @@ namespace fheroes2
         applyRectTransform( 8, 1, 5 );
     }
 
+    void StandardWindow::applyGemDecoratedCorners()
+    {
+        fheroes2::Sprite gem;
+        const uint32_t gemSideLength = 9;
+        gem.resize( gemSideLength, gemSideLength );
+        gem.reset();
+        if ( !Settings::Get().isEvilInterfaceEnabled() ) {
+            const fheroes2::Sprite & gemDialog = fheroes2::AGG::GetICN( ICN::REDBACK, 0 );
+            Copy( gemDialog, 20, 2, gem, 0, 0, gemSideLength, gemSideLength );
+        }
+        else {
+            const fheroes2::Sprite & corners = fheroes2::AGG::GetICN( ICN::EVIL_DIALOG_PLAIN_CORNERS, 0 );
+            const uint32_t cornerSideLength = 43;
+            Copy( corners, 0, 0, _output, _windowArea.x, _windowArea.y, cornerSideLength, cornerSideLength );
+            Copy( corners, cornerSideLength, 0, _output, _windowArea.x + _windowArea.width - cornerSideLength, _windowArea.y, cornerSideLength, cornerSideLength );
+            Copy( corners, 0, cornerSideLength, _output, _windowArea.x, _windowArea.y + _windowArea.height - cornerSideLength, cornerSideLength, cornerSideLength );
+            Copy( corners, cornerSideLength, cornerSideLength, _output, _windowArea.x + _windowArea.width - cornerSideLength,
+                  _windowArea.y + _windowArea.height - cornerSideLength, cornerSideLength, cornerSideLength );
+
+            const fheroes2::Sprite & gemDialog = fheroes2::AGG::GetICN( ICN::WINLOSEE, 0 );
+            Copy( gemDialog, 32, 2, gem, 0, 0, gemSideLength, gemSideLength );
+            FillTransform( gem, 0, 0, 1, 1, 1 );
+            FillTransform( gem, gemSideLength - 1, 0, 1, 1, 1 );
+            FillTransform( gem, 0, gemSideLength - 1, 1, 1, 1 );
+            FillTransform( gem, gemSideLength - 1, gemSideLength - 1, 1, 1, 1 );
+        }
+        Blit( gem, 0, 0, _output, _windowArea.x + 4, _windowArea.y + 2, gemSideLength, gemSideLength );
+        Blit( gem, 0, 0, _output, _windowArea.x + _windowArea.width - 2 - gemSideLength, _windowArea.y + 2, gemSideLength, gemSideLength );
+        Blit( gem, 0, 0, _output, _windowArea.x + 4, _windowArea.y + _windowArea.height - gemSideLength - 4, gemSideLength, gemSideLength );
+        Blit( gem, 0, 0, _output, _windowArea.x + _windowArea.width - 2 - gemSideLength, _windowArea.y + _windowArea.height - gemSideLength - 4, gemSideLength,
+              gemSideLength );
+        
+    }
+
     void StandardWindow::renderScrollbarBackground( const Rect & roi, const bool isEvilInterface )
     {
         const Sprite & scrollBar = AGG::GetICN( isEvilInterface ? ICN::ADVBORDE : ICN::ADVBORD, 0 );

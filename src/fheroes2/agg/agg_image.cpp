@@ -2567,6 +2567,22 @@ namespace
                 }
             }
             return true;
+        case ICN::EVIL_DIALOG_PLAIN_CORNERS: {
+            _icnVsSprite[id].resize( 1 );
+
+            fheroes2::Sprite & cornerSprite = _icnVsSprite[id][0];
+            const uint32_t cornerSideLength = 43;
+            cornerSprite.resize( cornerSideLength * 2, cornerSideLength * 2 );
+            const fheroes2::Sprite & originalGoodDialog = fheroes2::AGG::GetICN( ICN::WINLOSE, 0 );
+            Copy( originalGoodDialog, 0, 0, cornerSprite, 0, 0, cornerSideLength, cornerSideLength );
+            Copy( originalGoodDialog, originalGoodDialog.width() - cornerSideLength, 0, cornerSprite, cornerSideLength, 0, cornerSideLength, cornerSideLength );
+            Copy( originalGoodDialog, 0, originalGoodDialog.height() - cornerSideLength, cornerSprite, 0, cornerSideLength, cornerSideLength, cornerSideLength );
+            Copy( originalGoodDialog, originalGoodDialog.width() - cornerSideLength, originalGoodDialog.height() - cornerSideLength, cornerSprite, cornerSideLength,
+                  cornerSideLength, cornerSideLength, cornerSideLength );
+            fheroes2::ApplyPalette( cornerSprite, PAL::GetPalette( PAL::PaletteType::GOOD_TO_EVIL_INTERFACE ) );
+
+            return true;
+        }
         case ICN::MONS32:
             LoadOriginalICN( id );
 
