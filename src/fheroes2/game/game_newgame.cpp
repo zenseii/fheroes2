@@ -446,8 +446,8 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
     fheroes2::ButtonGroup playerCountButtons;
 
     for ( int32_t i = 0; i < 5; ++i ) {
-        playerCountButtons.createButton( mainModeButtons.button( i ).area().x, mainModeButtons.button( i ).area().y, menuButtonsIcnIndex, ( i + 7 ) * 2,
-                                         ( i + 7 ) * 2 + 1, i );
+        playerCountButtons.createButton( buttonStandardGame.area().x, buttonStandardGame.area().y + i * ( buttonStandardGame.area().height + spaceBetweenButtons ),
+                                         menuButtonsIcnIndex, ( i + 7 ) * 2, ( i + 7 ) * 2 + 1, i );
         playerCountButtons.button( i ).disable();
     }
     fheroes2::ButtonBase & button2Players = playerCountButtons.button( 0 );
@@ -503,9 +503,7 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
                 if ( !isPriceOfLoyaltyCampaignPresent() ) {
                     return fheroes2::GameMode::NEW_SUCCESSION_WARS_CAMPAIGN;
                 }
-                for ( size_t i = 0; i < mainModeButtons.getButtonsCount(); ++i ) {
-                    mainModeButtons.button( i ).disable();
-                }
+                mainModeButtons.disable();
                 emptyDialog.restore();
                 buttonSuccessionWars.enable();
                 buttonPriceOfLoyalty.enable();
@@ -526,9 +524,7 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
                 return fheroes2::GameMode::NEW_BATTLE_ONLY;
             }
             if ( HotKeyPressEvent( HotKeyEvent::MAIN_MENU_MULTI ) || le.MouseClickLeft( buttonMultiGame.area() ) ) {
-                for ( size_t i = 0; i < mainModeButtons.getButtonsCount(); ++i ) {
-                    mainModeButtons.button( i ).disable();
-                }
+                mainModeButtons.disable();
                 emptyDialog.restore();
                 buttonHotSeat.enable();
                 buttonHotSeat.draw();
@@ -618,9 +614,7 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
             if ( le.MouseClickLeft( buttonHotSeat.area() ) || HotKeyPressEvent( HotKeyEvent::MAIN_MENU_HOTSEAT ) ) {
                 buttonHotSeat.disable();
                 emptyDialog.restore();
-                for ( size_t i = 0; i < playerCountButtons.getButtonsCount(); ++i ) {
-                    playerCountButtons.button( i ).enable();
-                }
+                playerCountButtons.enable();
                 playerCountButtons.draw();
                 playerCountButtons.drawShadows( display );
                 display.render( emptyDialog.rect() );
