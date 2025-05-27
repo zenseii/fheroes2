@@ -670,6 +670,13 @@ namespace fheroes2
         }
     }
 
+    void ButtonGroup::drawOnState( LocalEvent & le )
+    {
+        for ( const auto & button : _button ) {
+            button->drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( button->area() ) );
+        }
+    }
+
     int ButtonGroup::processEvents()
     {
         LocalEvent & le = LocalEvent::Get();

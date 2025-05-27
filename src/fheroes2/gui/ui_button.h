@@ -33,6 +33,8 @@
 #include "screen.h"
 #include "ui_base.h"
 
+class LocalEvent;
+
 namespace fheroes2
 {
     enum class FontColor : uint8_t;
@@ -299,6 +301,8 @@ namespace fheroes2
 
         // Enable all the buttons in the button group.
         void enable();
+
+        void drawOnState( LocalEvent & le );
 
         size_t getButtonsCount() const
         {

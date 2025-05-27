@@ -550,9 +550,7 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
             }
         }
         else if ( button2Players.isEnabled() ) {
-            for ( size_t i = 0; i < mainModeButtons.getButtonsCount(); ++i ) {
-                playerCountButtons.button( i ).drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( playerCountButtons.button( i ).area() ) );
-            }
+            playerCountButtons.drawOnState( le );
 
             if ( le.MouseClickLeft( button2Players.area() ) || le.isKeyPressed( fheroes2::Key::KEY_2 ) ) {
                 return fheroes2::GameMode::SELECT_SCENARIO_TWO_HUMAN_PLAYERS;
