@@ -294,6 +294,12 @@ namespace fheroes2
         // Draws shadows for all the buttons in the group according to their coordinates.
         void drawShadows( Image & output ) const;
 
+        // Disable all the buttons in the button group.
+        void disable();
+
+        // Enable all the buttons in the button group.
+        void enable();
+
         size_t getButtonsCount() const
         {
             return _button.size();

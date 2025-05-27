@@ -656,6 +656,20 @@ namespace fheroes2
         }
     }
 
+    void ButtonGroup::disable()
+    {
+        for ( const auto & button : _button ) {
+            button->disable();
+        }
+    }
+
+    void ButtonGroup::enable()
+    {
+        for ( const auto & button : _button ) {
+            button->enable();
+        }
+    }
+
     int ButtonGroup::processEvents()
     {
         LocalEvent & le = LocalEvent::Get();
