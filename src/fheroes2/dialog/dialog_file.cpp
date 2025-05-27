@@ -68,10 +68,7 @@ namespace
 
         // dialog menu loop
         while ( le.HandleEvents() ) {
-            newGameButton.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( newGameButton.area() ) );
-            loadGameButton.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( loadGameButton.area() ) );
-            saveGameButton.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( saveGameButton.area() ) );
-            quitButton.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( quitButton.area() ) );
+            optionButtons.drawOnState( le );
             buttonCancel.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( buttonCancel.area() ) );
 
             if ( le.MouseClickLeft( newGameButton.area() ) || Game::HotKeyPressEvent( Game::HotKeyEvent::MAIN_MENU_NEW_GAME ) ) {
