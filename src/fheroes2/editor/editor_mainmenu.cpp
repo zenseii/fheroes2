@@ -102,7 +102,7 @@ namespace
         fheroes2::showStandardTextMessage( _( "Warning" ), "The Map Editor is still in development. This function is not available yet.", Dialog::OK );
     }
 
-    fheroes2::GameMode openNewEmptyMap( const Maps::MapSize & mapSize )
+    fheroes2::GameMode selectMapSize( const Maps::MapSize & mapSize )
     {
         fheroes2::fadeOutDisplay();
         Game::setDisplayFadeIn();
@@ -283,7 +283,7 @@ namespace Editor
                 // Loop through all map size buttons.
                 for ( size_t i = 0; i < mapSizeCount; ++i ) {
                     if ( le.MouseClickLeft( mapSizeButtons.button( i ).area() ) || Game::HotKeyPressEvent( mapSizeHotkeys[i] ) ) {
-                        return openNewEmptyMap( mapSizes[i] );
+                        return selectMapSize( mapSizes[i] );
                     }
 
                     if ( le.isMouseRightButtonPressedInArea( mapSizeButtons.button( i ).area() ) ) {
