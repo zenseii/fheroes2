@@ -191,10 +191,10 @@ void Game::mainGameLoop( bool isFirstGameRun, bool isProbablyDemoVersion )
             result = Game::StartBattleOnly();
             break;
         case fheroes2::GameMode::EDITOR_MAIN_MENU:
-            result = Editor::menuMain();
+            result = Editor::menuMain( false );
             break;
         case fheroes2::GameMode::EDITOR_NEW_MAP:
-            result = Editor::menuNewFromScratchMap();
+            result = Editor::menuMain( true );
             break;
         case fheroes2::GameMode::EDITOR_LOAD_MAP:
             result = Editor::menuLoadMap();
