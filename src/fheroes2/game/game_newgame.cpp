@@ -67,8 +67,6 @@
 
 namespace
 {
-    const int32_t buttonYStep = 66;
-
     std::unique_ptr<SMKVideoSequence> getVideo( const std::string & fileName )
     {
         std::string videoPath;

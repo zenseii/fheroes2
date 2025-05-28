@@ -53,8 +53,6 @@
 
 namespace
 {
-    const int32_t buttonYStep = 66;
-
     void outputLoadGameInTextSupportMode()
     {
         START_TEXT_SUPPORT_MODE
