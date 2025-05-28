@@ -1485,15 +1485,18 @@ namespace
             _icnVsSprite[id].resize( 20 );
 
             if ( useOriginalResources() ) {
-                for ( int i = 0; i < 3; ++i ) {
+                for ( int i = 0; i < 2; ++i ) {
                     _icnVsSprite[id][i * 2] = fheroes2::AGG::GetICN( ICN::BTNEMAIN, i * 2 );
                     _icnVsSprite[id][i * 2 + 1] = fheroes2::AGG::GetICN( ICN::BTNEMAIN, i * 2 + 1 );
                 }
-                // Add generated Back button.
+                // Add generated Main Menu button.
                 const fheroes2::FontType buttonFontType = fheroes2::FontType::buttonReleasedWhite();
                 const fheroes2::Size buttonSize{ _icnVsSprite[id][0].width() - 10, _icnVsSprite[id][0].height() };
-                fheroes2::makeButtonSprites( _icnVsSprite[id][6], _icnVsSprite[id][7], fheroes2::getSupportedText( gettext_noop( "EditorMainMenu|BACK" ), buttonFontType ), buttonSize,
-                                             false, ICN::STONEBAK );
+                fheroes2::makeButtonSprites( _icnVsSprite[id][4], _icnVsSprite[id][5], fheroes2::getSupportedText( gettext_noop( "MAIN\nMENU" ), buttonFontType ),
+                                             buttonSize, false, ICN::STONEBAK );
+                // Add generated Back button.
+                fheroes2::makeButtonSprites( _icnVsSprite[id][6], _icnVsSprite[id][7],
+                                             fheroes2::getSupportedText( gettext_noop( "EditorMainMenu|BACK" ), buttonFontType ), buttonSize, false, ICN::STONEBAK );
 
                 // Add From Scratch and Random buttons.
                 for ( int i = 0; i < 2; ++i ) {
@@ -1511,10 +1514,10 @@ namespace
             const fheroes2::FontType buttonFontType = fheroes2::FontType::buttonReleasedWhite();
             std::vector<const char *> texts = { fheroes2::getSupportedText( gettext_noop( "NEW\nMAP" ), buttonFontType ),
                                                 fheroes2::getSupportedText( gettext_noop( "LOAD\nMAP" ), buttonFontType ),
-                                                fheroes2::getSupportedText( gettext_noop( "CANCEL" ), buttonFontType ),
-                                                fheroes2::getSupportedText( gettext_noop( "EditorMainMenu|BACK" ), buttonFontType ),
-                                                fheroes2::getSupportedText( gettext_noop( "NewMap|FROM\nSCRATCH" ), buttonFontType ),
-                                                fheroes2::getSupportedText( gettext_noop( "NewMap|RANDOM" ), buttonFontType ),
+                                                fheroes2::getSupportedText( gettext_noop( "MAIN\nMENU" ), buttonFontType ),
+                                                fheroes2::getSupportedText( gettext_noop( "editorMainMenu|BACK" ), buttonFontType ),
+                                                fheroes2::getSupportedText( gettext_noop( "newMap|FROM\nSCRATCH" ), buttonFontType ),
+                                                fheroes2::getSupportedText( gettext_noop( "newMap|RANDOM" ), buttonFontType ),
                                                 "36 X 36",
                                                 "72 X 72",
                                                 "108 X 108",

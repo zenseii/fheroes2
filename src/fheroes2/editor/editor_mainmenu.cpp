@@ -158,11 +158,11 @@ namespace Editor
 
         background.renderSymmetricButtons( mainModeButtons, 0, true );
 
-        fheroes2::Button buttonCancel( buttonNewMap.area().x,
-                                       background.activeArea().y * 2 + background.activeArea().height - buttonNewMap.area().y - buttonNewMap.area().height,
-                                       menuButtonsIcnIndex, 4, 5 );
+        fheroes2::Button buttonMainMenu( buttonNewMap.area().x,
+                                         background.activeArea().y * 2 + background.activeArea().height - buttonNewMap.area().y - buttonNewMap.area().height,
+                                         menuButtonsIcnIndex, 4, 5 );
 
-        fheroes2::Button buttonBack( buttonCancel.area().x, buttonCancel.area().y, menuButtonsIcnIndex, 6, 7 );
+        fheroes2::Button buttonBack( buttonMainMenu.area().x, buttonMainMenu.area().y, menuButtonsIcnIndex, 6, 7 );
 
         // Add From Scratch and Random buttons. Currently unused until Random map generator has been implemented.
         fheroes2::ButtonGroup mapCreationModeButtons;
@@ -187,12 +187,12 @@ namespace Editor
             mapSizeButtons.disable();
             buttonBack.disable();
 
-            buttonCancel.draw();
-            buttonCancel.drawShadow( display );
+            buttonMainMenu.draw();
+            buttonMainMenu.drawShadow( display );
         }
         else {
             mainModeButtons.disable();
-            buttonCancel.disable();
+            buttonMainMenu.disable();
             emptyDialog.restore();
 
             mapSizeButtons.draw();
@@ -209,11 +209,11 @@ namespace Editor
         while ( le.HandleEvents() ) {
             if ( buttonNewMap.isEnabled() ) {
                 mainModeButtons.drawOnState( le );
-                buttonCancel.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( buttonCancel.area() ) );
+                buttonMainMenu.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( buttonMainMenu.area() ) );
 
                 if ( le.MouseClickLeft( buttonNewMap.area() ) || Game::HotKeyPressEvent( Game::HotKeyEvent::EDITOR_NEW_MAP_MENU ) ) {
                     mainModeButtons.disable();
-                    buttonCancel.disable();
+                    buttonMainMenu.disable();
 
                     emptyDialog.restore();
                     // TODO: Change to mapCreationModeButtons when Random map generator has been implemented.
@@ -232,7 +232,7 @@ namespace Editor
                 if ( le.MouseClickLeft( buttonLoadMap.area() ) || Game::HotKeyPressEvent( Game::HotKeyEvent::EDITOR_LOAD_MAP_MENU ) ) {
                     return fheroes2::GameMode::EDITOR_LOAD_MAP;
                 }
-                if ( le.MouseClickLeft( buttonCancel.area() ) || Game::HotKeyPressEvent( Game::HotKeyEvent::DEFAULT_CANCEL ) ) {
+                if ( le.MouseClickLeft( buttonMainMenu.area() ) || Game::HotKeyPressEvent( Game::HotKeyEvent::DEFAULT_CANCEL ) ) {
                     return fheroes2::GameMode::MAIN_MENU;
                 }
 
@@ -244,8 +244,8 @@ namespace Editor
                 else if ( le.isMouseRightButtonPressedInArea( buttonLoadMap.area() ) ) {
                     fheroes2::showStandardTextMessage( _( "Load Map" ), _( "Load an existing map." ), Dialog::ZERO );
                 }
-                else if ( le.isMouseRightButtonPressedInArea( buttonCancel.area() ) ) {
-                    fheroes2::showStandardTextMessage( _( "Cancel" ), _( "Cancel back to the main menu." ), Dialog::ZERO );
+                else if ( le.isMouseRightButtonPressedInArea( buttonMainMenu.area() ) ) {
+                    fheroes2::showStandardTextMessage( _( "Main Menu" ), _( "Exit the Editor and return to the game's Main Menu." ), Dialog::ZERO );
                 }
             }
             else if ( mapCreationModeButtons.button( 0 ).isEnabled() ) {
@@ -307,9 +307,9 @@ namespace Editor
                     mainModeButtons.draw();
                     mainModeButtons.drawShadows( display );
 
-                    buttonCancel.enable();
-                    buttonCancel.draw();
-                    buttonCancel.drawShadow( display );
+                    buttonMainMenu.enable();
+                    buttonMainMenu.draw();
+                    buttonMainMenu.drawShadow( display );
 
                     display.render( background.activeArea() );
 
