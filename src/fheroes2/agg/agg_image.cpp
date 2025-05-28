@@ -2456,7 +2456,7 @@ namespace
         case ICN::BTNNEWGM:
         case ICN::X_LOADCM: {
             LoadOriginalICN( id );
-            // Remove embedded shadows and backgrounds because we generate our own. It's safe to divide by two because every button has 2 states.
+            // Remove embedded shadows and backgrounds because we generate our own. We can safely divide by two because every button has 2 states.
             for ( uint32_t i = 0; i < ( _icnVsSprite[id].size() / 2 ); ++i ) {
                 fheroes2::Sprite & released = _icnVsSprite[id][i * 2];
                 fheroes2::Sprite & pressed = _icnVsSprite[id][i * 2 + 1];
