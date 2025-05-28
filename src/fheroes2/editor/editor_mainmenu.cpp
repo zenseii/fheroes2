@@ -111,6 +111,7 @@ namespace
         if ( editorInterface.generateNewMap( mapSize ) ) {
             return editorInterface.startEdit();
         }
+        return fheroes2::GameMode::EDITOR_NEW_MAP;
     }
 }
 
