@@ -67,6 +67,14 @@
 
 namespace
 {
+    const size_t playerCountOptions = 5;
+    const std::array<fheroes2::Key, playerCountOptions> playerCountHotkeys
+        = { fheroes2::Key::KEY_2, fheroes2::Key::KEY_3, fheroes2::Key::KEY_4, fheroes2::Key::KEY_5, fheroes2::Key::KEY_6 };
+    const std::array<fheroes2::GameMode, playerCountOptions> playerCountModes
+        = { fheroes2::GameMode::SELECT_SCENARIO_TWO_HUMAN_PLAYERS, fheroes2::GameMode::SELECT_SCENARIO_THREE_HUMAN_PLAYERS,
+            fheroes2::GameMode::SELECT_SCENARIO_FOUR_HUMAN_PLAYERS, fheroes2::GameMode::SELECT_SCENARIO_FIVE_HUMAN_PLAYERS,
+            fheroes2::GameMode::SELECT_SCENARIO_SIX_HUMAN_PLAYERS };
+
     std::unique_ptr<SMKVideoSequence> getVideo( const std::string & fileName )
     {
         std::string videoPath;
@@ -448,11 +456,6 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
                                          menuButtonsIcnIndex, ( i + 7 ) * 2, ( i + 7 ) * 2 + 1, i );
         playerCountButtons.button( i ).disable();
     }
-    fheroes2::ButtonBase & button2Players = playerCountButtons.button( 0 );
-    fheroes2::ButtonBase & button3Players = playerCountButtons.button( 1 );
-    fheroes2::ButtonBase & button4Players = playerCountButtons.button( 2 );
-    fheroes2::ButtonBase & button5Players = playerCountButtons.button( 3 );
-    fheroes2::ButtonBase & button6Players = playerCountButtons.button( 4 );
 
     fheroes2::Button buttonSuccessionWars;
     fheroes2::Button buttonPriceOfLoyalty;
@@ -547,42 +550,32 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
                 fheroes2::showStandardTextMessage( _( "Game Settings" ), _( "Change language, resolution and settings of the game." ), Dialog::ZERO );
             }
         }
-        else if ( button2Players.isEnabled() ) {
+        else if ( playerCountButtons.button( 0 ).isEnabled() ) {
             playerCountButtons.drawOnState( le );
 
-            if ( le.MouseClickLeft( button2Players.area() ) || le.isKeyPressed( fheroes2::Key::KEY_2 ) ) {
-                return fheroes2::GameMode::SELECT_SCENARIO_TWO_HUMAN_PLAYERS;
+            // Loop through all player count buttons.
+            for ( size_t i = 0; i < playerCountOptions; ++i ) {
+                if ( le.MouseClickLeft( playerCountButtons.button( i ).area() ) || le.isKeyPressed( playerCountHotkeys[i] ) ) {
+                    return playerCountModes[i];
+                }
             }
-            if ( le.MouseClickLeft( button3Players.area() ) || le.isKeyPressed( fheroes2::Key::KEY_3 ) ) {
-                return fheroes2::GameMode::SELECT_SCENARIO_THREE_HUMAN_PLAYERS;
-            }
-            if ( le.MouseClickLeft( button4Players.area() ) || le.isKeyPressed( fheroes2::Key::KEY_4 ) ) {
-                return fheroes2::GameMode::SELECT_SCENARIO_FOUR_HUMAN_PLAYERS;
-            }
-            if ( le.MouseClickLeft( button5Players.area() ) || le.isKeyPressed( fheroes2::Key::KEY_5 ) ) {
-                return fheroes2::GameMode::SELECT_SCENARIO_FIVE_HUMAN_PLAYERS;
-            }
-            if ( le.MouseClickLeft( button6Players.area() ) || le.isKeyPressed( fheroes2::Key::KEY_6 ) ) {
-                return fheroes2::GameMode::SELECT_SCENARIO_SIX_HUMAN_PLAYERS;
-            }
-
-            if ( le.isMouseRightButtonPressedInArea( button2Players.area() ) ) {
+            if ( le.isMouseRightButtonPressedInArea( playerCountButtons.button( 0 ).area() ) ) {
                 fheroes2::showStandardTextMessage( _( "2 Players" ), _( "Play with 2 human players, and optionally, up to 4 additional computer players." ),
                                                    Dialog::ZERO );
             }
-            else if ( le.isMouseRightButtonPressedInArea( button3Players.area() ) ) {
+            else if ( le.isMouseRightButtonPressedInArea( playerCountButtons.button( 1 ).area() ) ) {
                 fheroes2::showStandardTextMessage( _( "3 Players" ), _( "Play with 3 human players, and optionally, up to 3 additional computer players." ),
                                                    Dialog::ZERO );
             }
-            else if ( le.isMouseRightButtonPressedInArea( button4Players.area() ) ) {
+            else if ( le.isMouseRightButtonPressedInArea( playerCountButtons.button( 2 ).area() ) ) {
                 fheroes2::showStandardTextMessage( _( "4 Players" ), _( "Play with 4 human players, and optionally, up to 2 additional computer players." ),
                                                    Dialog::ZERO );
             }
-            else if ( le.isMouseRightButtonPressedInArea( button5Players.area() ) ) {
+            else if ( le.isMouseRightButtonPressedInArea( playerCountButtons.button( 3 ).area() ) ) {
                 fheroes2::showStandardTextMessage( _( "5 Players" ), _( "Play with 5 human players, and optionally, up to 1 additional computer player." ),
                                                    Dialog::ZERO );
             }
-            else if ( le.isMouseRightButtonPressedInArea( button6Players.area() ) ) {
+            else if ( le.isMouseRightButtonPressedInArea( playerCountButtons.button( 4 ).area() ) ) {
                 fheroes2::showStandardTextMessage( _( "6 Players" ), _( "Play with 6 human players." ), Dialog::ZERO );
             }
         }
@@ -596,6 +589,7 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
             if ( le.MouseClickLeft( buttonPriceOfLoyalty.area() ) || HotKeyPressEvent( HotKeyEvent::MAIN_MENU_NEW_EXPANSION_CAMPAIGN ) ) {
                 return fheroes2::GameMode::NEW_PRICE_OF_LOYALTY_CAMPAIGN;
             }
+
             if ( le.isMouseRightButtonPressedInArea( buttonSuccessionWars.area() ) ) {
                 fheroes2::showStandardTextMessage( _( "Original Campaign" ),
                                                    _( "Either Roland's or Archibald's campaign from the original Heroes of Might and Magic II." ), Dialog::ZERO );
@@ -614,8 +608,10 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
                 playerCountButtons.draw();
                 playerCountButtons.drawShadows( display );
                 display.render( emptyDialog.rect() );
+                continue;
             }
-            else if ( le.isMouseRightButtonPressedInArea( buttonHotSeat.area() ) ) {
+
+            if ( le.isMouseRightButtonPressedInArea( buttonHotSeat.area() ) ) {
                 fheroes2::showStandardTextMessage(
                     _( "Hot Seat" ), _( "Play a Hot Seat game, where 2 to 6 players play on the same device, switching into the 'Hot Seat' when it is their turn." ),
                     Dialog::ZERO );
@@ -626,7 +622,8 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
         if ( HotKeyPressEvent( HotKeyEvent::DEFAULT_CANCEL ) || le.MouseClickLeft( buttonCancel.area() ) ) {
             return fheroes2::GameMode::MAIN_MENU;
         }
-        else if ( le.isMouseRightButtonPressedInArea( buttonCancel.area() ) ) {
+
+        if ( le.isMouseRightButtonPressedInArea( buttonCancel.area() ) ) {
             fheroes2::showStandardTextMessage( _( "Cancel" ), _( "Cancel back to the main menu." ), Dialog::ZERO );
         }
     }
