@@ -126,8 +126,8 @@ namespace
                                                 ICN::BUTTON_MAP_SELECT_EVIL,
                                                 ICN::BUTTONS_NEW_GAME_MENU_GOOD,
                                                 ICN::BUTTONS_NEW_GAME_MENU_EVIL,
-                                                ICN::BUTTON_NEW_MAP,
-                                                ICN::BUTTON_LOAD_MAP,
+                                                ICN::BUTTONS_EDITOR_MENU_GOOD,
+                                                ICN::BUTTONS_EDITOR_MENU_EVIL,
                                                 ICN::BUTTON_GIFT_GOOD,
                                                 ICN::BUTTON_GIFT_EVIL,
                                                 ICN::UNIFORM_EVIL_MAX_BUTTON,
@@ -1252,6 +1252,7 @@ namespace
         case ICN::BUTTON_SMALL_MIN_EVIL:
         case ICN::BUTTON_SMALL_RESTART_EVIL:
         case ICN::BUTTONS_NEW_GAME_MENU_EVIL:
+        case ICN::BUTTONS_EDITOR_MENU_EVIL:
         case ICN::UNIFORM_EVIL_MAX_BUTTON:
         case ICN::UNIFORM_EVIL_MIN_BUTTON: {
             // We do palette swaps for these due to either one of two reasons: to generate completely new buttons, or to preserve
@@ -1296,6 +1297,9 @@ namespace
             }
             else if ( id == ICN::BUTTONS_NEW_GAME_MENU_EVIL ) {
                 goodButtonIcnID = ICN::BUTTONS_NEW_GAME_MENU_GOOD;
+            }
+            else if ( id == ICN::BUTTONS_EDITOR_MENU_EVIL) {
+                goodButtonIcnID = ICN::BUTTONS_EDITOR_MENU_GOOD;
             }
             _icnVsSprite[id].resize( fheroes2::AGG::GetICNCount( goodButtonIcnID ) );
             const size_t icnSize = _icnVsSprite[id].size();
@@ -1477,41 +1481,46 @@ namespace
             fheroes2::makeSymmetricBackgroundSprites( _icnVsSprite[id], texts, false, 80 );
             break;
         }
-        case ICN::BUTTON_NEW_MAP:
-        case ICN::BUTTON_LOAD_MAP: {
-            _icnVsSprite[id].resize( 2 );
+        case ICN::BUTTONS_EDITOR_MENU_GOOD: {
+            _icnVsSprite[id].resize( 20 );
 
             if ( useOriginalResources() ) {
-                int buttonIcnID = ICN::BTNEMAIN;
-                // Remove the shadows since we are adding our own in the dialog. Should be moved to just LoadModifiedICN?
-                const fheroes2::Sprite originalReleased = fheroes2::AGG::GetICN( buttonIcnID, id == ICN::BUTTON_NEW_MAP ? 0 : 2 );
-                const fheroes2::Sprite originalPressed = fheroes2::AGG::GetICN( buttonIcnID, id == ICN::BUTTON_NEW_MAP ? 1 : 3 );
+                for ( int i = 0; i < 3; ++i ) {
+                    _icnVsSprite[id][i * 2] = fheroes2::AGG::GetICN( ICN::BTNEMAIN, i * 2 );
+                    _icnVsSprite[id][i * 2 + 1] = fheroes2::AGG::GetICN( ICN::BTNEMAIN, i * 2 + 1 );
+                }
+                // Add generated Back button.
+                const fheroes2::FontType buttonFontType = fheroes2::FontType::buttonReleasedWhite();
+                const fheroes2::Size buttonSize{ _icnVsSprite[id][0].width() - 10, _icnVsSprite[id][0].height() };
+                fheroes2::makeButtonSprites( _icnVsSprite[id][6], _icnVsSprite[id][7], fheroes2::getSupportedText( gettext_noop( "EditorMainMenu|BACK" ), buttonFontType ), buttonSize,
+                                             false, ICN::STONEBAK );
 
-                fheroes2::Sprite & released = _icnVsSprite[id][0];
-                fheroes2::Sprite & pressed = _icnVsSprite[id][1];
-
-                const int32_t removedShadowOffsetWidth = 5;
-                const int32_t removedShadowOffsetHeight = 6;
-
-                released.resize( originalReleased.width() - removedShadowOffsetWidth, originalReleased.height() - removedShadowOffsetHeight );
-                pressed.resize( originalPressed.width() - removedShadowOffsetWidth, originalPressed.height() - removedShadowOffsetHeight );
-                released.reset();
-                pressed.reset();
-
-                fheroes2::Copy( originalReleased, removedShadowOffsetWidth, 0, _icnVsSprite[id][0], 0, 0, originalReleased.width() - removedShadowOffsetWidth,
-                                originalReleased.height() - removedShadowOffsetHeight );
-                fheroes2::Copy( originalPressed, removedShadowOffsetWidth, 0, _icnVsSprite[id][1], 0, 0, originalPressed.width() - removedShadowOffsetWidth,
-                                originalPressed.height() - removedShadowOffsetHeight );
-                setButtonCornersTransparent( released );
+                // Add From Scratch and Random buttons.
+                for ( int i = 0; i < 2; ++i ) {
+                    _icnVsSprite[id][( i + 4 ) * 2] = fheroes2::AGG::GetICN( ICN::BTNENEW, i * 2 );
+                    _icnVsSprite[id][( i + 4 ) * 2 + 1] = fheroes2::AGG::GetICN( ICN::BTNENEW, i * 2 + 1 );
+                }
+                // Add map size buttons.
+                for ( int i = 0; i < 4; ++i ) {
+                    _icnVsSprite[id][( i + 6 ) * 2] = fheroes2::AGG::GetICN( ICN::BTNESIZE, i * 2 );
+                    _icnVsSprite[id][( i + 6 ) * 2 + 1] = fheroes2::AGG::GetICN( ICN::BTNESIZE, i * 2 + 1 );
+                }
 
                 break;
             }
-            const char * text = id == ICN::BUTTON_NEW_MAP ? gettext_noop( "NEW\nMAP" ) : gettext_noop( "LOAD\nMAP" );
+            const fheroes2::FontType buttonFontType = fheroes2::FontType::buttonReleasedWhite();
+            std::vector<const char *> texts = { fheroes2::getSupportedText( gettext_noop( "NEW\nMAP" ), buttonFontType ),
+                                                fheroes2::getSupportedText( gettext_noop( "LOAD\nMAP" ), buttonFontType ),
+                                                fheroes2::getSupportedText( gettext_noop( "CANCEL" ), buttonFontType ),
+                                                fheroes2::getSupportedText( gettext_noop( "EditorMainMenu|BACK" ), buttonFontType ),
+                                                fheroes2::getSupportedText( gettext_noop( "NewMap|FROM\nSCRATCH" ), buttonFontType ),
+                                                fheroes2::getSupportedText( gettext_noop( "NewMap|RANDOM" ), buttonFontType ),
+                                                "36 X 36",
+                                                "72 X 72",
+                                                "108 X 108",
+                                                "144 X 144" };
 
-            text = fheroes2::getSupportedText( id == ICN::BUTTON_NEW_MAP ? gettext_noop( "NEW\nMAP" ) : gettext_noop( "LOAD\nMAP" ),
-                                               fheroes2::FontType::buttonReleasedWhite() );
-            fheroes2::makeButtonSprites( _icnVsSprite[id][0], _icnVsSprite[id][1], text, { 117, 56 }, false, ICN::STONEBAK );
-
+            fheroes2::makeSymmetricBackgroundSprites( _icnVsSprite[id], texts, false, 80 );
             break;
         }
         case ICN::GOOD_CAMPAIGN_BUTTONS:
@@ -2438,6 +2447,7 @@ namespace
             return true;
         case ICN::BTNDCCFG:
         case ICN::BTNEMAIN:
+        case ICN::BTNESIZE:
         case ICN::BTNHOTST:
         case ICN::BTNMP:
         case ICN::BTNNEWGM:
