@@ -436,6 +436,10 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
     fheroes2::ImageRestorer emptyDialog( display, background.activeArea().x, background.activeArea().y, background.activeArea().width,
                                          background.activeArea().height - buttonStandardGame.area().height - spaceBetweenButtons * 2 - 2 );
 
+    if ( !isSuccessionWarsCampaignPresent() ) {
+        buttonCampaignGame.disable();
+    }
+
     background.renderSymmetricButtons( mainModeButtons, 0, true );
 
     // Add the cancel button at the bottom of the dialog.
@@ -471,10 +475,6 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
         buttonPriceOfLoyalty.setPosition( mainModeButtons.button( 1 ).area().x, mainModeButtons.button( 1 ).area().y );
     }
 
-    if ( !isSuccessionWarsCampaignPresent() ) {
-        buttonCampaignGame.disable();
-    }
-
     fheroes2::validateFadeInAndRender();
 
     LocalEvent & le = LocalEvent::Get();
@@ -489,13 +489,7 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
 
     while ( le.HandleEvents() ) {
         if ( buttonStandardGame.isEnabled() ) {
-            buttonStandardGame.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( buttonStandardGame.area() ) );
-            if ( buttonCampaignGame.isEnabled() ) {
-                buttonCampaignGame.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( buttonCampaignGame.area() ) );
-            }
-            buttonMultiGame.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( buttonMultiGame.area() ) );
-            buttonBattleGame.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( buttonBattleGame.area() ) );
-            buttonSettings.drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( buttonSettings.area() ) );
+            mainModeButtons.drawOnState( le );
 
             if ( HotKeyPressEvent( HotKeyEvent::MAIN_MENU_STANDARD ) || le.MouseClickLeft( buttonStandardGame.area() ) ) {
                 return fheroes2::GameMode::NEW_STANDARD;

@@ -114,6 +114,10 @@ fheroes2::GameMode Game::LoadGame()
     fheroes2::ImageRestorer emptyDialog( display, background.activeArea().x, background.activeArea().y, background.activeArea().width,
                                          background.activeArea().height - buttonStandardGame.area().height - spaceBetweenButtons * 2 - 2 );
 
+    if ( !isSuccessionWarsCampaignPresent() ) {
+        buttonCampaignGame.disable();
+    }
+
     background.renderSymmetricButtons( gameModeButtons, 0, true );
 
     // Add the cancel button at the bottom of the dialog.
@@ -127,19 +131,14 @@ fheroes2::GameMode Game::LoadGame()
     fheroes2::Button buttonHotSeat( buttonStandardGame.area().x, buttonStandardGame.area().y, menuButtonsIcnIndex, 12, 13 );
     buttonHotSeat.disable();
 
-    if ( !isSuccessionWarsCampaignPresent() ) {
-        buttonCampaignGame.disable();
-    }
-
     fheroes2::validateFadeInAndRender();
 
     LocalEvent & le = LocalEvent::Get();
 
     while ( le.HandleEvents() ) {
         if ( buttonStandardGame.isEnabled() ) {
-            for ( size_t i = 0; i < gameModeButtons.getButtonsCount(); ++i ) {
-                gameModeButtons.button( i ).drawOnState( le.isMouseLeftButtonPressedAndHeldInArea( gameModeButtons.button( i ).area() ) );
-            }
+            gameModeButtons.drawOnState( le );
+
             if ( le.MouseClickLeft( buttonStandardGame.area() ) || HotKeyPressEvent( HotKeyEvent::MAIN_MENU_STANDARD ) ) {
                 if ( ListFiles::IsEmpty( GetSaveDir(), GetSaveFileExtension( Game::TYPE_STANDARD ) ) ) {
                     fheroes2::showStandardTextMessage( _( "Load Game" ), _( "No save files to load." ), Dialog::OK );
