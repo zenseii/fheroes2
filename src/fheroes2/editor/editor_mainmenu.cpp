@@ -49,8 +49,6 @@
 #include "ui_dialog.h"
 #include "ui_tool.h"
 #include "ui_window.h"
-#include "world.h"
-#include "world_object_uid.h"
 
 namespace
 {
@@ -106,15 +104,13 @@ namespace
 
     fheroes2::GameMode openNewEmptyMap( const Maps::MapSize & mapSize )
     {
-        world.generateMapForEditor( mapSize );
-
-        // Reset object UID to keep track of newly added objects.
-        Maps::resetObjectUID();
-
         fheroes2::fadeOutDisplay();
         Game::setDisplayFadeIn();
 
-        return Interface::EditorInterface::Get().startEdit( true );
+        Interface::EditorInterface & editorInterface = Interface::EditorInterface::Get();
+        if ( editorInterface.generateNewMap( mapSize ) ) {
+            return editorInterface.startEdit();
+        }
     }
 }
 
@@ -352,6 +348,6 @@ namespace Editor
         fheroes2::fadeOutDisplay();
         Game::setDisplayFadeIn();
 
-        return Interface::EditorInterface::Get().startEdit( false );
+        return Interface::EditorInterface::Get().startEdit();
     }
 }
