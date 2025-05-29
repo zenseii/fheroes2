@@ -154,6 +154,17 @@ fheroes2::GameMode Game::NewStandard()
     return fheroes2::GameMode::SELECT_SCENARIO_ONE_HUMAN_PLAYER;
 }
 
+fheroes2::GameMode Game::NewHotSeat( const size_t playerCount )
+{
+    assert( 1 < playerCount && playerCount < 7 );
+    Settings & conf = Settings::Get();
+    if ( conf.isCampaignGameType() ) {
+        conf.setCurrentMapInfo( {} );
+    }
+    conf.SetGameType( Game::TYPE_HOTSEAT );
+    return playerCountModes[playerCount];
+}
+
 fheroes2::GameMode Game::NewSuccessionWarsCampaign()
 {
     Settings::Get().SetGameType( Game::TYPE_CAMPAIGN );
@@ -550,7 +561,7 @@ fheroes2::GameMode Game::NewGame( const bool isProbablyDemoVersion )
             // Loop through all player count buttons.
             for ( size_t i = 0; i < playerCountOptions; ++i ) {
                 if ( le.MouseClickLeft( playerCountButtons.button( i ).area() ) || le.isKeyPressed( playerCountHotkeys[i] ) ) {
-                    return playerCountModes[i];
+                    return NewHotSeat( i + 2 );
                 }
             }
             if ( le.isMouseRightButtonPressedInArea( playerCountButtons.button( 0 ).area() ) ) {
