@@ -25,6 +25,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <optional>
 #include <sstream>
 
 #include "agg_image.h"
@@ -572,7 +573,7 @@ uint32_t Battle::Unit::CalculateDamageUnit( const Unit & enemy, double dmg ) con
     // Attack bonus is 20% to 300%
     dmg *= 1 + ( 0 < r ? 0.1 * std::min( r, 20 ) : 0.05 * std::max( r, -16 ) );
 
-    return static_cast<uint32_t>( dmg ) < 1 ? 1 : static_cast<uint32_t>( dmg );
+    return std::max( fheroes2::checkedCast<uint32_t>( dmg ).value(), 1U );
 }
 
 uint32_t Battle::Unit::GetDamage( const Unit & enemy, Rand::DeterministicRandomGenerator & randomGenerator ) const
@@ -596,7 +597,7 @@ uint32_t Battle::Unit::GetDamage( const Unit & enemy, Rand::DeterministicRandomG
         res /= 2;
     }
 
-    return res;
+    return std::max( res, 1U );
 }
 
 uint32_t Battle::Unit::HowManyWillBeKilled( const uint32_t dmg ) const
@@ -992,7 +993,7 @@ uint32_t Battle::Unit::GetDefense() const
     return res;
 }
 
-int32_t Battle::Unit::evaluateThreatForUnit( const Unit & defender ) const
+double Battle::Unit::evaluateThreatForUnit( const Unit & defender ) const
 {
     const Unit & attacker = *this;
 
@@ -1156,7 +1157,7 @@ int32_t Battle::Unit::evaluateThreatForUnit( const Unit & defender ) const
         attackerThreat /= 1.25;
     }
 
-    return static_cast<int32_t>( attackerThreat * 100 );
+    return attackerThreat;
 }
 
 Funds Battle::Unit::GetSurrenderCost() const
@@ -1635,10 +1636,10 @@ fheroes2::Point Battle::Unit::GetStartMissileOffset( const size_t direction ) co
     return animation.getProjectileOffset( direction );
 }
 
-int Battle::Unit::GetCurrentColor() const
+PlayerColor Battle::Unit::GetCurrentColor() const
 {
     if ( Modes( SP_BERSERKER ) ) {
-        return -1; // Be aware of unknown color
+        return PlayerColor::UNUSED; // Be aware of unknown color
     }
 
     if ( Modes( SP_HYPNOTIZE ) ) {
@@ -1651,12 +1652,12 @@ int Battle::Unit::GetCurrentColor() const
     return GetColor();
 }
 
-int Battle::Unit::GetCurrentOrArmyColor() const
+PlayerColor Battle::Unit::GetCurrentOrArmyColor() const
 {
-    const int color = GetCurrentColor();
+    const PlayerColor color = GetCurrentColor();
 
     // Unknown color in case of SP_BERSERKER mode
-    if ( color < 0 ) {
+    if ( color == PlayerColor::UNUSED ) {
         return GetArmyColor();
     }
 

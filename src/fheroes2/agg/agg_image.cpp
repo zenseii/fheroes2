@@ -246,7 +246,7 @@ namespace
     }
 
     // This class serves the purpose of preserving the original alphabet which is loaded from AGG files for cases when we generate new language alphabet.
-    class OriginalAlphabetPreserver
+    class OriginalAlphabetPreserver final
     {
     public:
         void preserve()
@@ -292,6 +292,10 @@ namespace
             _icnVsSprite[ICN::GRAY_FONT].clear();
             _icnVsSprite[ICN::GRAY_SMALL_FONT].clear();
             _icnVsSprite[ICN::WHITE_LARGE_FONT].clear();
+            _icnVsSprite[ICN::GOLDEN_GRADIENT_FONT].clear();
+            _icnVsSprite[ICN::GOLDEN_GRADIENT_LARGE_FONT].clear();
+            _icnVsSprite[ICN::SILVER_GRADIENT_FONT].clear();
+            _icnVsSprite[ICN::SILVER_GRADIENT_LARGE_FONT].clear();
         }
 
         bool isPreserved() const
@@ -2220,6 +2224,11 @@ namespace
                 for ( fheroes2::Sprite & fontImage : imageArray ) {
                     ReplaceColorIdByTransformId( fontImage, 50, 2 );
                 }
+
+                // The PoL assets contain a dot ('.') sprite instead of asterisk ('*') while the SW assets contain correct asterisk sprite.
+                // We replace PoL sprite with the correct one from SW assets.
+                replacePOLAssetWithSW( id, 42 - 32 );
+
                 modifyBaseNormalFont( _icnVsSprite[id] );
             }
 
@@ -4892,8 +4901,12 @@ namespace
                 // Expand the existing set of Adventure Map objects:
                 // - 2 extra River Delta objects. Each object has 7 image parts.
                 // - 1 new Stone Liths with 3 image parts.
-                // - 3 new variants of Observation Tower object. In total, 6 new image parts.
-                images.resize( 218 + ( 7 * 2 ) + 3 + 6 );
+                // - 3 new variants of Observation Tower object. Each object has 2 image parts.
+                // - 1 new "Black Cat" object that has: 1 main image + 6 animation images.
+                // - 1 new "Barrel" object that has: 1 main (empty) image + 6 animation images.
+                // In total, 8 new objects (37 new images).
+
+                images.resize( 218 + ( 7 * 2 ) + 3 + ( 2 * 3 ) + ( 1 + 6 ) + ( 1 + 6 ) );
 
                 // 2 River Deltas.
                 for ( size_t i = 0; i < 14; ++i ) {
@@ -4936,6 +4949,20 @@ namespace
                 images[240] = images[198];
                 fheroes2::h2d::readImage( "observation_tower_snow_top_part.image", temp );
                 Blit( temp, 0, 0, images[240], 0, 0, temp.width(), temp.height() );
+
+                // Black Cat. Main object image.
+                fheroes2::h2d::readImage( "black_cat.image", images[241] );
+
+                // Black Cat. Tail and eyes animation.
+                for ( size_t i = 0; i < 6; ++i ) {
+                    fheroes2::h2d::readImage( "black_cat_animation_" + std::to_string( i ) + ".image", images[242 + i] );
+                }
+
+                // Barrel. Object has only animation images but for compatibility
+                // we need to have the main image (images[248]) be empty for this object.
+                for ( size_t i = 0; i < 6; ++i ) {
+                    fheroes2::h2d::readImage( "barrel_animation_" + std::to_string( i ) + ".image", images[249 + i] );
+                }
             }
 
             return true;
@@ -5159,26 +5186,47 @@ namespace fheroes2::AGG
 
     void updateLanguageDependentResources( const SupportedLanguage language, const bool loadOriginalAlphabet )
     {
-        if ( loadOriginalAlphabet || !isAlphabetSupported( language ) ) {
-            if ( !alphabetPreserver.isPreserved() ) {
+        static bool areOriginalResourcesInUse = false;
+        static CodePage currentCodePage{ CodePage::NONE };
+
+        const bool loadOriginalResources = loadOriginalAlphabet || !isAlphabetSupported( language );
+
+        if ( loadOriginalResources ) {
+            if ( alphabetPreserver.isPreserved() ) {
+                if ( areOriginalResourcesInUse ) {
+                    // Since we are already using the original resources, we don't need to do anything else.
+                    // This saves us a lot of time by not having to rebuild many of the images we use for fonts and buttons.
+                    return;
+                }
+
+                alphabetPreserver.restore();
+            }
+            else {
                 // This can happen when we try to change a language without loading assets.
                 alphabetPreserver.preserve();
             }
-            else {
-                alphabetPreserver.restore();
-            }
         }
         else {
+            if ( !areOriginalResourcesInUse && currentCodePage == getCodePage( language ) ) {
+                // We are trying to load resources for the same code page. We don't need to redo the same work again.
+                return;
+            }
+
             alphabetPreserver.preserve();
             // Restore original letters when changing language to avoid changes to them being carried over.
             alphabetPreserver.restore();
+
             generateAlphabet( language, _icnVsSprite );
         }
+
         generateButtonAlphabet( language, _icnVsSprite );
 
         // Clear language dependent resources.
         for ( const int id : languageDependentIcnId ) {
             _icnVsSprite[id].clear();
         }
+
+        currentCodePage = getCodePage( language );
+        areOriginalResourcesInUse = loadOriginalResources;
     }
 }

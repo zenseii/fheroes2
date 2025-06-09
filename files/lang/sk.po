@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 13:36+0000\n"
+"POT-Creation-Date: 2025-06-06 02:30+0000\n"
 "PO-Revision-Date: 2025-03-12 23:48+0100\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: \n"
@@ -3671,6 +3671,10 @@ msgstr "Objekty oceánu"
 msgid "Select Adventure Object:"
 msgstr "Objekty oceánu"
 
+#, fuzzy
+msgid "Select color"
+msgstr "Zvoľ bojovníka:"
+
 msgid "Players Icon"
 msgstr "Ikona hráča"
 
@@ -4305,6 +4309,9 @@ msgstr "s jedným artefaktom."
 msgid "The total number of obelisks is %{count}."
 msgstr ""
 
+msgid "There are no players on the map, so no one can own this object."
+msgstr ""
+
 #, fuzzy
 msgid "Roads"
 msgstr "Cesta"
@@ -4795,6 +4802,9 @@ msgstr ""
 msgid "LANGUAGE"
 msgstr ""
 
+msgid "ABOUT"
+msgstr ""
+
 msgid ""
 "The entered map description exceeds the maximum allowed 5 rows. It will be "
 "shortened to fit the map description field."
@@ -4812,6 +4822,9 @@ msgstr ""
 #, fuzzy
 msgid "Change Map Description"
 msgstr "Zvolený opis"
+
+msgid "About"
+msgstr ""
 
 #, fuzzy
 msgid "Click to accept the changes made."
@@ -4835,6 +4848,11 @@ msgstr "Udalosť"
 #, fuzzy
 msgid "Click to change the language of the map."
 msgstr "Zmeň jazyk hry."
+
+msgid ""
+"Click to edit notes from the map creator. These notes are optional and do "
+"not appear during gameplay."
+msgstr ""
 
 #, fuzzy
 msgid "Click to change your map name."
@@ -5962,6 +5980,14 @@ msgstr ""
 "Nepriateľ obsadil %{name}!\n"
 "Triumfálne zvíťazili."
 
+#, fuzzy
+msgid ""
+"The enemy has found the %{name}.\n"
+"Your quest is a failure."
+msgstr ""
+"Podarilo sa ti nájsť %{name}.\n"
+"Tvoja úloha je splnená."
+
 msgid ""
 "The enemy has built up over %{count} gold in his treasury.\n"
 "You must bow done in defeat before his wealth and power."
@@ -6567,6 +6593,10 @@ msgstr "Slovensky"
 msgid "Vietnamese"
 msgstr "Vietnamsky"
 
+#, fuzzy
+msgid "Greek"
+msgstr "Zelený"
+
 msgid "Slow"
 msgstr "Pomalá"
 
@@ -6793,6 +6823,11 @@ msgstr ""
 
 msgid "Ransacking an enemy camp, you discover a hidden cache of treasures."
 msgstr "Pri plienení nepriateľského tábora objavíš skrytú skrýšu s pokladmi."
+
+msgid ""
+"Your ship bumps into a barrel drifting at sea. Inside, you discover a stash "
+"of lost treasure."
+msgstr ""
 
 msgid ""
 "The keeper of the mill announces:\n"
@@ -8097,6 +8132,18 @@ msgstr ""
 "drahokamu. Pozrie sa hore a povie,\n"
 "\"Na svojich cestách som sa naučila veľa z oblasti tajomnej mágie. Moju "
 "schopnosť ma naučil jeden veľký veštec. Mám odpoveď, ktorú hľadáš.\""
+
+msgid ""
+"The sting of your previous encounter still lingers, and you keep your "
+"distance from the intimidating cat until you have regained your courage in "
+"battle."
+msgstr ""
+
+msgid ""
+"You come upon a great cat, purring as it rubs against your leg. Charmed, you "
+"reach down, but it bites you and flees. At least the laughter at your "
+"misfortune lifts your troops' spirits."
+msgstr ""
 
 msgid "No spell book is present."
 msgstr "Kniha kúziel nie je k dispozícii."
@@ -9541,6 +9588,14 @@ msgstr "Močiar"
 
 msgid "Frozen Lake"
 msgstr ""
+
+#, fuzzy
+msgid "Black Cat"
+msgstr "Čierna perla"
+
+#, fuzzy
+msgid "Barrel"
+msgstr "Bariéra"
 
 msgid "randomRace|level 1 creatures"
 msgstr ""
@@ -12304,64 +12359,3 @@ msgstr "Povedal jej: Jada jada jada... a ona na to že: Blá, blá, blá..."
 
 msgid "An unknown force is being resurrected..."
 msgstr "Neznáma sila je vzkriesená..."
-
-msgid ""
-"Check the newest version of the game at\n"
-"https://github.com/ihhub/\n"
-"fheroes2/releases"
-msgstr ""
-"Pozri si najnovšiu verziu hry na\n"
-"https://github.com/ihhub/\n"
-"fheroes2/releases"
-
-#~ msgid ""
-#~ "After spending hours trying to fish the chest out of the sea, you open "
-#~ "it, only to find it empty."
-#~ msgstr ""
-#~ "Po hodinách strávených snahou vyloviť truhlicu z mora ju otvoríš a "
-#~ "zistíš, že je prázdna."
-
-#~ msgid ""
-#~ "After scouring the area, you fall upon a hidden chest, containing the "
-#~ "%{gold} gold pieces."
-#~ msgstr ""
-#~ "Po prehľadaní oblasti narazíš na skrytú truhlicu, ktorá obsahuje %{gold} "
-#~ "zlatých."
-
-#~ msgid ""
-#~ "Select the campaign difficulty. This can be lowered at any point during "
-#~ "the campaign."
-#~ msgstr "Zvoľ obtiažnosť kampane. Neskôr sa bude dať kedykoľvek znížiť."
-
-#~ msgid "Select count %{resource}:"
-#~ msgstr "Zvoľ počet - %{resource}:"
-
-#~ msgid "Enable auto combat"
-#~ msgstr "Povoľ automatizovaný boj"
-
-#~ msgid "hotkey|finish the battle in auto mode"
-#~ msgstr "ukonči boj v automatickom móde"
-
-#~ msgid "Please Remember"
-#~ msgstr "Nezabudni, prosím"
-
-#, fuzzy
-#~ msgid ""
-#~ "You can always change the language, resolution and settings of the game "
-#~ "by clicking on the "
-#~ msgstr "Rozlíšenie hry si vždy môžeš zmeniť kliknutím na "
-
-#~ msgid "door"
-#~ msgstr "dvere"
-
-#, fuzzy
-#~ msgid "NEW GAME"
-#~ msgstr ""
-#~ "NOVÁ\n"
-#~ "HRA"
-
-#~ msgid "Warning!"
-#~ msgstr "Pozor!"
-
-#~ msgid "Dummy 1"
-#~ msgstr "Atrapa 1"

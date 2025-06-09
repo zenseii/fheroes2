@@ -767,11 +767,18 @@ namespace
 
                 fheroes2::showResourceMessage( header, body, Dialog::OK, funds );
             }
+            else if ( objectType == MP2::OBJ_BARREL ) {
+                const fheroes2::Text header( MP2::StringObject( objectType ), fheroes2::FontType::normalYellow() );
+                const fheroes2::Text body( _( "Your ship bumps into a barrel drifting at sea. Inside, you discover a stash of lost treasure." ),
+                                           fheroes2::FontType::normalWhite() );
+
+                fheroes2::showResourceMessage( header, body, Dialog::OK, funds );
+            }
             else {
-                const auto resource = funds.getFirstValidResource();
+                const auto [resourceType, resourceCount] = funds.getFirstValidResource();
 
                 Interface::AdventureMap & I = Interface::AdventureMap::Get();
-                I.getStatusPanel().SetResource( resource.first, resource.second );
+                I.getStatusPanel().SetResource( resourceType, resourceCount );
                 I.setRedraw( Interface::REDRAW_STATUS );
             }
 
@@ -2424,7 +2431,7 @@ namespace
         const Outcome outcome = [dst_index, &title, objectIsEmptyMsg, recruitmentAvailableMsg, warningMsg]() {
             const Maps::Tile & tile = world.getTile( dst_index );
 
-            if ( getColorFromTile( tile ) != Color::NONE ) {
+            if ( getColorFromTile( tile ) != PlayerColor::NONE ) {
                 const Troop troop = getTroopFromTile( tile );
 
                 if ( !troop.isValid() ) {
@@ -2484,7 +2491,7 @@ namespace
                 hero.IncreaseExperience( res.GetExperienceAttacker() );
 
                 // Set ownership of the dwelling to a Neutral (gray) player so that any player can recruit troops without a fight.
-                setColorOnTile( tile, Color::UNUSED );
+                setColorOnTile( tile, PlayerColor::UNUSED );
 
                 if ( fheroes2::showStandardTextMessage( title, victoryMsg, Dialog::YES | Dialog::NO ) == Dialog::YES ) {
                     const Troop troop = getTroopFromTile( tile );
@@ -3643,7 +3650,7 @@ namespace
 
         std::string title = MP2::StringObject( objectType );
 
-        if ( kingdom.IsVisitTravelersTent( getColorFromTile( tile ) ) ) {
+        if ( kingdom.IsVisitTravelersTent( getBarrierColorFromTile( tile ) ) ) {
             AudioManager::PlaySound( M82::EXPERNCE );
 
             fheroes2::showStandardTextMessage(
@@ -3672,12 +3679,41 @@ namespace
         const Maps::Tile & tile = world.getTile( dst_index );
         Kingdom & kingdom = hero.GetKingdom();
 
+        const int tentColor = getBarrierColorFromTile( tile );
+
         fheroes2::showStandardTextMessage(
-            std::string( MP2::StringObject( objectType ) ) + " (" + fheroes2::getTentColorName( getColorFromTile( tile ) ) + ")",
+            std::string( MP2::StringObject( objectType ) ) + " (" + fheroes2::getTentColorName( tentColor ) + ")",
             _( "You enter the tent and see an old woman gazing into a magic gem. She looks up and says,\n\"In my travels, I have learned much in the way of arcane magic. A great oracle taught me his skill. I have the answer you seek.\"" ),
             Dialog::OK );
 
-        kingdom.SetVisitTravelersTent( getColorFromTile( tile ) );
+        kingdom.SetVisitTravelersTent( tentColor );
+    }
+
+    // Black Cat gives +3 morale and -2 luck.
+    void actionToBlackCat( Heroes & hero, int32_t dst_index )
+    {
+        DEBUG_LOG( DBG_GAME, DBG_INFO, hero.GetName() )
+
+        if ( hero.isObjectTypeVisited( MP2::OBJ_BLACK_CAT ) ) {
+            fheroes2::showStandardTextMessage(
+                MP2::StringObject( MP2::OBJ_BLACK_CAT ),
+                _( "The sting of your previous encounter still lingers, and you keep your distance from the intimidating cat until you have regained your courage in battle." ),
+                Dialog::OK );
+
+            return;
+        }
+
+        hero.SetVisited( dst_index );
+        AudioManager::PlaySound( M82::GOODMRLE );
+
+        const fheroes2::MoraleDialogElement moraleUI( true );
+        const fheroes2::LuckDialogElement luckUI( false );
+        const std::vector<const fheroes2::DialogElement *> elementUI{ &moraleUI, &moraleUI, &moraleUI, &luckUI, &luckUI };
+
+        fheroes2::showStandardTextMessage(
+            std::string( MP2::StringObject( MP2::OBJ_BLACK_CAT ) ),
+            _( "You come upon a great cat, purring as it rubs against your leg. Charmed, you reach down, but it bites you and flees. At least the laughter at your misfortune lifts your troops' spirits." ),
+            Dialog::OK, elementUI );
     }
 }
 
@@ -3686,7 +3722,7 @@ void Heroes::ScoutRadar() const
     Interface::AdventureMap & I = Interface::AdventureMap::Get();
 
 #if defined( WITH_DEBUG )
-    if ( GetColor() != Color::NONE ) {
+    if ( GetColor() != PlayerColor::NONE ) {
         const Player * player = Players::Get( GetColor() );
         assert( player != nullptr );
 
@@ -3773,6 +3809,9 @@ void Heroes::Action( int tileIndex )
 
         I.getGameArea().SetCenter( GetCenter() );
         I.redraw( Interface::REDRAW_GAMEAREA | Interface::REDRAW_RADAR_CURSOR | Interface::REDRAW_HEROES );
+
+        // Render the screen with the hero at the action object before rendering the action.
+        fheroes2::Display::instance().render();
     }
 
     switch ( objectType ) {
@@ -3783,6 +3822,7 @@ void Heroes::Action( int tileIndex )
     case MP2::OBJ_CASTLE:
         ActionToCastle( *this, tileIndex );
         break;
+
     case MP2::OBJ_HERO:
         ActionToHeroes( *this, tileIndex );
         break;
@@ -3790,11 +3830,11 @@ void Heroes::Action( int tileIndex )
     case MP2::OBJ_BOAT:
         ActionToBoat( *this, tileIndex );
         break;
+
     case MP2::OBJ_COAST:
         ActionToCoast( *this, tileIndex );
         break;
 
-    // resource object
     case MP2::OBJ_WINDMILL:
     case MP2::OBJ_WATER_WHEEL:
     case MP2::OBJ_MAGIC_GARDEN:
@@ -3805,10 +3845,12 @@ void Heroes::Action( int tileIndex )
     case MP2::OBJ_WAGON:
         ActionToWagon( *this, tileIndex );
         break;
+
     case MP2::OBJ_SKELETON:
         ActionToSkeleton( *this, objectType, tileIndex );
         break;
 
+    case MP2::OBJ_BARREL:
     case MP2::OBJ_BOTTLE:
     case MP2::OBJ_CAMPFIRE:
     case MP2::OBJ_RESOURCE:
@@ -3819,9 +3861,11 @@ void Heroes::Action( int tileIndex )
     case MP2::OBJ_TREASURE_CHEST:
         ActionToTreasureChest( *this, objectType, tileIndex );
         break;
+
     case MP2::OBJ_GENIE_LAMP:
         ActionToGenieLamp( *this, objectType, tileIndex );
         break;
+
     case MP2::OBJ_FLOTSAM:
         ActionToFlotSam( *this, objectType, tileIndex );
         break;
@@ -3829,11 +3873,11 @@ void Heroes::Action( int tileIndex )
     case MP2::OBJ_SHIPWRECK_SURVIVOR:
         ActionToShipwreckSurvivor( *this, objectType, tileIndex );
         break;
+
     case MP2::OBJ_ARTIFACT:
         ActionToArtifact( *this, tileIndex );
         break;
 
-    // shrine circle
     case MP2::OBJ_SHRINE_FIRST_CIRCLE:
     case MP2::OBJ_SHRINE_SECOND_CIRCLE:
     case MP2::OBJ_SHRINE_THIRD_CIRCLE:
@@ -3844,12 +3888,10 @@ void Heroes::Action( int tileIndex )
         ActionToWitchsHut( *this, objectType, tileIndex );
         break;
 
-    // info message
     case MP2::OBJ_SIGN:
         ActionToSign( *this, tileIndex );
         break;
 
-    // luck modification
     case MP2::OBJ_FOUNTAIN:
     case MP2::OBJ_FAERIE_RING:
     case MP2::OBJ_IDOL:
@@ -3859,14 +3901,15 @@ void Heroes::Action( int tileIndex )
     case MP2::OBJ_PYRAMID:
         ActionToPyramid( *this, objectType, tileIndex );
         break;
+
     case MP2::OBJ_MAGIC_WELL:
         ActionToMagicWell( *this, tileIndex );
         break;
+
     case MP2::OBJ_TRADING_POST:
         ActionToTradingPost( *this );
         break;
 
-    // primary skill modification
     case MP2::OBJ_FORT:
     case MP2::OBJ_MERCENARY_CAMP:
     case MP2::OBJ_WITCH_DOCTORS_HUT:
@@ -3874,7 +3917,6 @@ void Heroes::Action( int tileIndex )
         ActionToPrimarySkillObject( *this, objectType, tileIndex );
         break;
 
-    // morale modification
     case MP2::OBJ_OASIS:
     case MP2::OBJ_TEMPLE:
     case MP2::OBJ_WATERING_HOLE:
@@ -3888,15 +3930,14 @@ void Heroes::Action( int tileIndex )
         ActionToPoorMoraleObject( *this, objectType, tileIndex );
         break;
 
-    // experience modification
     case MP2::OBJ_GAZEBO:
         ActionToExperienceObject( *this, objectType, tileIndex );
         break;
+
     case MP2::OBJ_DAEMON_CAVE:
         ActionToDaemonCave( *this, objectType, tileIndex );
         break;
 
-    // teleports
     case MP2::OBJ_STONE_LITHS:
         ActionToTeleports( *this, tileIndex );
         break;
@@ -3907,11 +3948,11 @@ void Heroes::Action( int tileIndex )
     case MP2::OBJ_OBSERVATION_TOWER:
         ActionToObservationTower( *this, objectType, tileIndex );
         break;
+
     case MP2::OBJ_MAGELLANS_MAPS:
         ActionToMagellanMaps( *this, objectType, tileIndex );
         break;
 
-    // capture color object
     case MP2::OBJ_ALCHEMIST_LAB:
     case MP2::OBJ_MINE:
     case MP2::OBJ_SAWMILL:
@@ -3923,7 +3964,6 @@ void Heroes::Action( int tileIndex )
         ActionToAbandonedMine( *this, objectType, tileIndex );
         break;
 
-    // accept army
     case MP2::OBJ_WATCH_TOWER:
     case MP2::OBJ_EXCAVATION:
     case MP2::OBJ_CAVE:
@@ -3936,7 +3976,6 @@ void Heroes::Action( int tileIndex )
         ActionToDwellingJoinMonster( *this, objectType, tileIndex );
         break;
 
-    // recruit army
     case MP2::OBJ_RUINS:
     case MP2::OBJ_TREE_CITY:
     case MP2::OBJ_WAGON_CAMP:
@@ -3944,7 +3983,6 @@ void Heroes::Action( int tileIndex )
         ActionToDwellingRecruitMonster( *this, objectType, tileIndex );
         break;
 
-    // battle and recruit army
     case MP2::OBJ_DRAGON_CITY:
     case MP2::OBJ_CITY_OF_DEAD:
     case MP2::OBJ_TROLL_BRIDGE:
@@ -3979,11 +4017,12 @@ void Heroes::Action( int tileIndex )
     case MP2::OBJ_ORACLE:
         ActionToOracle( *this, objectType );
         break;
+
     case MP2::OBJ_SPHINX:
         ActionToSphinx( *this, objectType, tileIndex );
         break;
 
-    // loyalty version
+    // Price of Loyalty objects
     case MP2::OBJ_WATER_ALTAR:
     case MP2::OBJ_AIR_ALTAR:
     case MP2::OBJ_FIRE_ALTAR:
@@ -3991,27 +4030,35 @@ void Heroes::Action( int tileIndex )
     case MP2::OBJ_BARROW_MOUNDS:
         ActionToDwellingRecruitMonster( *this, objectType, tileIndex );
         break;
+
     case MP2::OBJ_ALCHEMIST_TOWER:
         ActionToAlchemistTower( *this );
         break;
+
     case MP2::OBJ_STABLES:
         ActionToStables( *this, objectType, tileIndex );
         break;
+
     case MP2::OBJ_ARENA:
         ActionToArena( *this, objectType, tileIndex );
         break;
+
     case MP2::OBJ_MERMAID:
         ActionToGoodLuckObject( *this, objectType, tileIndex );
         break;
+
     case MP2::OBJ_SIRENS:
         ActionToSirens( *this, objectType, tileIndex );
         break;
+
     case MP2::OBJ_JAIL:
         ActionToJail( *this, objectType, tileIndex );
         break;
+
     case MP2::OBJ_HUT_OF_MAGI:
         ActionToHutMagi( *this, objectType, tileIndex );
         break;
+
     case MP2::OBJ_EYE_OF_MAGI:
         ActionToEyeMagi( *this, objectType );
         break;
@@ -4019,11 +4066,15 @@ void Heroes::Action( int tileIndex )
     case MP2::OBJ_BARRIER:
         ActionToBarrier( *this, objectType, tileIndex );
         break;
+
     case MP2::OBJ_TRAVELLER_TENT:
         ActionToTravellersTent( *this, objectType, tileIndex );
         break;
 
-    // other object
+    case MP2::OBJ_BLACK_CAT:
+        actionToBlackCat( *this, tileIndex );
+        break;
+
     default:
         break;
     }

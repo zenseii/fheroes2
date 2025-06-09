@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 13:36+0000\n"
+"POT-Creation-Date: 2025-06-06 02:30+0000\n"
 "PO-Revision-Date: 2025-02-11 15:05+0100\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -3669,6 +3669,10 @@ msgstr "Choix d'élément (bonus) :"
 msgid "Select Adventure Object:"
 msgstr "Choix d'élément (aventure) :"
 
+#, fuzzy
+msgid "Select color"
+msgstr "Choisir créature :"
+
 msgid "Players Icon"
 msgstr "Icônes des joueurs"
 
@@ -4303,6 +4307,9 @@ msgstr "avec un artéfact."
 msgid "The total number of obelisks is %{count}."
 msgstr ""
 
+msgid "There are no players on the map, so no one can own this object."
+msgstr ""
+
 msgid "Roads"
 msgstr "Routes"
 
@@ -4802,6 +4809,9 @@ msgstr "ÉVÉNEMENT"
 msgid "LANGUAGE"
 msgstr "LANGUE"
 
+msgid "ABOUT"
+msgstr ""
+
 msgid ""
 "The entered map description exceeds the maximum allowed 5 rows. It will be "
 "shortened to fit the map description field."
@@ -4819,6 +4829,9 @@ msgstr ""
 #, fuzzy
 msgid "Change Map Description"
 msgstr "Description sélectionnée"
+
+msgid "About"
+msgstr ""
 
 #, fuzzy
 msgid "Click to accept the changes made."
@@ -4841,6 +4854,11 @@ msgstr "Événements"
 #, fuzzy
 msgid "Click to change the language of the map."
 msgstr "Changer la langue du jeu."
+
+msgid ""
+"Click to edit notes from the map creator. These notes are optional and do "
+"not appear during gameplay."
+msgstr ""
 
 #, fuzzy
 msgid "Click to change your map name."
@@ -5966,6 +5984,14 @@ msgstr ""
 "L'ennemi a capturé %{name} !\n"
 "Ce camp adverse a triomphé."
 
+#, fuzzy
+msgid ""
+"The enemy has found the %{name}.\n"
+"Your quest is a failure."
+msgstr ""
+"Vous avez trouvé le %{name}.\n"
+"Votre quête est terminée."
+
 msgid ""
 "The enemy has built up over %{count} gold in his treasury.\n"
 "You must bow done in defeat before his wealth and power."
@@ -6576,6 +6602,10 @@ msgstr "Slovaque"
 msgid "Vietnamese"
 msgstr "Vietnamien"
 
+#, fuzzy
+msgid "Greek"
+msgstr "Vert"
+
 msgid "Slow"
 msgstr "Lente"
 
@@ -6804,6 +6834,11 @@ msgstr ""
 
 msgid "Ransacking an enemy camp, you discover a hidden cache of treasures."
 msgstr "En fouillant le camp, vous découvrez des trésors cachés."
+
+msgid ""
+"Your ship bumps into a barrel drifting at sea. Inside, you discover a stash "
+"of lost treasure."
+msgstr ""
 
 msgid ""
 "The keeper of the mill announces:\n"
@@ -8187,6 +8222,18 @@ msgstr ""
 "\"Au cours de mes voyages, j'ai beaucoup appris sur le sujet de la magie "
 "arcane. Un grand oracle m'a appris son talent. J'ai la réponse que vous "
 "cherchez.\""
+
+msgid ""
+"The sting of your previous encounter still lingers, and you keep your "
+"distance from the intimidating cat until you have regained your courage in "
+"battle."
+msgstr ""
+
+msgid ""
+"You come upon a great cat, purring as it rubs against your leg. Charmed, you "
+"reach down, but it bites you and flees. At least the laughter at your "
+"misfortune lifts your troops' spirits."
+msgstr ""
 
 msgid "No spell book is present."
 msgstr "Le grimoire n'est pas présent."
@@ -9600,6 +9647,14 @@ msgstr "Lac marécageux"
 
 msgid "Frozen Lake"
 msgstr "Lac gélé"
+
+#, fuzzy
+msgid "Black Cat"
+msgstr "La perle noire"
+
+#, fuzzy
+msgid "Barrel"
+msgstr "Barrière magique"
 
 msgid "randomRace|level 1 creatures"
 msgstr ""
@@ -12398,80 +12453,3 @@ msgstr "Il lui a dit : Yada yada yada... et elle a répondu : Bla, bla, bla..."
 
 msgid "An unknown force is being resurrected..."
 msgstr "Une force inconnue est ressuscitée..."
-
-msgid ""
-"Check the newest version of the game at\n"
-"https://github.com/ihhub/\n"
-"fheroes2/releases"
-msgstr ""
-"Téléchargez la dernière version du jeu sur\n"
-"https://github.com/ihhub/\n"
-"fheroes2/releases"
-
-#~ msgid ""
-#~ "After spending hours trying to fish the chest out of the sea, you open "
-#~ "it, only to find it empty."
-#~ msgstr ""
-#~ "Après avoir passé des heures à essayer de repêcher le coffre de la mer, "
-#~ "vous l'ouvrez, et découvrez qu'il est vide."
-
-#~ msgid ""
-#~ "After scouring the area, you fall upon a hidden chest, containing the "
-#~ "%{gold} gold pieces."
-#~ msgstr ""
-#~ "Après avoir parcouru la zone, vous tombez sur un coffre caché, contenant "
-#~ "%{gold} pièces d'or."
-
-#~ msgid ""
-#~ "Select the campaign difficulty. This can be lowered at any point during "
-#~ "the campaign."
-#~ msgstr ""
-#~ "Choisissez la difficulté de la campagne. Elle pourra être abaissée à tout "
-#~ "moment au cours de la campagne."
-
-#~ msgid "Select count %{resource}:"
-#~ msgstr "Sélectionner %{resource} :"
-
-#~ msgid "Enable auto combat"
-#~ msgstr "Activer le combat automatique"
-
-#~ msgid "hotkey|finish the battle in auto mode"
-#~ msgstr "Finir la bataille en mode auto"
-
-#~ msgid "Please Remember"
-#~ msgstr "N'oubliez pas"
-
-# Needs extra whitespace to avoid yellow word splitting
-#~ msgid ""
-#~ "You can always change the language, resolution and settings of the game "
-#~ "by clicking on the "
-#~ msgstr ""
-#~ "Vous pouvez toujours changer la langue, la résolution et les paramètres "
-#~ "en cliquant sur la "
-
-#~ msgid "door"
-#~ msgstr "porte"
-
-#~ msgid " on the left side of the Main Menu, or with the "
-#~ msgstr " située à gauche du menu principal, ou avec le bouton "
-
-#~ msgid " button from the "
-#~ msgstr " à partir du menu "
-
-#~ msgid "NEW GAME"
-#~ msgstr "NOUVELLE PARTIE"
-
-#~ msgid ""
-#~ " menu. \n"
-#~ "\n"
-#~ "Enjoy the game!"
-#~ msgstr ""
-#~ ".\n"
-#~ "\n"
-#~ "Bon jeu !"
-
-#~ msgid "Warning!"
-#~ msgstr "Attention !"
-
-#~ msgid "Dummy 1"
-#~ msgstr "Emplacement 1"

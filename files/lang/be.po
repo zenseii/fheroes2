@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 13:36+0000\n"
+"POT-Creation-Date: 2025-06-06 02:30+0000\n"
 "PO-Revision-Date: 2022-09-23 16:01+0200\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: \n"
@@ -3545,6 +3545,9 @@ msgstr "Мова"
 msgid "Select Adventure Object:"
 msgstr "Мова"
 
+msgid "Select color"
+msgstr ""
+
 msgid "Players Icon"
 msgstr "Іконка гульцоў"
 
@@ -4136,6 +4139,9 @@ msgstr ""
 msgid "The total number of obelisks is %{count}."
 msgstr ""
 
+msgid "There are no players on the map, so no one can own this object."
+msgstr ""
+
 msgid "Roads"
 msgstr ""
 
@@ -4586,6 +4592,9 @@ msgstr ""
 msgid "LANGUAGE"
 msgstr ""
 
+msgid "ABOUT"
+msgstr ""
+
 msgid ""
 "The entered map description exceeds the maximum allowed 5 rows. It will be "
 "shortened to fit the map description field."
@@ -4603,6 +4612,9 @@ msgstr ""
 #, fuzzy
 msgid "Change Map Description"
 msgstr "Апісанне"
+
+msgid "About"
+msgstr ""
 
 #, fuzzy
 msgid "Click to accept the changes made."
@@ -4625,6 +4637,11 @@ msgstr ""
 #, fuzzy
 msgid "Click to change the language of the map."
 msgstr "Змяніць мову гульні."
+
+msgid ""
+"Click to edit notes from the map creator. These notes are optional and do "
+"not appear during gameplay."
+msgstr ""
 
 #, fuzzy
 msgid "Click to change your map name."
@@ -5701,6 +5718,11 @@ msgid ""
 msgstr ""
 
 msgid ""
+"The enemy has found the %{name}.\n"
+"Your quest is a failure."
+msgstr ""
+
+msgid ""
 "The enemy has built up over %{count} gold in his treasury.\n"
 "You must bow done in defeat before his wealth and power."
 msgstr ""
@@ -6256,6 +6278,10 @@ msgstr ""
 msgid "Vietnamese"
 msgstr ""
 
+#, fuzzy
+msgid "Greek"
+msgstr "Зялёны"
+
 msgid "Slow"
 msgstr "Павольная"
 
@@ -6475,6 +6501,11 @@ msgid ""
 msgstr ""
 
 msgid "Ransacking an enemy camp, you discover a hidden cache of treasures."
+msgstr ""
+
+msgid ""
+"Your ship bumps into a barrel drifting at sea. Inside, you discover a stash "
+"of lost treasure."
 msgstr ""
 
 msgid ""
@@ -7437,6 +7468,18 @@ msgid ""
 "up and says,\n"
 "\"In my travels, I have learned much in the way of arcane magic. A great "
 "oracle taught me his skill. I have the answer you seek.\""
+msgstr ""
+
+msgid ""
+"The sting of your previous encounter still lingers, and you keep your "
+"distance from the intimidating cat until you have regained your courage in "
+"battle."
+msgstr ""
+
+msgid ""
+"You come upon a great cat, purring as it rubs against your leg. Charmed, you "
+"reach down, but it bites you and flees. At least the laughter at your "
+"misfortune lifts your troops' spirits."
 msgstr ""
 
 #, fuzzy
@@ -8769,6 +8812,13 @@ msgid "Swampy Lake"
 msgstr ""
 
 msgid "Frozen Lake"
+msgstr ""
+
+#, fuzzy
+msgid "Black Cat"
+msgstr "Чорны цмок"
+
+msgid "Barrel"
 msgstr ""
 
 msgid "randomRace|level 1 creatures"
@@ -11137,12 +11187,3 @@ msgstr "Ён сказаў ёй: Бэ бэ бэ... а потым яна сказ�
 
 msgid "An unknown force is being resurrected..."
 msgstr "Адраджаецца невядомая сіла..."
-
-msgid ""
-"Check the newest version of the game at\n"
-"https://github.com/ihhub/\n"
-"fheroes2/releases"
-msgstr ""
-"Новую версію гульні можна знайсці на сайце\n"
-"https://github.com/ihhub/\n"
-"fheroes2/releases"

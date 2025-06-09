@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 13:36+0000\n"
+"POT-Creation-Date: 2025-06-06 02:30+0000\n"
 "PO-Revision-Date: 2025-03-16 22:17+0100\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -3634,6 +3634,10 @@ msgstr "Artefactos"
 msgid "Select Adventure Object:"
 msgstr "Artefactos"
 
+#, fuzzy
+msgid "Select color"
+msgstr "Mejor monstruo:"
+
 msgid "Players Icon"
 msgstr "Icono de los jugadores"
 
@@ -4287,6 +4291,9 @@ msgstr "con un artefacto."
 msgid "The total number of obelisks is %{count}."
 msgstr ""
 
+msgid "There are no players on the map, so no one can own this object."
+msgstr ""
+
 #, fuzzy
 msgid "Roads"
 msgstr "Fin del camino"
@@ -4778,6 +4785,9 @@ msgstr "EVENTOS"
 msgid "LANGUAGE"
 msgstr "IDIOMA"
 
+msgid "ABOUT"
+msgstr ""
+
 msgid ""
 "The entered map description exceeds the maximum allowed 5 rows. It will be "
 "shortened to fit the map description field."
@@ -4795,6 +4805,9 @@ msgstr ""
 #, fuzzy
 msgid "Change Map Description"
 msgstr "Descripción seleccionada"
+
+msgid "About"
+msgstr ""
 
 #, fuzzy
 msgid "Click to accept the changes made."
@@ -4817,6 +4830,11 @@ msgstr ""
 #, fuzzy
 msgid "Click to change the language of the map."
 msgstr "Cambiar el idioma del juego."
+
+msgid ""
+"Click to edit notes from the map creator. These notes are optional and do "
+"not appear during gameplay."
+msgstr ""
 
 #, fuzzy
 msgid "Click to change your map name."
@@ -5941,6 +5959,14 @@ msgstr ""
 "¡El enemigo ha capturado %{name}!\n"
 "Son los triunfadores."
 
+#, fuzzy
+msgid ""
+"The enemy has found the %{name}.\n"
+"Your quest is a failure."
+msgstr ""
+"Has encontrado %{name}.\n"
+"Tu búsqueda ha concluido."
+
 msgid ""
 "The enemy has built up over %{count} gold in his treasury.\n"
 "You must bow done in defeat before his wealth and power."
@@ -6532,6 +6558,10 @@ msgstr ""
 msgid "Vietnamese"
 msgstr ""
 
+#, fuzzy
+msgid "Greek"
+msgstr "Verde"
+
 msgid "Slow"
 msgstr "Lento"
 
@@ -6762,6 +6792,11 @@ msgstr ""
 msgid "Ransacking an enemy camp, you discover a hidden cache of treasures."
 msgstr ""
 "Saqueando un campamento enemigo descubres un depósito oculto con tesoros."
+
+msgid ""
+"Your ship bumps into a barrel drifting at sea. Inside, you discover a stash "
+"of lost treasure."
+msgstr ""
 
 msgid ""
 "The keeper of the mill announces:\n"
@@ -8079,6 +8114,18 @@ msgstr ""
 "Ella mira hacia arriba y dice,\n"
 "\"En mis viajes, he aprendido mucho del camino de la magia arcana. Un gran "
 "oráculo me paso sus habilidades. Tengo la respuesta que buscas.\""
+
+msgid ""
+"The sting of your previous encounter still lingers, and you keep your "
+"distance from the intimidating cat until you have regained your courage in "
+"battle."
+msgstr ""
+
+msgid ""
+"You come upon a great cat, purring as it rubs against your leg. Charmed, you "
+"reach down, but it bites you and flees. At least the laughter at your "
+"misfortune lifts your troops' spirits."
+msgstr ""
 
 msgid "No spell book is present."
 msgstr "No hay libro de hechizos."
@@ -9500,6 +9547,14 @@ msgstr "Ciénaga"
 
 msgid "Frozen Lake"
 msgstr ""
+
+#, fuzzy
+msgid "Black Cat"
+msgstr "La Perla Negra"
+
+#, fuzzy
+msgid "Barrel"
+msgstr "Barrera"
 
 msgid "randomRace|level 1 creatures"
 msgstr ""
@@ -12075,75 +12130,3 @@ msgstr ""
 
 msgid "An unknown force is being resurrected..."
 msgstr ""
-
-msgid ""
-"Check the newest version of the game at\n"
-"https://github.com/ihhub/\n"
-"fheroes2/releases"
-msgstr ""
-"Puedes descargar la última versión del juego desde el sítio:\n"
-"https://github.com/ihhub/\n"
-"fheroes2/releases"
-
-#~ msgid ""
-#~ "After spending hours trying to fish the chest out of the sea, you open "
-#~ "it, only to find it empty."
-#~ msgstr ""
-#~ "Después de pasar horas intentando sacar el cofre del mar, lo abres y "
-#~ "resulta estar vacío."
-
-#~ msgid ""
-#~ "After scouring the area, you fall upon a hidden chest, containing the "
-#~ "%{gold} gold pieces."
-#~ msgstr ""
-#~ "Después de dar una batida por el área, das con un cofre escondido que "
-#~ "contiene %{gold} piezas de oro."
-
-#~ msgid "Select count %{resource}:"
-#~ msgstr "Seleccionar cantidad de %{resource}:"
-
-#, fuzzy
-#~ msgid "Enable auto combat"
-#~ msgstr "Combate automático"
-
-#, fuzzy
-#~ msgid "hotkey|finish the battle in auto mode"
-#~ msgstr "¿Estás seguro de que desea descartar este ejército?"
-
-#~ msgid "Please Remember"
-#~ msgstr "Recuerde"
-
-#~ msgid ""
-#~ "You can always change the language, resolution and settings of the game "
-#~ "by clicking on the "
-#~ msgstr ""
-#~ "Siempre puedes cambiar el idioma, la resolución y la configuración del "
-#~ "juego haciendo clic en la "
-
-#~ msgid "door"
-#~ msgstr "puerta"
-
-#~ msgid " on the left side of the Main Menu, or with the "
-#~ msgstr "de la izquierda del menú principal, o con el botón "
-
-#~ msgid " button from the "
-#~ msgstr " del menú "
-
-#~ msgid "NEW GAME"
-#~ msgstr "NUEVO JUEGO"
-
-#~ msgid ""
-#~ " menu. \n"
-#~ "\n"
-#~ "Enjoy the game!"
-#~ msgstr ""
-#~ ".\n"
-#~ "\n"
-#~ "¡Disfruta del juego!"
-
-#~ msgid "Warning!"
-#~ msgstr "¡Advertencia!"
-
-#, fuzzy
-#~ msgid "Dummy 1"
-#~ msgstr "Momia"
