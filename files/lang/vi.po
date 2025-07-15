@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-21 16:35+0000\n"
+"POT-Creation-Date: 2025-07-12 14:58+0000\n"
 "PO-Revision-Date: 2024-02-20 08:49+0700\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: \n"
@@ -41,6 +41,9 @@ msgstr "THOÁT"
 msgid "smallerButton|EXIT"
 msgstr "THOÁT"
 
+msgid "OKAY"
+msgstr "ĐƯỢC"
+
 msgid "HEROES"
 msgstr "TƯỚNG"
 
@@ -53,9 +56,6 @@ msgstr ""
 
 msgid "CANCEL"
 msgstr "TỪ BỎ"
-
-msgid "OKAY"
-msgstr "ĐƯỢC"
 
 msgid "ACCEPT"
 msgstr "ĐỒNG Ý"
@@ -813,6 +813,14 @@ msgstr "Niệm %{spell}"
 msgid "Select spell target"
 msgstr "Chọn mục tiêu niệm chú"
 
+#, fuzzy
+msgid "Are you sure you want to enable the auto combat mode?"
+msgstr "Ngươi có chắc chắn muốn bật chiến đấu tự động?"
+
+#, fuzzy
+msgid "Are you sure you want to resolve the battle in the quick combat mode?"
+msgstr "Ngươi có chắc chắn muốn kết thúc trận chiến ở chế độ tự động không?"
+
 msgid "View Ballista info"
 msgstr "Xem thông tin Máy bắn đá"
 
@@ -877,14 +885,6 @@ msgstr "Thanh Tin nhắn"
 
 msgid "Shows the results of individual monster's actions."
 msgstr "Hiển thị kết quả hành động của từng quái vật."
-
-#, fuzzy
-msgid "Are you sure you want to enable the auto combat mode?"
-msgstr "Ngươi có chắc chắn muốn bật chiến đấu tự động?"
-
-#, fuzzy
-msgid "Are you sure you want to resolve the battle in the quick combat mode?"
-msgstr "Ngươi có chắc chắn muốn kết thúc trận chiến ở chế độ tự động không?"
 
 msgid ""
 "AUTO\n"
@@ -4027,12 +4027,17 @@ msgstr "Lâu đài"
 msgid "Town Army"
 msgstr "Thị trấn"
 
-msgid "Click to change the Castle name. Right-click to reset to default."
-msgstr ""
+#, fuzzy
+msgid "Click to change the Castle name."
+msgstr "Nhấp để xem thị trấn sau."
 
 #, fuzzy
 msgid "Enter Castle name"
 msgstr "Mất tướng: %{name}."
+
+#, fuzzy
+msgid "Reset the Castle name."
+msgstr "Mất lâu đài '%{name}'."
 
 msgid "Allow to build a castle in this town."
 msgstr ""
@@ -4049,8 +4054,25 @@ msgstr ""
 msgid "Use default defenders army."
 msgstr ""
 
-msgid "Set custom Castle Army. Right-click to reset unit."
-msgstr ""
+#, fuzzy
+msgid "Reset the army."
+msgstr "Giải tán đội quân này."
+
+#, fuzzy
+msgid "Set custom Castle Army."
+msgstr "Lâu đài"
+
+#, fuzzy
+msgid "Click to accept the changes made."
+msgstr "Nhấp để xem thị trấn sau."
+
+#, fuzzy
+msgid "Exit this dialog, discarding the changes made."
+msgstr "Nhấp để xem thị trấn sau."
+
+#, fuzzy
+msgid "Castle Settings"
+msgstr "Cài đặt Trò chơi"
 
 #, fuzzy
 msgid "Message Text:"
@@ -4860,10 +4882,6 @@ msgid "About"
 msgstr ""
 
 #, fuzzy
-msgid "Click to accept the changes made."
-msgstr "Nhấp để xem thị trấn sau."
-
-#, fuzzy
 msgid "Click to edit custom rumors."
 msgstr "Nhấp để lưu trò chơi hiện tại."
 
@@ -5635,6 +5653,10 @@ msgstr "bỏ lượt trong trận chiến"
 
 msgid "hotkey|cast battle spell"
 msgstr "niệm chú trong trận chiến"
+
+#, fuzzy
+msgid "hotkey|toggle display of battle turn order"
+msgstr "chuyển đổi chế độ tự động chiến đấu"
 
 msgid "hotkey|dwelling level 1"
 msgstr "nhà lính cấp 1"
@@ -7416,6 +7438,14 @@ msgid ""
 msgstr ""
 "Sự thận trọng là phần tốt hơn của lòng dũng cảm và ngươi quyết định tránh "
 "cuộc chiến này ngay hôm nay."
+
+#, fuzzy
+msgid ""
+"After spending hours trying to fish the chest out of the sea, you open it, "
+"only to find it empty."
+msgstr ""
+"Sau hàng giờ cố gắng câu chiếc rương ngoài biển, ngươi mở nó ra và tìm thấy "
+"%{gold} vàng."
 
 msgid ""
 "After spending hours trying to fish the chest out of the sea, you open it "

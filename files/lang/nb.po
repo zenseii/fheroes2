@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-21 16:35+0000\n"
+"POT-Creation-Date: 2025-07-12 14:58+0000\n"
 "PO-Revision-Date: 2025-03-12 23:47+0100\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: \n"
@@ -41,6 +41,9 @@ msgstr "UT"
 msgid "smallerButton|EXIT"
 msgstr "UT"
 
+msgid "OKAY"
+msgstr "OK"
+
 msgid "HEROES"
 msgstr "HELTER"
 
@@ -53,9 +56,6 @@ msgstr ""
 
 msgid "CANCEL"
 msgstr "AVBRYT"
-
-msgid "OKAY"
-msgstr "OK"
 
 msgid "ACCEPT"
 msgstr "GODTA"
@@ -810,6 +810,14 @@ msgstr "Bruk %{spell}"
 msgid "Select spell target"
 msgstr "Velg trolldomsmål"
 
+#, fuzzy
+msgid "Are you sure you want to enable the auto combat mode?"
+msgstr "Er du sikker på at du ønsker å skru på autokamp?"
+
+#, fuzzy
+msgid "Are you sure you want to resolve the battle in the quick combat mode?"
+msgstr "Er du sikker på at du vil fullføre kampen med automatiske trekk?"
+
 msgid "View Ballista info"
 msgstr "Vis info om ballisten"
 
@@ -874,14 +882,6 @@ msgstr "Kamplogg"
 
 msgid "Shows the results of individual monster's actions."
 msgstr "Viser en logg over alle krigernes trekk."
-
-#, fuzzy
-msgid "Are you sure you want to enable the auto combat mode?"
-msgstr "Er du sikker på at du ønsker å skru på autokamp?"
-
-#, fuzzy
-msgid "Are you sure you want to resolve the battle in the quick combat mode?"
-msgstr "Er du sikker på at du vil fullføre kampen med automatiske trekk?"
 
 msgid ""
 "AUTO\n"
@@ -4094,12 +4094,17 @@ msgstr "Borg"
 msgid "Town Army"
 msgstr "By"
 
-msgid "Click to change the Castle name. Right-click to reset to default."
-msgstr ""
+#, fuzzy
+msgid "Click to change the Castle name."
+msgstr "Klikk for å vise neste by."
 
 #, fuzzy
 msgid "Enter Castle name"
 msgstr "Mist helten kalt %{name}."
+
+#, fuzzy
+msgid "Reset the Castle name."
+msgstr "Mist borgen kalt %{name}."
 
 msgid "Allow to build a castle in this town."
 msgstr ""
@@ -4116,8 +4121,25 @@ msgstr ""
 msgid "Use default defenders army."
 msgstr ""
 
-msgid "Set custom Castle Army. Right-click to reset unit."
-msgstr ""
+#, fuzzy
+msgid "Reset the army."
+msgstr "Bortvis denne troppen."
+
+#, fuzzy
+msgid "Set custom Castle Army."
+msgstr "Borg"
+
+#, fuzzy
+msgid "Click to accept the changes made."
+msgstr "Klikk for å vise neste by."
+
+#, fuzzy
+msgid "Exit this dialog, discarding the changes made."
+msgstr "Klikk for å vise neste by."
+
+#, fuzzy
+msgid "Castle Settings"
+msgstr "Spillinnstillinger"
 
 #, fuzzy
 msgid "Message Text:"
@@ -4932,10 +4954,6 @@ msgid "About"
 msgstr ""
 
 #, fuzzy
-msgid "Click to accept the changes made."
-msgstr "Klikk for å vise neste by."
-
-#, fuzzy
 msgid "Click to edit custom rumors."
 msgstr "Klikk for å lagre det nåværende spillet."
 
@@ -5714,6 +5732,10 @@ msgstr "Velg pass i kamp"
 
 msgid "hotkey|cast battle spell"
 msgstr "Bruk magi i kamp"
+
+#, fuzzy
+msgid "hotkey|toggle display of battle turn order"
+msgstr "Slå på/av automatiske trekk i kamp"
 
 msgid "hotkey|dwelling level 1"
 msgstr "Bosted nivå 1"
@@ -7520,6 +7542,14 @@ msgid ""
 "for today."
 msgstr ""
 "Du velger varsomhet framfor dumdristighet og unngår denne kampen for i dag."
+
+#, fuzzy
+msgid ""
+"After spending hours trying to fish the chest out of the sea, you open it, "
+"only to find it empty."
+msgstr ""
+"Etter å ha strevd i timesvis med å fiske opp kista fra havet, åpner du den "
+"og finner %{gold} gullstykker."
 
 msgid ""
 "After spending hours trying to fish the chest out of the sea, you open it "

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-21 16:35+0000\n"
+"POT-Creation-Date: 2025-07-12 14:58+0000\n"
 "PO-Revision-Date: 2022-09-23 16:01+0200\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: \n"
@@ -43,6 +43,9 @@ msgstr "ВЫЙСЦІ"
 msgid "smallerButton|EXIT"
 msgstr "ВЫЙСЦІ"
 
+msgid "OKAY"
+msgstr "ДОБРА"
+
 msgid "HEROES"
 msgstr "ГЕРОІ"
 
@@ -55,9 +58,6 @@ msgstr ""
 
 msgid "CANCEL"
 msgstr "НАЗАД"
-
-msgid "OKAY"
-msgstr "ДОБРА"
 
 msgid "ACCEPT"
 msgstr "ПРЫНЯЦЬ"
@@ -815,6 +815,12 @@ msgstr "Скарыстаць %{spell}"
 msgid "Select spell target"
 msgstr "Выберыце цэль заклінання"
 
+msgid "Are you sure you want to enable the auto combat mode?"
+msgstr "Вы ўпэўнены, што хочаце ўключыць рэжым аўтабою?"
+
+msgid "Are you sure you want to resolve the battle in the quick combat mode?"
+msgstr "Вы ўпэўнены, што хочаце правесці бітву ў рэжыме хуткага бою?"
+
 msgid "View Ballista info"
 msgstr "Інфармацыя пра балісту"
 
@@ -879,12 +885,6 @@ msgstr "Інфармацыйны радок"
 
 msgid "Shows the results of individual monster's actions."
 msgstr "Тут паказваюцца вынікі дзеянняў асобных атрадаў."
-
-msgid "Are you sure you want to enable the auto combat mode?"
-msgstr "Вы ўпэўнены, што хочаце ўключыць рэжым аўтабою?"
-
-msgid "Are you sure you want to resolve the battle in the quick combat mode?"
-msgstr "Вы ўпэўнены, што хочаце правесці бітву ў рэжыме хуткага бою?"
 
 msgid ""
 "AUTO\n"
@@ -3896,11 +3896,16 @@ msgstr "Замак"
 msgid "Town Army"
 msgstr "Горад"
 
-msgid "Click to change the Castle name. Right-click to reset to default."
-msgstr ""
+#, fuzzy
+msgid "Click to change the Castle name."
+msgstr "Пстрыкніце сюды, каб выбраць сцэнар"
 
 #, fuzzy
 msgid "Enter Castle name"
+msgstr "Пакінуць замак"
+
+#, fuzzy
+msgid "Reset the Castle name."
 msgstr "Пакінуць замак"
 
 msgid "Allow to build a castle in this town."
@@ -3918,8 +3923,24 @@ msgstr ""
 msgid "Use default defenders army."
 msgstr ""
 
-msgid "Set custom Castle Army. Right-click to reset unit."
+msgid "Reset the army."
 msgstr ""
+
+#, fuzzy
+msgid "Set custom Castle Army."
+msgstr "Замак"
+
+#, fuzzy
+msgid "Click to accept the changes made."
+msgstr "Пстрыкніце сюды, каб выбраць сцэнар"
+
+#, fuzzy
+msgid "Exit this dialog, discarding the changes made."
+msgstr "Пстрыкніце сюды, каб выбраць сцэнар"
+
+#, fuzzy
+msgid "Castle Settings"
+msgstr "Налады гульні"
 
 msgid "Message Text:"
 msgstr ""
@@ -4646,10 +4667,6 @@ msgstr "Апісанне"
 
 msgid "About"
 msgstr ""
-
-#, fuzzy
-msgid "Click to accept the changes made."
-msgstr "Пстрыкніце сюды, каб выбраць сцэнар"
 
 #, fuzzy
 msgid "Click to edit custom rumors."
@@ -5398,6 +5415,10 @@ msgstr ""
 
 msgid "hotkey|cast battle spell"
 msgstr ""
+
+#, fuzzy
+msgid "hotkey|toggle display of battle turn order"
+msgstr "Звычайная гульня"
 
 msgid "hotkey|dwelling level 1"
 msgstr ""
@@ -6932,6 +6953,11 @@ msgstr ""
 msgid ""
 "Discretion is the better part of valor, and you decide to avoid this fight "
 "for today."
+msgstr ""
+
+msgid ""
+"After spending hours trying to fish the chest out of the sea, you open it, "
+"only to find it empty."
 msgstr ""
 
 msgid ""
