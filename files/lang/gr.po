@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-12 14:58+0000\n"
+"POT-Creation-Date: 2025-09-20 09:35+0000\n"
 "PO-Revision-Date: 2025-05-19 07:06+0200\n"
 "Last-Translator: PlatoHero <platozp@gmail.com>\n"
 "Language-Team: platozp@gmail.com\n"
@@ -3106,6 +3106,15 @@ msgstr ""
 msgid "Click to apply the selected resolution."
 msgstr ""
 
+msgid "Click to select the maximum amount."
+msgstr ""
+
+msgid "Click to select the minimum amount."
+msgstr ""
+
+msgid "Click to apply the entered number."
+msgstr ""
+
 msgid "Click to apply the entered text."
 msgstr ""
 
@@ -3200,6 +3209,9 @@ msgstr ""
 msgid "Select Hero:"
 msgstr ""
 
+msgid "Select Monsters:"
+msgstr ""
+
 msgid "race|Random"
 msgstr ""
 
@@ -3266,6 +3278,9 @@ msgid ""
 msgstr ""
 
 msgid "%{mineName} appearance:"
+msgstr ""
+
+msgid "Click to select the color."
 msgstr ""
 
 msgid "Click to select %{object} as the resource generator to be placed."
@@ -3555,6 +3570,27 @@ msgstr ""
 msgid "Random Town Name"
 msgstr ""
 
+msgid "BANNED SPELLS"
+msgstr ""
+
+msgid "Click to accept the changes made."
+msgstr ""
+
+msgid "Exit this dialog, discarding the changes made."
+msgstr ""
+
+msgid "Click to ban spells from appearing in the Mage Guild."
+msgstr ""
+
+msgid "Banned Spells"
+msgstr ""
+
+msgid "Select spells that will appear in the Mage Guild."
+msgstr ""
+
+msgid "SET SPELLS"
+msgstr ""
+
 msgid "Allow Castle build"
 msgstr ""
 
@@ -3603,10 +3639,10 @@ msgstr ""
 msgid "Set custom Castle Army."
 msgstr ""
 
-msgid "Click to accept the changes made."
+msgid "Set spells to appear in the Mage Guild."
 msgstr ""
 
-msgid "Exit this dialog, discarding the changes made."
+msgid "Set Spells"
 msgstr ""
 
 msgid "Castle Settings"
@@ -3745,6 +3781,9 @@ msgid ""
 "crosses the event tile."
 msgstr ""
 
+msgid "Click to make selection."
+msgstr ""
+
 msgid "%{objects} cannot be placed on water."
 msgstr ""
 
@@ -3760,6 +3799,9 @@ msgid "Objects cannot be placed outside the map."
 msgstr ""
 
 msgid "Action objects must be placed on clear tiles."
+msgstr ""
+
+msgid "A maximum of %{count} %{objects} can be placed on the map."
 msgstr ""
 
 msgid ""
@@ -3863,6 +3905,11 @@ msgid "Roads"
 msgstr ""
 
 msgid "Streams"
+msgstr ""
+
+msgid ""
+"A maximum of %{count} heroes including jailed heroes can be placed on the "
+"map."
 msgstr ""
 
 msgid ""
@@ -4345,6 +4392,11 @@ msgid ""
 "tougher for the human player."
 msgstr ""
 
+msgid ""
+"editor|%{object}\n"
+"(%{color} player)"
+msgstr ""
+
 msgid "editor|%{count} %{resource}"
 msgstr ""
 
@@ -4406,6 +4458,12 @@ msgid "Save Map:"
 msgstr ""
 
 msgid "Click to save the current map."
+msgstr ""
+
+msgid "Click to show only level %{level} spells."
+msgstr ""
+
+msgid "Spells level"
 msgstr ""
 
 msgid "Riddle:"
@@ -4556,6 +4614,9 @@ msgid "Days spent"
 msgstr ""
 
 msgid "The number of days spent on this campaign."
+msgstr ""
+
+msgid "Scenario Title"
 msgstr ""
 
 msgid "Project Coordination and Core Development"
@@ -5469,7 +5530,13 @@ msgstr ""
 msgid "Astrologers proclaim the Month of the %{name}."
 msgstr ""
 
+msgid "New Month!"
+msgstr ""
+
 msgid "Astrologers proclaim the Week of the %{name}."
+msgstr ""
+
+msgid "New Week!"
 msgstr ""
 
 msgid "After regular growth, the population of %{monster} is doubled!"
@@ -5487,16 +5554,10 @@ msgstr[1] ""
 msgid "%{monster} growth +%{count}."
 msgstr ""
 
-msgid " All populations are halved."
+msgid "All populations are halved."
 msgstr ""
 
-msgid " All dwellings increase population."
-msgstr ""
-
-msgid "New Month!"
-msgstr ""
-
-msgid "New Week!"
+msgid "All dwellings increase population."
 msgstr ""
 
 msgid "Beware!"
@@ -5885,12 +5946,6 @@ msgstr ""
 msgid ", FPS: "
 msgstr ""
 
-msgid "shipAndGraveyard|%{object} robber"
-msgstr ""
-
-msgid "pyramid|%{object} raided"
-msgstr ""
-
 msgid "Ector"
 msgstr ""
 
@@ -5915,6 +5970,9 @@ msgstr ""
 msgid "Fineous"
 msgstr ""
 
+msgid "Jaclyn"
+msgstr ""
+
 msgid "Jezebel"
 msgstr ""
 
@@ -5922,9 +5980,6 @@ msgid "Atlas"
 msgstr ""
 
 msgid "Ergon"
-msgstr ""
-
-msgid "Jaclyn"
 msgstr ""
 
 msgid "Gem"
@@ -6014,6 +6069,9 @@ msgstr ""
 msgid "Dainwin"
 msgstr ""
 
+msgid "Gallavant"
+msgstr ""
+
 msgid "Joseph"
 msgstr ""
 
@@ -6032,13 +6090,16 @@ msgstr ""
 msgid "Elderian"
 msgstr ""
 
-msgid "Gallavant"
-msgstr ""
-
 msgid "Jarkonas"
 msgstr ""
 
 msgid "Martine"
+msgstr ""
+
+msgid "shipAndGraveyard|%{object} robber"
+msgstr ""
+
+msgid "pyramid|%{object} raided"
 msgstr ""
 
 msgid " gives you maximum morale"
@@ -7162,7 +7223,7 @@ msgstr ""
 msgid "Random %{race} hero (Level %{level})"
 msgstr ""
 
-msgid "Hero race:"
+msgid "Hero class:"
 msgstr ""
 
 msgid "Are you sure you want to dismiss this Hero?"
@@ -7195,7 +7256,7 @@ msgstr ""
 msgid "Enter hero's name"
 msgstr ""
 
-msgid "Click to change race."
+msgid "Click to change class."
 msgstr ""
 
 msgid ""
@@ -8891,7 +8952,7 @@ msgstr ""
 msgid "Flyer"
 msgstr ""
 
-msgid "Always retaliates"
+msgid "Unlimited retaliation"
 msgstr ""
 
 msgid "Attacks all adjacent enemies"

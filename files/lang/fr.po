@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-12 14:58+0000\n"
+"POT-Creation-Date: 2025-09-20 09:35+0000\n"
 "PO-Revision-Date: 2025-02-11 15:05+0100\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -3518,6 +3518,18 @@ msgstr "Choisir la résolution d'écran:"
 msgid "Click to apply the selected resolution."
 msgstr "Cliquez pour valider la résolution choisie."
 
+#, fuzzy
+msgid "Click to select the maximum amount."
+msgstr "Cliquez ici pour sélectionner cet alignement."
+
+#, fuzzy
+msgid "Click to select the minimum amount."
+msgstr "Cliquez ici pour sélectionner cet alignement."
+
+#, fuzzy
+msgid "Click to apply the entered number."
+msgstr "Cliquez pour valider le texte."
+
 msgid "Click to apply the entered text."
 msgstr "Cliquez pour valider le texte."
 
@@ -3620,6 +3632,10 @@ msgstr "Choisir créature :"
 msgid "Select Hero:"
 msgstr "Choisir héros :"
 
+#, fuzzy
+msgid "Select Monsters:"
+msgstr "Choisir créature :"
+
 msgid "race|Random"
 msgstr "Aléatoire"
 
@@ -3690,6 +3706,10 @@ msgstr ""
 
 msgid "%{mineName} appearance:"
 msgstr "Aspect de %{mineName} :"
+
+#, fuzzy
+msgid "Click to select the color."
+msgstr "Cliquez ici pour sélectionner cette couleur."
 
 msgid "Click to select %{object} as the resource generator to be placed."
 msgstr ""
@@ -4000,6 +4020,30 @@ msgstr "Nom du château aléatoire"
 msgid "Random Town Name"
 msgstr "Nom du village aléatoire"
 
+msgid "BANNED SPELLS"
+msgstr ""
+
+#, fuzzy
+msgid "Click to accept the changes made."
+msgstr "Cliquez pour afficher le village suivant."
+
+#, fuzzy
+msgid "Exit this dialog, discarding the changes made."
+msgstr "Cliquez pour afficher le village suivant."
+
+msgid "Click to ban spells from appearing in the Mage Guild."
+msgstr ""
+
+#, fuzzy
+msgid "Banned Spells"
+msgstr "Sortilège aléatoire"
+
+msgid "Select spells that will appear in the Mage Guild."
+msgstr ""
+
+msgid "SET SPELLS"
+msgstr ""
+
 #, fuzzy
 msgid "Allow Castle build"
 msgstr "Château céleste"
@@ -4058,13 +4102,12 @@ msgstr "Ronvoyer cette armée."
 msgid "Set custom Castle Army."
 msgstr "Château"
 
-#, fuzzy
-msgid "Click to accept the changes made."
-msgstr "Cliquez pour afficher le village suivant."
+msgid "Set spells to appear in the Mage Guild."
+msgstr ""
 
 #, fuzzy
-msgid "Exit this dialog, discarding the changes made."
-msgstr "Cliquez pour afficher le village suivant."
+msgid "Set Spells"
+msgstr "Choisir sort :"
 
 #, fuzzy
 msgid "Castle Settings"
@@ -4223,6 +4266,10 @@ msgid ""
 msgstr ""
 
 #, fuzzy
+msgid "Click to make selection."
+msgstr "Cliquez ici pour sélectionner cette couleur."
+
+#, fuzzy
 msgid "%{objects} cannot be placed on water."
 msgstr "Les rochers ne peuvent pas être placés sur l'eau."
 
@@ -4242,6 +4289,12 @@ msgstr "Les élements ne peuvent pas être placés en dehors de la carte."
 #, fuzzy
 msgid "Action objects must be placed on clear tiles."
 msgstr "Les éléments liés à la mer doivent être placés sur l'eau."
+
+#, fuzzy
+msgid "A maximum of %{count} %{objects} can be placed on the map."
+msgstr ""
+"Un maximum de %{count} héros de la même couleur peuvent être placés sur la "
+"carte."
 
 # Needs line break to have insectile space but keep partie and ? together.
 #, fuzzy
@@ -4367,6 +4420,14 @@ msgstr "Routes"
 
 msgid "Streams"
 msgstr "Rivières"
+
+#, fuzzy
+msgid ""
+"A maximum of %{count} heroes including jailed heroes can be placed on the "
+"map."
+msgstr ""
+"Un maximum de %{count} héros de la même couleur peuvent être placés sur la "
+"carte."
 
 msgid ""
 "A maximum of %{count} heroes of the same color can be placed on the map."
@@ -4950,6 +5011,12 @@ msgstr ""
 "joueur humain."
 
 #, fuzzy
+msgid ""
+"editor|%{object}\n"
+"(%{color} player)"
+msgstr "Joueur %{color}"
+
+#, fuzzy
 msgid "editor|%{count} %{resource}"
 msgstr "Sélectionner %{resource} :"
 
@@ -5026,6 +5093,13 @@ msgstr "Sauvegarder la carte"
 #, fuzzy
 msgid "Click to save the current map."
 msgstr "Enregistrer le jeu en cours."
+
+msgid "Click to show only level %{level} spells."
+msgstr ""
+
+#, fuzzy
+msgid "Spells level"
+msgstr "Parchemin magique"
 
 msgid "Riddle:"
 msgstr ""
@@ -5197,6 +5271,10 @@ msgstr "Jours passés"
 
 msgid "The number of days spent on this campaign."
 msgstr "Le nombre de jours passés dans cette campagne."
+
+#, fuzzy
+msgid "Scenario Title"
+msgstr "Scénario"
 
 msgid "Project Coordination and Core Development"
 msgstr "Coordination du projet et développement"
@@ -6185,8 +6263,14 @@ msgstr "Cliquez pour revenir au menu principal."
 msgid "Astrologers proclaim the Month of the %{name}."
 msgstr "Les astrologues proclament le mois %{name}."
 
+msgid "New Month!"
+msgstr "Nouveau mois !"
+
 msgid "Astrologers proclaim the Week of the %{name}."
 msgstr "Les astrologues proclament la semaine %{name}."
+
+msgid "New Week!"
+msgstr "Nouvelle semaine !"
 
 msgid "After regular growth, the population of %{monster} is doubled!"
 msgstr ""
@@ -6208,17 +6292,13 @@ msgstr[1] ""
 msgid "%{monster} growth +%{count}."
 msgstr "La population de %{monster} augmente de +%{count}."
 
-msgid " All populations are halved."
+#, fuzzy
+msgid "All populations are halved."
 msgstr " Toutes les populations sont réduites de moitié."
 
-msgid " All dwellings increase population."
+#, fuzzy
+msgid "All dwellings increase population."
 msgstr " La population de toutes les demeures augmente."
-
-msgid "New Month!"
-msgstr "Nouveau mois !"
-
-msgid "New Week!"
-msgstr "Nouvelle semaine !"
 
 msgid "Beware!"
 msgstr "Attention !"
@@ -6664,12 +6744,6 @@ msgstr "Mal"
 msgid ", FPS: "
 msgstr ", FPS : "
 
-msgid "shipAndGraveyard|%{object} robber"
-msgstr "%{object} cambriolé"
-
-msgid "pyramid|%{object} raided"
-msgstr "%{object} pillée"
-
 msgid "Ector"
 msgstr "Ector"
 
@@ -6694,6 +6768,9 @@ msgstr "Crag Hack"
 msgid "Fineous"
 msgstr "Fineous"
 
+msgid "Jaclyn"
+msgstr "Jaclyn"
+
 msgid "Jezebel"
 msgstr "Jezebel"
 
@@ -6702,9 +6779,6 @@ msgstr "Atlas"
 
 msgid "Ergon"
 msgstr "Ergon"
-
-msgid "Jaclyn"
-msgstr "Jaclyn"
 
 msgid "Gem"
 msgstr "Gem"
@@ -6793,6 +6867,9 @@ msgstr "Frère Brax"
 msgid "Dainwin"
 msgstr "Dainwin"
 
+msgid "Gallavant"
+msgstr "Gallavant"
+
 msgid "Joseph"
 msgstr "Joseph"
 
@@ -6811,14 +6888,17 @@ msgstr "Drakonia"
 msgid "Elderian"
 msgstr "Elderian"
 
-msgid "Gallavant"
-msgstr "Gallavant"
-
 msgid "Jarkonas"
 msgstr "Jarkonas"
 
 msgid "Martine"
 msgstr "Martine"
+
+msgid "shipAndGraveyard|%{object} robber"
+msgstr "%{object} cambriolé"
+
+msgid "pyramid|%{object} raided"
+msgstr "%{object} pillée"
 
 msgid " gives you maximum morale"
 msgstr " augmente votre moral à son maximum"
@@ -8408,7 +8488,7 @@ msgid "Random %{race} hero (Level %{level})"
 msgstr "%{name} le %{race} (niveau %{level})"
 
 #, fuzzy
-msgid "Hero race:"
+msgid "Hero class:"
 msgstr "Fenêtre d'informations du héros"
 
 msgid "Are you sure you want to dismiss this Hero?"
@@ -8444,7 +8524,7 @@ msgid "Enter hero's name"
 msgstr "Perdre le héros : %{name}."
 
 #, fuzzy
-msgid "Click to change race."
+msgid "Click to change class."
 msgstr "Cliquez pour afficher le village suivant."
 
 msgid ""
@@ -10211,8 +10291,9 @@ msgstr "Attaque sur deux hexagones"
 msgid "Flyer"
 msgstr "Volant"
 
-msgid "Always retaliates"
-msgstr "Riposte toujours"
+#, fuzzy
+msgid "Unlimited retaliation"
+msgstr "Aucune riposte de l'ennemi"
 
 msgid "Attacks all adjacent enemies"
 msgstr "Attaque tous les ennemis adjacents"
@@ -12498,6 +12579,15 @@ msgstr "Il lui a dit : Yada yada yada... et elle a répondu : Bla, bla, bla..."
 
 msgid "An unknown force is being resurrected..."
 msgstr "Une force inconnue est ressuscitée..."
+
+#~ msgid "Always retaliates"
+#~ msgstr "Riposte toujours"
+
+#, fuzzy
+#~ msgid "A maximum of 72 %{objects} can be placed on the map."
+#~ msgstr ""
+#~ "Un maximum de %{count} héros de la même couleur peuvent être placés sur "
+#~ "la carte."
 
 #~ msgid "CONFIG"
 #~ msgstr ""

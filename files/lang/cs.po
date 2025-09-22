@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-12 14:58+0000\n"
+"POT-Creation-Date: 2025-09-20 09:35+0000\n"
 "PO-Revision-Date: 2025-04-09 11:06+0200\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: Czech <george.king@seznam.cz>\n"
@@ -3439,6 +3439,18 @@ msgstr "Nastav rozlišení hry:"
 msgid "Click to apply the selected resolution."
 msgstr "Kliknutím se rozlišení změní na vybrané."
 
+#, fuzzy
+msgid "Click to select the maximum amount."
+msgstr "Klikněte pro výběr této třídy."
+
+#, fuzzy
+msgid "Click to select the minimum amount."
+msgstr "Klikněte pro výběr této třídy."
+
+#, fuzzy
+msgid "Click to apply the entered number."
+msgstr "Klikněte pro použití zadaného textu."
+
 msgid "Click to apply the entered text."
 msgstr "Klikněte pro použití zadaného textu."
 
@@ -3541,6 +3553,10 @@ msgstr "Vybrat jednotku:"
 msgid "Select Hero:"
 msgstr "Vybrat hrdinu:"
 
+#, fuzzy
+msgid "Select Monsters:"
+msgstr "Vybrat jednotku:"
+
 msgid "race|Random"
 msgstr "Náhodný"
 
@@ -3608,6 +3624,10 @@ msgstr "Typ suroviny:"
 
 msgid "%{mineName} appearance:"
 msgstr "Vzhled %{mineName}:"
+
+#, fuzzy
+msgid "Click to select the color."
+msgstr "Kliknout pro výběr barvy."
 
 msgid "Click to select %{object} as the resource generator to be placed."
 msgstr "Klikněte pro výběr %{object} jako generátoru surovin k umístění."
@@ -3913,6 +3933,29 @@ msgstr "Náhodný název hradu"
 msgid "Random Town Name"
 msgstr "Náhodný název města"
 
+msgid "BANNED SPELLS"
+msgstr ""
+
+msgid "Click to accept the changes made."
+msgstr "Klikněte pro potvrzení provedených změn."
+
+#, fuzzy
+msgid "Exit this dialog, discarding the changes made."
+msgstr "Klikněte pro potvrzení provedených změn."
+
+msgid "Click to ban spells from appearing in the Mage Guild."
+msgstr ""
+
+#, fuzzy
+msgid "Banned Spells"
+msgstr "Náhodné kouzlo"
+
+msgid "Select spells that will appear in the Mage Guild."
+msgstr ""
+
+msgid "SET SPELLS"
+msgstr ""
+
 msgid "Allow Castle build"
 msgstr "Povolit stavbu hradu"
 
@@ -3965,12 +4008,12 @@ msgstr "Propustit tuto armádu."
 msgid "Set custom Castle Army."
 msgstr "Armáda hradu"
 
-msgid "Click to accept the changes made."
-msgstr "Klikněte pro potvrzení provedených změn."
+msgid "Set spells to appear in the Mage Guild."
+msgstr ""
 
 #, fuzzy
-msgid "Exit this dialog, discarding the changes made."
-msgstr "Klikněte pro potvrzení provedených změn."
+msgid "Set Spells"
+msgstr "Seslat kouzlo:"
 
 #, fuzzy
 msgid "Castle Settings"
@@ -4116,6 +4159,10 @@ msgstr ""
 "jednou. Pokud není zaškrtnuto, událost se spustí pokaždé, když některý z "
 "uvedených hráčů překročí políčko s událostí."
 
+#, fuzzy
+msgid "Click to make selection."
+msgstr "Kliknout pro výběr barvy."
+
 msgid "%{objects} cannot be placed on water."
 msgstr "%{objects} nelze umístit na vodu."
 
@@ -4132,6 +4179,10 @@ msgstr "Objekty nelze umístit mimo mapu."
 
 msgid "Action objects must be placed on clear tiles."
 msgstr "Akční objekty musí být umístěny na prázdných polích."
+
+#, fuzzy
+msgid "A maximum of %{count} %{objects} can be placed on the map."
+msgstr "Na mapě může být umístěno maximálně %{count} obelisků."
 
 msgid ""
 "Do you wish to return to the game's Main Menu? All unsaved changes will be "
@@ -4250,6 +4301,12 @@ msgstr "Cesty"
 
 msgid "Streams"
 msgstr "Řeky"
+
+#, fuzzy
+msgid ""
+"A maximum of %{count} heroes including jailed heroes can be placed on the "
+"map."
+msgstr "Na mapě může být umístěno maximálně %{count} hrdinů stejné barvy."
 
 msgid ""
 "A maximum of %{count} heroes of the same color can be placed on the map."
@@ -4770,6 +4827,12 @@ msgstr ""
 "silnější nepřátele, méně surovin nebo jiné speciální podmínky, které ztěžují "
 "hru hráči."
 
+#, fuzzy
+msgid ""
+"editor|%{object}\n"
+"(%{color} player)"
+msgstr "%{color} hráč"
+
 msgid "editor|%{count} %{resource}"
 msgstr "%{count} %{resource}"
 
@@ -4838,6 +4901,13 @@ msgstr "Uložit mapu:"
 
 msgid "Click to save the current map."
 msgstr "Klikni pro uložení aktuální mapy."
+
+msgid "Click to show only level %{level} spells."
+msgstr ""
+
+#, fuzzy
+msgid "Spells level"
+msgstr "Kouzelný svitek"
 
 msgid "Riddle:"
 msgstr "Hádanka:"
@@ -5009,6 +5079,10 @@ msgstr "Uběhlo dní"
 
 msgid "The number of days spent on this campaign."
 msgstr "Počet dní od začátku této kampaně."
+
+#, fuzzy
+msgid "Scenario Title"
+msgstr "Scénář"
 
 msgid "Project Coordination and Core Development"
 msgstr "Koordinace projektu a hlavní vývoj"
@@ -5986,8 +6060,14 @@ msgstr "Klikni pro návrat do hlavního menu."
 msgid "Astrologers proclaim the Month of the %{name}."
 msgstr "Astrologové hlásí, že nastává měsíc %{name}."
 
+msgid "New Month!"
+msgstr "Nový měsíc!"
+
 msgid "Astrologers proclaim the Week of the %{name}."
 msgstr "Astrologové hlásí, že nastává týden %{name}."
+
+msgid "New Week!"
+msgstr "Začal nový týden!"
 
 msgid "After regular growth, the population of %{monster} is doubled!"
 msgstr "Při pravidelném nárůstu došlo ke zdvojení populace %{monster}!"
@@ -6008,17 +6088,13 @@ msgstr[2] ""
 msgid "%{monster} growth +%{count}."
 msgstr "Růst %{monster} +%{count}."
 
-msgid " All populations are halved."
+#, fuzzy
+msgid "All populations are halved."
 msgstr " Populace jednotek k najmutí klesá na polovinu."
 
-msgid " All dwellings increase population."
+#, fuzzy
+msgid "All dwellings increase population."
 msgstr " Všechna obydlí zvyšují svou populaci."
-
-msgid "New Month!"
-msgstr "Nový měsíc!"
-
-msgid "New Week!"
-msgstr "Začal nový týden!"
 
 msgid "Beware!"
 msgstr "Pozor!"
@@ -6451,12 +6527,6 @@ msgstr "Zlý"
 msgid ", FPS: "
 msgstr ", FPS: "
 
-msgid "shipAndGraveyard|%{object} robber"
-msgstr "%{object} vykraden"
-
-msgid "pyramid|%{object} raided"
-msgstr "%{object} byla vykradena"
-
 # Heroes names section - translate not needed
 msgid "Ector"
 msgstr "Ector"
@@ -6482,6 +6552,9 @@ msgstr "Crag Hack"
 msgid "Fineous"
 msgstr "Fineous"
 
+msgid "Jaclyn"
+msgstr "Jaclyn"
+
 msgid "Jezebel"
 msgstr "Jezebel"
 
@@ -6490,9 +6563,6 @@ msgstr "Atlas"
 
 msgid "Ergon"
 msgstr "Ergon"
-
-msgid "Jaclyn"
-msgstr "Jaclyn"
 
 msgid "Gem"
 msgstr "Gem"
@@ -6581,6 +6651,9 @@ msgstr "Bratr Brax"
 msgid "Dainwin"
 msgstr "Dainwin"
 
+msgid "Gallavant"
+msgstr "Gallavant"
+
 msgid "Joseph"
 msgstr "Joseph"
 
@@ -6599,14 +6672,17 @@ msgstr "Drakonia"
 msgid "Elderian"
 msgstr "Elderian"
 
-msgid "Gallavant"
-msgstr "Gallavant"
-
 msgid "Jarkonas"
 msgstr "Jarkonas"
 
 msgid "Martine"
 msgstr "Martine"
+
+msgid "shipAndGraveyard|%{object} robber"
+msgstr "%{object} vykraden"
+
+msgid "pyramid|%{object} raided"
+msgstr "%{object} byla vykradena"
 
 msgid " gives you maximum morale"
 msgstr " dává maximální morálku"
@@ -8103,7 +8179,8 @@ msgstr "Náhodný hrdina (Úroveň %{level})"
 msgid "Random %{race} hero (Level %{level})"
 msgstr "Náhodný hrdina %{race} (Úroveň %{level})"
 
-msgid "Hero race:"
+#, fuzzy
+msgid "Hero class:"
 msgstr "Rasa hrdiny:"
 
 msgid "Are you sure you want to dismiss this Hero?"
@@ -8140,7 +8217,8 @@ msgstr "Nastavte hlídkový rádius v polích"
 msgid "Enter hero's name"
 msgstr "Zadejte jméno hrdiny"
 
-msgid "Click to change race."
+#, fuzzy
+msgid "Click to change class."
 msgstr "Klikni pro změnu rasy."
 
 msgid ""
@@ -9905,8 +9983,9 @@ msgstr "Útok přes dvě pole"
 msgid "Flyer"
 msgstr "Létá"
 
-msgid "Always retaliates"
-msgstr "Vždy vrací útok"
+#, fuzzy
+msgid "Unlimited retaliation"
+msgstr "Nepřítel nevrací úder"
 
 msgid "Attacks all adjacent enemies"
 msgstr "Útočí na všechny nepřátele v okolí"
@@ -12098,6 +12177,13 @@ msgstr "On jí řekl: Yada yada yada... ona pak řekla: Bla, bla, bla..."
 
 msgid "An unknown force is being resurrected..."
 msgstr "Neznámá síla se probouzí..."
+
+#~ msgid "Always retaliates"
+#~ msgstr "Vždy vrací útok"
+
+#, fuzzy
+#~ msgid "A maximum of 72 %{objects} can be placed on the map."
+#~ msgstr "Na mapě může být umístěno maximálně %{count} obelisků."
 
 #~ msgid "Click to change the Castle name. Right-click to reset to default."
 #~ msgstr ""

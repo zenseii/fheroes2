@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-12 14:58+0000\n"
+"POT-Creation-Date: 2025-09-20 09:35+0000\n"
 "PO-Revision-Date: 2022-12-03 04:36+0100\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: <it@li.org>\n"
@@ -3336,6 +3336,18 @@ msgid "Click to apply the selected resolution."
 msgstr ""
 
 #, fuzzy
+msgid "Click to select the maximum amount."
+msgstr "Clicca per salvare la partita in corso."
+
+#, fuzzy
+msgid "Click to select the minimum amount."
+msgstr "Clicca per salvare la partita in corso."
+
+#, fuzzy
+msgid "Click to apply the entered number."
+msgstr "Clicca per salvare la partita in corso."
+
+#, fuzzy
 msgid "Click to apply the entered text."
 msgstr "Clicca per salvare la partita in corso."
 
@@ -3435,6 +3447,10 @@ msgstr "Scegli mostro:"
 msgid "Select Hero:"
 msgstr "Scegli eroe:"
 
+#, fuzzy
+msgid "Select Monsters:"
+msgstr "Scegli mostro:"
+
 msgid "race|Random"
 msgstr "Casuale"
 
@@ -3517,6 +3533,10 @@ msgstr "Risorso"
 #, fuzzy
 msgid "%{mineName} appearance:"
 msgstr "%{name}: %{race}"
+
+#, fuzzy
+msgid "Click to select the color."
+msgstr "Clicca per andare alla città succ."
 
 msgid "Click to select %{object} as the resource generator to be placed."
 msgstr ""
@@ -3836,6 +3856,30 @@ msgstr "Castello casuale"
 msgid "Random Town Name"
 msgstr "Città casuale"
 
+msgid "BANNED SPELLS"
+msgstr ""
+
+#, fuzzy
+msgid "Click to accept the changes made."
+msgstr "Clicca per andare alla città succ."
+
+#, fuzzy
+msgid "Exit this dialog, discarding the changes made."
+msgstr "Clicca per andare alla città succ."
+
+msgid "Click to ban spells from appearing in the Mage Guild."
+msgstr ""
+
+#, fuzzy
+msgid "Banned Spells"
+msgstr "Casuale"
+
+msgid "Select spells that will appear in the Mage Guild."
+msgstr ""
+
+msgid "SET SPELLS"
+msgstr ""
+
 #, fuzzy
 msgid "Allow Castle build"
 msgstr "Castello Celeste"
@@ -3892,13 +3936,12 @@ msgstr ""
 msgid "Set custom Castle Army."
 msgstr "Castello"
 
-#, fuzzy
-msgid "Click to accept the changes made."
-msgstr "Clicca per andare alla città succ."
+msgid "Set spells to appear in the Mage Guild."
+msgstr ""
 
 #, fuzzy
-msgid "Exit this dialog, discarding the changes made."
-msgstr "Clicca per andare alla città succ."
+msgid "Set Spells"
+msgstr "Scegli magia:"
 
 #, fuzzy
 msgid "Castle Settings"
@@ -4051,6 +4094,10 @@ msgid ""
 msgstr ""
 
 #, fuzzy
+msgid "Click to make selection."
+msgstr "Clicca per andare alla città succ."
+
+#, fuzzy
 msgid "%{objects} cannot be placed on water."
 msgstr "Opzioni Avventura"
 
@@ -4068,6 +4115,10 @@ msgstr ""
 
 #, fuzzy
 msgid "Action objects must be placed on clear tiles."
+msgstr "Opzioni Avventura"
+
+#, fuzzy
+msgid "A maximum of %{count} %{objects} can be placed on the map."
 msgstr "Opzioni Avventura"
 
 #, fuzzy
@@ -4196,6 +4247,12 @@ msgstr "Strada"
 
 msgid "Streams"
 msgstr ""
+
+#, fuzzy
+msgid ""
+"A maximum of %{count} heroes including jailed heroes can be placed on the "
+"map."
+msgstr "Opzioni Avventura"
 
 msgid ""
 "A maximum of %{count} heroes of the same color can be placed on the map."
@@ -4753,6 +4810,12 @@ msgstr ""
 "dura all'umano."
 
 #, fuzzy
+msgid ""
+"editor|%{object}\n"
+"(%{color} player)"
+msgstr "Giocatore %{color}"
+
+#, fuzzy
 msgid "editor|%{count} %{resource}"
 msgstr "Scegli quantità di %{resource}:"
 
@@ -4824,6 +4887,13 @@ msgstr "Salva Partita"
 #, fuzzy
 msgid "Click to save the current map."
 msgstr "Clicca per salvare la partita in corso."
+
+msgid "Click to show only level %{level} spells."
+msgstr ""
+
+#, fuzzy
+msgid "Spells level"
+msgstr "magia fallita!"
 
 msgid "Riddle:"
 msgstr ""
@@ -4983,6 +5053,10 @@ msgstr ""
 
 msgid "The number of days spent on this campaign."
 msgstr ""
+
+#, fuzzy
+msgid "Scenario Title"
+msgstr "Scenario"
 
 msgid "Project Coordination and Core Development"
 msgstr ""
@@ -5949,8 +6023,14 @@ msgstr ""
 msgid "Astrologers proclaim the Month of the %{name}."
 msgstr "Gli Astrologi prevedono il mese di %{name}."
 
+msgid "New Month!"
+msgstr ""
+
 msgid "Astrologers proclaim the Week of the %{name}."
 msgstr "Gli Astrologi prevedono la settimana di %{name}."
+
+msgid "New Week!"
+msgstr ""
 
 msgid "After regular growth, the population of %{monster} is doubled!"
 msgstr ""
@@ -5973,17 +6053,13 @@ msgstr[1] ""
 msgid "%{monster} growth +%{count}."
 msgstr "Crescita %{monster} +%{count}."
 
-msgid " All populations are halved."
+#, fuzzy
+msgid "All populations are halved."
 msgstr "Tutte le populazioni dimezzate."
 
-msgid " All dwellings increase population."
+#, fuzzy
+msgid "All dwellings increase population."
 msgstr "Cresce il numero di truppe disponibili di ogni dimora."
-
-msgid "New Month!"
-msgstr ""
-
-msgid "New Week!"
-msgstr ""
 
 msgid "Beware!"
 msgstr ""
@@ -6400,12 +6476,6 @@ msgstr "Cattivo"
 msgid ", FPS: "
 msgstr ""
 
-msgid "shipAndGraveyard|%{object} robber"
-msgstr ""
-
-msgid "pyramid|%{object} raided"
-msgstr ""
-
 msgid "Ector"
 msgstr ""
 
@@ -6430,6 +6500,9 @@ msgstr ""
 msgid "Fineous"
 msgstr "Fineo"
 
+msgid "Jaclyn"
+msgstr ""
+
 msgid "Jezebel"
 msgstr "Gezebel"
 
@@ -6437,9 +6510,6 @@ msgid "Atlas"
 msgstr ""
 
 msgid "Ergon"
-msgstr ""
-
-msgid "Jaclyn"
 msgstr ""
 
 msgid "Gem"
@@ -6529,6 +6599,9 @@ msgstr "Frate Brax"
 msgid "Dainwin"
 msgstr ""
 
+msgid "Gallavant"
+msgstr ""
+
 msgid "Joseph"
 msgstr ""
 
@@ -6547,13 +6620,16 @@ msgstr ""
 msgid "Elderian"
 msgstr ""
 
-msgid "Gallavant"
-msgstr ""
-
 msgid "Jarkonas"
 msgstr ""
 
 msgid "Martine"
+msgstr ""
+
+msgid "shipAndGraveyard|%{object} robber"
+msgstr ""
+
+msgid "pyramid|%{object} raided"
 msgstr ""
 
 msgid " gives you maximum morale"
@@ -7732,7 +7808,7 @@ msgid "Random %{race} hero (Level %{level})"
 msgstr "%{name}: %{race} (Livello %{level})"
 
 #, fuzzy
-msgid "Hero race:"
+msgid "Hero class:"
 msgstr "Schermata Eroe"
 
 msgid "Are you sure you want to dismiss this Hero?"
@@ -7767,7 +7843,7 @@ msgid "Enter hero's name"
 msgstr ""
 
 #, fuzzy
-msgid "Click to change race."
+msgid "Click to change class."
 msgstr "Clicca per andare alla città succ."
 
 msgid ""
@@ -9502,8 +9578,9 @@ msgstr "Colpo di due riquardri"
 msgid "Flyer"
 msgstr "Creatura Volante"
 
-msgid "Always retaliates"
-msgstr "Contrattacca sempre"
+#, fuzzy
+msgid "Unlimited retaliation"
+msgstr "Nessun contrattacco nemico"
 
 msgid "Attacks all adjacent enemies"
 msgstr "Attacca tutti i nemici adiacenti"
@@ -11480,3 +11557,6 @@ msgstr ""
 
 msgid "An unknown force is being resurrected..."
 msgstr "Una forza sconosciuta sta risorgendo..."
+
+#~ msgid "Always retaliates"
+#~ msgstr "Contrattacca sempre"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-12 14:58+0000\n"
+"POT-Creation-Date: 2025-09-20 09:35+0000\n"
 "PO-Revision-Date: 2022-10-25 08:52+0200\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -3390,6 +3390,21 @@ msgstr ""
 msgid "Click to apply the selected resolution."
 msgstr ""
 
+#, fuzzy
+msgid "Click to select the maximum amount."
+msgstr ""
+"Weet je zeker dat je het gevecht in de automatische modus wilt beëindigen?"
+
+#, fuzzy
+msgid "Click to select the minimum amount."
+msgstr ""
+"Weet je zeker dat je het gevecht in de automatische modus wilt beëindigen?"
+
+#, fuzzy
+msgid "Click to apply the entered number."
+msgstr ""
+"Weet je zeker dat je het gevecht in de automatische modus wilt beëindigen?"
+
 msgid "Click to apply the entered text."
 msgstr ""
 
@@ -3484,6 +3499,10 @@ msgstr ""
 msgid "Select Hero:"
 msgstr ""
 
+#, fuzzy
+msgid "Select Monsters:"
+msgstr "Selecteer spreuk doelwit"
+
 msgid "race|Random"
 msgstr ""
 
@@ -3557,6 +3576,11 @@ msgstr ""
 #, fuzzy
 msgid "%{mineName} appearance:"
 msgstr "%{name} de %{race}"
+
+#, fuzzy
+msgid "Click to select the color."
+msgstr ""
+"Weet je zeker dat je het gevecht in de automatische modus wilt beëindigen?"
 
 msgid "Click to select %{object} as the resource generator to be placed."
 msgstr ""
@@ -3850,6 +3874,32 @@ msgstr ""
 msgid "Random Town Name"
 msgstr ""
 
+msgid "BANNED SPELLS"
+msgstr ""
+
+#, fuzzy
+msgid "Click to accept the changes made."
+msgstr ""
+"Weet je zeker dat je het gevecht in de automatische modus wilt beëindigen?"
+
+#, fuzzy
+msgid "Exit this dialog, discarding the changes made."
+msgstr ""
+"Weet je zeker dat je het gevecht in de automatische modus wilt beëindigen?"
+
+msgid "Click to ban spells from appearing in the Mage Guild."
+msgstr ""
+
+#, fuzzy
+msgid "Banned Spells"
+msgstr "Spreuk uitspreken"
+
+msgid "Select spells that will appear in the Mage Guild."
+msgstr ""
+
+msgid "SET SPELLS"
+msgstr ""
+
 msgid "Allow Castle build"
 msgstr ""
 
@@ -3902,15 +3952,12 @@ msgstr ""
 msgid "Set custom Castle Army."
 msgstr ""
 
-#, fuzzy
-msgid "Click to accept the changes made."
+msgid "Set spells to appear in the Mage Guild."
 msgstr ""
-"Weet je zeker dat je het gevecht in de automatische modus wilt beëindigen?"
 
 #, fuzzy
-msgid "Exit this dialog, discarding the changes made."
-msgstr ""
-"Weet je zeker dat je het gevecht in de automatische modus wilt beëindigen?"
+msgid "Set Spells"
+msgstr "Spreuk uitspreken"
 
 msgid "Castle Settings"
 msgstr ""
@@ -4057,6 +4104,11 @@ msgid ""
 "crosses the event tile."
 msgstr ""
 
+#, fuzzy
+msgid "Click to make selection."
+msgstr ""
+"Weet je zeker dat je het gevecht in de automatische modus wilt beëindigen?"
+
 msgid "%{objects} cannot be placed on water."
 msgstr ""
 
@@ -4072,6 +4124,9 @@ msgid "Objects cannot be placed outside the map."
 msgstr ""
 
 msgid "Action objects must be placed on clear tiles."
+msgstr ""
+
+msgid "A maximum of %{count} %{objects} can be placed on the map."
 msgstr ""
 
 msgid ""
@@ -4176,6 +4231,11 @@ msgid "Roads"
 msgstr ""
 
 msgid "Streams"
+msgstr ""
+
+msgid ""
+"A maximum of %{count} heroes including jailed heroes can be placed on the "
+"map."
 msgstr ""
 
 msgid ""
@@ -4702,6 +4762,11 @@ msgid ""
 "tougher for the human player."
 msgstr ""
 
+msgid ""
+"editor|%{object}\n"
+"(%{color} player)"
+msgstr ""
+
 msgid "editor|%{count} %{resource}"
 msgstr ""
 
@@ -4769,6 +4834,13 @@ msgstr ""
 msgid "Click to save the current map."
 msgstr ""
 "Weet je zeker dat je het gevecht in de automatische modus wilt beëindigen?"
+
+msgid "Click to show only level %{level} spells."
+msgstr ""
+
+#, fuzzy
+msgid "Spells level"
+msgstr "Spreuk gefaald!"
 
 msgid "Riddle:"
 msgstr ""
@@ -4920,6 +4992,9 @@ msgid "Days spent"
 msgstr ""
 
 msgid "The number of days spent on this campaign."
+msgstr ""
+
+msgid "Scenario Title"
 msgstr ""
 
 msgid "Project Coordination and Core Development"
@@ -5847,7 +5922,13 @@ msgstr ""
 msgid "Astrologers proclaim the Month of the %{name}."
 msgstr ""
 
+msgid "New Month!"
+msgstr ""
+
 msgid "Astrologers proclaim the Week of the %{name}."
+msgstr ""
+
+msgid "New Week!"
 msgstr ""
 
 msgid "After regular growth, the population of %{monster} is doubled!"
@@ -5865,16 +5946,10 @@ msgstr[1] ""
 msgid "%{monster} growth +%{count}."
 msgstr ""
 
-msgid " All populations are halved."
+msgid "All populations are halved."
 msgstr ""
 
-msgid " All dwellings increase population."
-msgstr ""
-
-msgid "New Month!"
-msgstr ""
-
-msgid "New Week!"
+msgid "All dwellings increase population."
 msgstr ""
 
 msgid "Beware!"
@@ -6266,12 +6341,6 @@ msgstr ""
 msgid ", FPS: "
 msgstr ""
 
-msgid "shipAndGraveyard|%{object} robber"
-msgstr ""
-
-msgid "pyramid|%{object} raided"
-msgstr ""
-
 msgid "Ector"
 msgstr ""
 
@@ -6296,6 +6365,9 @@ msgstr ""
 msgid "Fineous"
 msgstr ""
 
+msgid "Jaclyn"
+msgstr ""
+
 msgid "Jezebel"
 msgstr ""
 
@@ -6303,9 +6375,6 @@ msgid "Atlas"
 msgstr ""
 
 msgid "Ergon"
-msgstr ""
-
-msgid "Jaclyn"
 msgstr ""
 
 msgid "Gem"
@@ -6395,6 +6464,9 @@ msgstr ""
 msgid "Dainwin"
 msgstr ""
 
+msgid "Gallavant"
+msgstr ""
+
 msgid "Joseph"
 msgstr ""
 
@@ -6413,13 +6485,16 @@ msgstr ""
 msgid "Elderian"
 msgstr ""
 
-msgid "Gallavant"
-msgstr ""
-
 msgid "Jarkonas"
 msgstr ""
 
 msgid "Martine"
+msgstr ""
+
+msgid "shipAndGraveyard|%{object} robber"
+msgstr ""
+
+msgid "pyramid|%{object} raided"
 msgstr ""
 
 msgid " gives you maximum morale"
@@ -7549,7 +7624,7 @@ msgid "Random %{race} hero (Level %{level})"
 msgstr ""
 
 #, fuzzy
-msgid "Hero race:"
+msgid "Hero class:"
 msgstr "Held Scherm"
 
 msgid "Are you sure you want to dismiss this Hero?"
@@ -7583,8 +7658,10 @@ msgstr ""
 msgid "Enter hero's name"
 msgstr ""
 
-msgid "Click to change race."
+#, fuzzy
+msgid "Click to change class."
 msgstr ""
+"Weet je zeker dat je het gevecht in de automatische modus wilt beëindigen?"
 
 msgid ""
 "'Spread' combat formation spreads the hero's units from the top to the "
@@ -9284,7 +9361,7 @@ msgstr ""
 msgid "Flyer"
 msgstr ""
 
-msgid "Always retaliates"
+msgid "Unlimited retaliation"
 msgstr ""
 
 msgid "Attacks all adjacent enemies"
