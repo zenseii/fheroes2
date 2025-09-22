@@ -79,8 +79,6 @@ namespace
                                                 ICN::BUTTONS_EDITOR_FILE_DIALOG_EVIL,
                                                 ICN::BUTTON_INFO_GOOD,
                                                 ICN::BUTTON_INFO_EVIL,
-                                                ICN::BUTTON_QUIT_GOOD,
-                                                ICN::BUTTON_QUIT_EVIL,
                                                 ICN::BUTTON_SMALL_CANCEL_GOOD,
                                                 ICN::BUTTON_SMALL_CANCEL_EVIL,
                                                 ICN::BUTTON_SMALL_OKAY_GOOD,
@@ -1466,36 +1464,21 @@ namespace
             break;
         }
         case ICN::BUTTON_INFO_EVIL:
-        case ICN::BUTTON_INFO_GOOD:
-        case ICN::BUTTON_QUIT_EVIL:
-        case ICN::BUTTON_QUIT_GOOD: {
+        case ICN::BUTTON_INFO_GOOD: {
             _icnVsSprite[id].resize( 2 );
 
-            const bool isEvilInterface = ( id == ICN::BUTTON_QUIT_EVIL || id == ICN::BUTTON_INFO_EVIL );
-            const bool isInfoButton = ( id == ICN::BUTTON_INFO_GOOD || id == ICN::BUTTON_INFO_EVIL );
+            const bool isEvilInterface = ( id == ICN::BUTTON_INFO_EVIL );
 
             if ( useOriginalResources() ) {
-                int buttonIcnID = ICN::UNKNOWN;
-                std::pair<int, int> icnIndex;
+                const int buttonIcnID = isEvilInterface ? ICN::APANELE : ICN::APANEL;
 
-                if ( isInfoButton ) {
-                    buttonIcnID = isEvilInterface ? ICN::APANELE : ICN::APANEL;
-                    icnIndex = { 4, 5 };
-                }
-                else {
-                    buttonIcnID = isEvilInterface ? ICN::CPANELE : ICN::CPANEL;
-                    icnIndex = { 6, 7 };
-                }
-
-                _icnVsSprite[id][0] = fheroes2::AGG::GetICN( buttonIcnID, icnIndex.first );
-                _icnVsSprite[id][1] = fheroes2::AGG::GetICN( buttonIcnID, icnIndex.second );
+                _icnVsSprite[id][0] = fheroes2::AGG::GetICN( buttonIcnID, 4 );
+                _icnVsSprite[id][1] = fheroes2::AGG::GetICN( buttonIcnID, 5 );
                 break;
             }
 
-            const char * text = isInfoButton ? gettext_noop( "INFO" ) : gettext_noop( "QUIT" );
-
-            text = fheroes2::getSupportedText( text, fheroes2::FontType::buttonReleasedWhite() );
-            fheroes2::makeButtonSprites( _icnVsSprite[id][0], _icnVsSprite[id][1], text, { 86, 56 }, isEvilInterface,
+            fheroes2::makeButtonSprites( _icnVsSprite[id][0], _icnVsSprite[id][1],
+                                         fheroes2::getSupportedText( gettext_noop( "INFO" ), fheroes2::FontType::buttonReleasedWhite() ), { 86, 56 }, isEvilInterface,
                                          isEvilInterface ? ICN::STONEBAK_EVIL : ICN::STONEBAK );
 
             break;
