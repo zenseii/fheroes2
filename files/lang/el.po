@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-20 09:35+0000\n"
+"POT-Creation-Date: 2025-11-02 13:40+0000\n"
 "PO-Revision-Date: 2025-05-19 07:06+0200\n"
 "Last-Translator: PlatoHero <platozp@gmail.com>\n"
 "Language-Team: platozp@gmail.com\n"
@@ -143,8 +143,18 @@ msgid ""
 msgstr ""
 
 msgid ""
+"RESTART\n"
+"GAME"
+msgstr ""
+
+msgid ""
 "SAVE\n"
 "GAME"
+msgstr ""
+
+msgid ""
+"QUICK\n"
+"SAVE"
 msgstr ""
 
 msgid "QUIT"
@@ -262,6 +272,9 @@ msgid ""
 "L"
 msgstr ""
 
+msgid "army|Few"
+msgstr ""
+
 msgid "Warrior"
 msgstr ""
 
@@ -272,6 +285,11 @@ msgid "Explorer"
 msgstr ""
 
 msgid "None"
+msgstr ""
+
+msgid ""
+"%{monster}\n"
+"%{range}"
 msgstr ""
 
 msgid ""
@@ -317,9 +335,6 @@ msgstr ""
 msgid ""
 "A legion of\n"
 "%{monster}"
-msgstr ""
-
-msgid "army|Few"
 msgstr ""
 
 msgid "army|Several"
@@ -2444,13 +2459,13 @@ msgid ""
 "no room for a spell book. Try giving one of your artifacts to another hero."
 msgstr ""
 
-msgid "Click to show next town."
+msgid "Click to show the next town."
 msgstr ""
 
 msgid "Show next town"
 msgstr ""
 
-msgid "Click to show previous town."
+msgid "Click to show the previous town."
 msgstr ""
 
 msgid "Show previous town"
@@ -2478,6 +2493,9 @@ msgid "The above spells are available here."
 msgstr ""
 
 msgid "The spells the hero can learn have been added to their book."
+msgstr ""
+
+msgid "Exit Mage Guild"
 msgstr ""
 
 msgid "A generous tip for the barkeep yields the following rumor:"
@@ -2511,16 +2529,7 @@ msgid ""
 "of the castle's side of the battlefield."
 msgstr ""
 
-msgid "Spread Formation"
-msgstr ""
-
-msgid "Grouped Formation"
-msgstr ""
-
-msgid "Click to show the next town."
-msgstr ""
-
-msgid "Click to show the previous town."
+msgid "Castle Options. Month: %{month}, Week: %{week}, Day: %{day}"
 msgstr ""
 
 msgid "Set garrison combat formation to 'Spread'"
@@ -2532,7 +2541,10 @@ msgstr ""
 msgid "Exit Castle Options"
 msgstr ""
 
-msgid "Castle Options"
+msgid "Spread Formation"
+msgstr ""
+
+msgid "Grouped Formation"
 msgstr ""
 
 msgid "Not enough resources to recruit creatures."
@@ -2728,6 +2740,12 @@ msgstr ""
 msgid "Need: "
 msgstr ""
 
+msgid "Restart Game"
+msgstr ""
+
+msgid "There was an issue during saving."
+msgstr ""
+
 msgid "New Game"
 msgstr ""
 
@@ -2740,10 +2758,19 @@ msgstr ""
 msgid "Load a previously saved game."
 msgstr ""
 
+msgid "Restart the scenario."
+msgstr ""
+
 msgid "Save Game"
 msgstr ""
 
 msgid "Save the current game."
+msgstr ""
+
+msgid "Quick Save"
+msgstr ""
+
+msgid "Save the current game without name selection."
 msgstr ""
 
 msgid "Quit"
@@ -2817,6 +2844,9 @@ msgstr ""
 msgid ""
 "Loss\n"
 "Conditions"
+msgstr ""
+
+msgid "Map Description"
 msgstr ""
 
 msgid "First select recipients!"
@@ -2899,6 +2929,15 @@ msgstr ""
 msgid "Interface"
 msgstr ""
 
+msgid "Army Estimation"
+msgstr ""
+
+msgid "Canonical"
+msgstr ""
+
+msgid "Numeric"
+msgstr ""
+
 msgid "Interface Type"
 msgstr ""
 
@@ -2912,6 +2951,15 @@ msgid "Scroll Speed"
 msgstr ""
 
 msgid "Sets the speed at which you scroll the window."
+msgstr ""
+
+msgid ""
+"Toggle how army sizes are displayed when right-clicking armies on the "
+"adventure map. \n"
+"\n"
+"Canonical: Army sizes are shown as descriptive text (e.g. \"Few\").\n"
+"\n"
+"Numeric: Army sizes are shown as numeric ranges (e.g. \"1-4\")."
 msgstr ""
 
 msgid "Select Game Language:"
@@ -3194,6 +3242,18 @@ msgstr ""
 msgid "Accept the choice made."
 msgstr ""
 
+msgid "Click to enable all items."
+msgstr ""
+
+msgid "Enable All Items"
+msgstr ""
+
+msgid "Click to disable all items."
+msgstr ""
+
+msgid "Disable All Items"
+msgstr ""
+
 msgid "Select Skill:"
 msgstr ""
 
@@ -3390,6 +3450,9 @@ msgstr ""
 msgid "N"
 msgstr ""
 
+msgid "Are you sure you want to delete the map:"
+msgstr ""
+
 msgid "No maps exist at that size."
 msgstr ""
 
@@ -3439,10 +3502,7 @@ msgid ""
 "things tougher for the human player."
 msgstr ""
 
-msgid "Selected Description"
-msgstr ""
-
-msgid "The description of the currently selected map."
+msgid "Selected Map Description"
 msgstr ""
 
 msgid "Jump"
@@ -3804,6 +3864,9 @@ msgstr ""
 msgid "A maximum of %{count} %{objects} can be placed on the map."
 msgstr ""
 
+msgid "Not able to generate a map with given parameters."
+msgstr ""
+
 msgid ""
 "Do you wish to return to the game's Main Menu? All unsaved changes will be "
 "lost."
@@ -3923,6 +3986,12 @@ msgid "Only one Random Ultimate Artifact can be placed on the map."
 msgstr ""
 
 msgid "A maximum of %{count} obelisks can be placed on the map."
+msgstr ""
+
+msgid "Pick player count"
+msgstr ""
+
+msgid "Limit region size"
 msgstr ""
 
 msgid "The map is corrupted."
@@ -4179,7 +4248,14 @@ msgstr ""
 msgid "View the editor system options, which let you customize the editor."
 msgstr ""
 
+msgid ""
+"Create a new map, either from scratch or using the random map generator."
+msgstr ""
+
 msgid "Exit the Editor and return to the game's Main Menu."
+msgstr ""
+
+msgid "Warning!"
 msgstr ""
 
 msgid "From Scratch"
@@ -4200,7 +4276,14 @@ msgstr ""
 msgid "Return to the Editor's main menu options."
 msgstr ""
 
+msgid ""
+"Generate a random map that is %{size} squares wide and %{size} squares high."
+msgstr ""
+
 msgid "Create a map that is %{size} squares wide and %{size} squares high."
+msgstr ""
+
+msgid "Return to the previous menu options."
 msgstr ""
 
 msgid "No maps available!"
@@ -4212,22 +4295,22 @@ msgstr ""
 msgid "[%{pos}]: %{name}, %{race} hero"
 msgstr ""
 
-msgid "[%{pos}]: %{race} town"
-msgstr ""
-
 msgid "[%{pos}]: %{race} castle"
 msgstr ""
 
-msgid "[%{pos}]: %{name}, %{race} town"
+msgid "[%{pos}]: %{race} town"
 msgstr ""
 
 msgid "[%{pos}]: %{name}, %{race} castle"
 msgstr ""
 
+msgid "[%{pos}]: %{name}, %{race} town"
+msgstr ""
+
 msgid "None."
 msgstr ""
 
-msgid "One side defeats another."
+msgid "One side defeats the other."
 msgstr ""
 
 msgid "Accumulate gold."
@@ -4310,9 +4393,6 @@ msgstr ""
 msgid "Map Difficulty"
 msgstr ""
 
-msgid "Map Description"
-msgstr ""
-
 msgid "RUMORS"
 msgstr ""
 
@@ -4323,11 +4403,6 @@ msgid "LANGUAGE"
 msgstr ""
 
 msgid "ABOUT"
-msgstr ""
-
-msgid ""
-"The entered map description exceeds the maximum allowed 5 rows. It will be "
-"shortened to fit the map description field."
 msgstr ""
 
 msgid ""
@@ -4460,10 +4535,34 @@ msgstr ""
 msgid "Click to save the current map."
 msgstr ""
 
+msgid "Click to enable all secondary skills."
+msgstr ""
+
+msgid "Enable All Secondary Skills"
+msgstr ""
+
+msgid "Click to disable all secondary skills."
+msgstr ""
+
+msgid "Disable All Secondary Skills"
+msgstr ""
+
 msgid "Click to show only level %{level} spells."
 msgstr ""
 
 msgid "Spells level"
+msgstr ""
+
+msgid "Click to enable all spells."
+msgstr ""
+
+msgid "Enable All Spells"
+msgstr ""
+
+msgid "Click to disable all spells."
+msgstr ""
+
+msgid "Disable All Spells"
 msgstr ""
 
 msgid "Riddle:"
@@ -4500,6 +4599,9 @@ msgid "Delete Answer"
 msgstr ""
 
 msgid "Delete an existing answer for the question."
+msgstr ""
+
+msgid "Riddle"
 msgstr ""
 
 msgid "No artifact will be given as a reward."
@@ -4904,6 +5006,12 @@ msgstr ""
 msgid "hotkey|toggle passability"
 msgstr ""
 
+msgid "hotkey|re-generate random map"
+msgstr ""
+
+msgid "hotkey|re-configure random map"
+msgstr ""
+
 msgid "hotkey|roland campaign"
 msgstr ""
 
@@ -4965,6 +5073,9 @@ msgid "hotkey|world map down right"
 msgstr ""
 
 msgid "hotkey|save game"
+msgstr ""
+
+msgid "hotkey|quick save"
 msgstr ""
 
 msgid "hotkey|next hero"
@@ -5527,6 +5638,9 @@ msgstr ""
 msgid "Click to return to the main menu."
 msgstr ""
 
+msgid "The map is corrupted or doesn't exist."
+msgstr ""
+
 msgid "Astrologers proclaim the Month of the %{name}."
 msgstr ""
 
@@ -5703,9 +5817,6 @@ msgid "Are you sure you want to overwrite the save with this name?"
 msgstr ""
 
 msgid "Game saved successfully."
-msgstr ""
-
-msgid "There was an issue during saving."
 msgstr ""
 
 msgid ""
@@ -7351,6 +7462,33 @@ msgid ""
 msgstr ""
 
 msgid "%{name1} meets %{name2}"
+msgstr ""
+
+msgid "hero|Level %{level}"
+msgstr ""
+
+msgid "Move all artifacts from %{from_hero_name} to %{to_hero_name}."
+msgstr ""
+
+msgid "Artifact Transfer"
+msgstr ""
+
+msgid "Swap Artifacts"
+msgstr ""
+
+msgid "Swap all artifacts between heroes."
+msgstr ""
+
+msgid "Move army from %{from_hero_name} to %{to_hero_name}."
+msgstr ""
+
+msgid "Army Transfer"
+msgstr ""
+
+msgid "Swap Armies"
+msgstr ""
+
+msgid "Swap armies between heroes."
 msgstr ""
 
 msgid "Enemy heroes are now fully identifiable."
@@ -10580,10 +10718,12 @@ msgstr ""
 msgid "Dimension Door"
 msgstr ""
 
-msgid "Returns the caster to any town or castle currently owned."
+msgid "Town Gate"
 msgstr ""
 
-msgid "Town Gate"
+msgid ""
+"Returns the caster to the nearest town or castle currently owned. This spell "
+"cannot be cast if the hero is already in a town or a castle."
 msgstr ""
 
 msgid ""
