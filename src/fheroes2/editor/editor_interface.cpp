@@ -1025,15 +1025,17 @@ namespace Interface
                     }
                 }
                 else if ( HotKeyPressEvent( Game::HotKeyEvent::EDITOR_RANDOM_MAP_RECONFIGURE ) ) {
-                    fheroes2::ActionCreator action( _historyManager, _mapFormat );
+                    if ( updateRandomMapConfiguration() ) {
+                        fheroes2::ActionCreator action( _historyManager, _mapFormat );
 
-                    if ( generateRandomMap( _mapFormat.width ) ) {
-                        _redraw |= mapUpdateFlags;
+                        if ( generateRandomMap( _mapFormat.width ) ) {
+                            _redraw |= mapUpdateFlags;
 
-                        action.commit();
-                    }
-                    else {
-                        _warningMessage.reset( _( "Not able to generate a map with given parameters." ) );
+                            action.commit();
+                        }
+                        else {
+                            _warningMessage.reset( _( "Not able to generate a map with given parameters." ) );
+                        }
                     }
                 }
 #endif
@@ -2009,7 +2011,7 @@ namespace Interface
 
             fheroes2::ActionCreator action( _historyManager, _mapFormat );
 
-            if ( !placeCastle( tilePos.x, tilePos.y, Color::IndexToColor( color ), type ) ) {
+            if ( !_placeCastle( tilePos.x, tilePos.y, Color::IndexToColor( color ), type ) ) {
                 return;
             }
 
@@ -2176,7 +2178,7 @@ namespace Interface
         return false;
     }
 
-    bool EditorInterface::_updateRandomMapConfiguration()
+    bool EditorInterface::updateRandomMapConfiguration()
     {
         Maps::Random_Generator::Configuration temp{ _randomMapConfig };
 
@@ -2184,7 +2186,11 @@ namespace Interface
             return false;
         }
 
-        if ( !Dialog::SelectCount( _( "Limit region size" ), 200, 10000, temp.regionSizeLimit ) ) {
+        if ( !Dialog::SelectCount( _( "Set water percentage" ), 0, 99, temp.waterPercentage ) ) {
+            return false;
+        }
+
+        if ( !Dialog::SelectCount( _( "Set map seed (set 0 to make the seed random)" ), 0, 999999, temp.seed ) ) {
             return false;
         }
 
@@ -2195,10 +2201,6 @@ namespace Interface
 
     bool EditorInterface::generateRandomMap( const int32_t mapWidth )
     {
-        if ( !_updateRandomMapConfiguration() ) {
-            return false;
-        }
-
         return Maps::Random_Generator::generateMap( _mapFormat, _randomMapConfig, mapWidth, mapWidth );
     }
 
@@ -2357,7 +2359,7 @@ namespace Interface
         }
     }
 
-    bool EditorInterface::placeCastle( const int32_t posX, const int32_t posY, const PlayerColor color, const int32_t type )
+    bool EditorInterface::_placeCastle( const int32_t posX, const int32_t posY, const PlayerColor color, const int32_t type )
     {
         if ( type < 0 ) {
             // Check your logic!
