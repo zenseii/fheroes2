@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fheroes2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-23 11:21+0000\n"
-"PO-Revision-Date: 2025-11-18 14:47+0100\n"
+"POT-Creation-Date: 2025-12-10 04:02+0000\n"
+"PO-Revision-Date: 2025-12-03 17:37+0100\n"
 "Last-Translator: fheroes2 team <fhomm2@gmail.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "Language: sv\n"
@@ -1118,6 +1118,12 @@ msgstr "Återställ till standardinställningar."
 
 msgid "Please select another hero."
 msgstr "Välj en annan hjälte."
+
+msgid "Click to set this hero to be human-controlled."
+msgstr "Klicka för att ange denna hjälte som spelarkontrollerad."
+
+msgid "Click to set this hero to be AI-controlled."
+msgstr "Klicka för att ange denna hjälte som AI-kontrollerad."
 
 msgid "%{race1} %{name1} vs %{race2} %{name2}"
 msgstr "%{race1} %{name1} mot %{race2} %{name2}"
@@ -3473,6 +3479,33 @@ msgstr "Steg:"
 msgid "Uncharted Territory"
 msgstr "Outforskat Område"
 
+msgid "Random Map Generator"
+msgstr "Slumpkartgenerator"
+
+msgid "rmg|Player count"
+msgstr "Spelarantal"
+
+msgid "rmg|Map layout"
+msgstr "Kartplan"
+
+msgid "rmg|Water percentage"
+msgstr "Havsprocent"
+
+msgid "rmg|Monster strength"
+msgstr "Varelsestyrka"
+
+msgid "rmg|Resource availability"
+msgstr "Resurstillgänglighet"
+
+msgid "rmg|Map seed"
+msgstr "Kartseed"
+
+msgid "Click to generate a new map."
+msgstr "Klicka för generera en ny karta."
+
+msgid "Return to the previous menu."
+msgstr "Återgå till föregående meny."
+
 msgid "Cost per troop:"
 msgstr "Kostnad per trupp:"
 
@@ -3607,6 +3640,12 @@ msgstr "Fil att Ladda:"
 msgid "Terrain object"
 msgstr "Terrängföremål"
 
+msgid "There is nothing to select from."
+msgstr "Det finns inget att välja."
+
+msgid "There are no castles to select from."
+msgstr "Det finns inga slott att välja."
+
 msgid "Accept the choice made."
 msgstr "Acceptera alla ändringar."
 
@@ -3622,17 +3661,32 @@ msgstr "Klicka för att inaktivera alla föremål."
 msgid "Disable All Items"
 msgstr "Inaktivera Alla Föremål"
 
+msgid "There are no secondary skills to select from."
+msgstr "Det finns inga sekundära förmågor att välja."
+
 msgid "Select Skill:"
 msgstr "Välj Förmåga:"
+
+msgid "There are no spells to select."
+msgstr "Det finns inga besvärjelser att välja."
 
 msgid "Select Spell:"
 msgstr "Välj Besvärjelse"
 
+msgid "There are no artifacts to select from."
+msgstr "Det finns inga artefakter att välja."
+
 msgid "Select Artifact:"
 msgstr "Välj Artefakt:"
 
+msgid "There are no monsters to select from."
+msgstr "Det finns inga varelser att välja."
+
 msgid "Select Monster:"
 msgstr "Välj Varelse:"
+
+msgid "There are no heroes to select from."
+msgstr "Det finns inga hjältar att välja."
 
 msgid "Select Hero:"
 msgstr "Välj Hjälte:"
@@ -3765,7 +3819,7 @@ msgid "Resurrection"
 msgstr "Resurrection"
 
 msgid "This map is made for \"%{game-version}\" version of the game."
-msgstr ""
+msgstr "Denna karta är skapad för \"%{game-version}\"-versionen av spelet."
 
 msgid "Map Type"
 msgstr "Karttyp"
@@ -4399,15 +4453,6 @@ msgstr "Endast en Slumpad Främsta Artefakt kan placeras på kartan."
 
 msgid "A maximum of %{count} obelisks can be placed on the map."
 msgstr "Maximalt %{count} obelisker kan placeras på kartan."
-
-msgid "Pick player count"
-msgstr "Ange spelarantal"
-
-msgid "Set water percentage"
-msgstr "Ange havsprocent"
-
-msgid "Set map seed (set 0 to make the seed random)"
-msgstr "Ange kart-seed (ange 0 för att slumpa seeden)"
 
 msgid "The map is corrupted."
 msgstr "Kartan är korrupt."
@@ -6382,6 +6427,9 @@ msgid ""
 msgstr ""
 "En eller flera hjältar kan fortfarande flytta sig. Är du säker på att du "
 "vill avsluta din runda?"
+
+msgid "To exit fheroes2, press the Home button or swipe up."
+msgstr ""
 
 msgid "Are you sure you want to quit?"
 msgstr "Är du säker på att du vill avsluta?"
@@ -9257,6 +9305,42 @@ msgstr "Gräs"
 
 msgid "Ocean"
 msgstr "Hav"
+
+msgid "map_layout|Mirrored"
+msgstr "Speglad"
+
+msgid "map_layout|Balanced"
+msgstr "Balanserad"
+
+msgid "map_layout|Islands"
+msgstr "Skärgård"
+
+msgid "map_layout|Pyramid"
+msgstr "Pyramid"
+
+msgid "map_layout|Quest"
+msgstr ""
+
+msgid "resource_density|Scarce"
+msgstr "Glest"
+
+msgid "resource_density|Normal"
+msgstr "Normalt"
+
+msgid "resource_density|Abundant"
+msgstr "Mycket"
+
+msgid "monster_strength|Weak"
+msgstr "Svag"
+
+msgid "monster_strength|Normal"
+msgstr "Normal"
+
+msgid "monster_strength|Strong"
+msgstr "Stark"
+
+msgid "monster_strength|Deadly"
+msgstr "Dödlig"
 
 msgid "maps|Small"
 msgstr "Liten"
@@ -12412,6 +12496,9 @@ msgstr "Han sa till henne: Jag bah... och hon svarade: Du bah..."
 
 msgid "An unknown force is being resurrected..."
 msgstr "En okänd kraft återuppstår..."
+
+#~ msgid "Set map seed (set 0 to make the seed random)"
+#~ msgstr "Ange kart-seed (ange 0 för att slumpa seeden)"
 
 #~ msgid ""
 #~ "Indicates whether the map is made for \"The Succession Wars\", \"The "

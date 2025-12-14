@@ -2,7 +2,7 @@
 
 ###########################################################################
 #   fheroes2: https://github.com/ihhub/fheroes2                           #
-#   Copyright (C) 2022 - 2025                                             #
+#   Copyright (C) 2025                                                    #
 #                                                                         #
 #   This program is free software; you can redistribute it and/or modify  #
 #   it under the terms of the GNU General Public License as published by  #
@@ -22,9 +22,12 @@
 
 set -e -o pipefail
 
-PKG_FILE="android.zip"
-PKG_FILE_SHA256="7d342b07bca53f2ab7e3bd3414ae1de3029c2c3a8c32e133a8aacdf86361a351"
-PKG_URL="https://github.com/fheroes2/fheroes2-prebuilt-deps/releases/download/android-deps/$PKG_FILE"
+# We might need to move packages into https://github.com/fheroes2/fheroes2-prebuilt-deps
+# repository as we did for other packages.
+PKG_NAME="release-2.32.10"
+PKG_FILE="$PKG_NAME.zip"
+PKG_FILE_SHA256="7a3c207b8509edc487d658df357ad764cd852d68fe248d307b25c0741d52fdf0"
+PKG_URL="https://github.com/libsdl-org/SDL/archive/refs/tags/$PKG_FILE"
 
 TMP_DIR="$(mktemp -d)"
 
@@ -48,4 +51,32 @@ else
     exit 1
 fi
 
-unzip -d "$(dirname "$0")/../../android" "$TMP_DIR/$PKG_FILE"
+unzip -d "$(dirname "$0")/../../ios" "$TMP_DIR/$PKG_FILE"
+
+mv "$(dirname "$0")/../../ios/SDL-$PKG_NAME" "$(dirname "$0")/../../ios/SDL2"
+
+PKG_NAME="release-2.8.1"
+PKG_FILE="$PKG_NAME.zip"
+PKG_FILE_SHA256="3738827df73c86268dfa52898780769d1a796316d73b535e2ab5ff2d8d0ff44f"
+PKG_URL="https://github.com/libsdl-org/SDL_mixer/archive/refs/tags/$PKG_FILE"
+
+if [[ -n "$(command -v wget)" ]]; then
+    wget -O "$TMP_DIR/$PKG_FILE" "$PKG_URL"
+elif [[ -n "$(command -v curl)" ]]; then
+    curl -o "$TMP_DIR/$PKG_FILE" -L "$PKG_URL"
+else
+    echo "Neither wget nor curl were found in your system. Unable to download the package archive. Installation aborted."
+    exit 1
+fi
+
+echo "$PKG_FILE_SHA256 *$PKG_FILE" > "$TMP_DIR/checksums"
+
+unzip -d "$(dirname "$0")/../../ios" "$TMP_DIR/$PKG_FILE"
+
+mv "$(dirname "$0")/../../ios/SDL_Mixer-$PKG_NAME" "$(dirname "$0")/../../ios/SDL2_Mixer"
+
+# Patch SDL_Mixer project.
+# It is needed since we are trying to build SDL Mixer using the latest SDL2 version.
+# Also, SDL Mixer doesn't support iPhone Simulator so we have to change this code or another one.
+sed -i '' 's#$(SRCROOT)/$(PLATFORM)/SDL2.framework/Headers#$(SRCROOT)/../../SDL2/include#' \
+    ios/SDL2_Mixer/Xcode/SDL_mixer.xcodeproj/project.pbxproj
