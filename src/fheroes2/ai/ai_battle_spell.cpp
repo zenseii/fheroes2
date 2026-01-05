@@ -1,6 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2024 - 2025                                             *
+ *   Copyright (C) 2024 - 2026                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -174,6 +174,11 @@ AI::SpellcastOutcome AI::BattlePlanner::spellDamageValue( const Spell & spell, B
 
         // If we retreat, we are not interested in partial damage, but only in the number of units actually killed
         if ( retreating ) {
+            if ( unit->Modes( Battle::CAP_MIRRORIMAGE ) ) {
+                // Since we are retreating there is no use to kill mirrored monster stack as it will disappear after the battle.
+                return 0.0;
+            }
+
             return unit->GetMonsterStrength() * unit->HowManyWillBeKilled( damage );
         }
 
@@ -903,6 +908,7 @@ AI::SpellcastOutcome AI::BattlePlanner::spellTeleportValue( Battle::Arena & aren
 
 AI::SpellcastOutcome AI::BattlePlanner::spellEarthquakeValue( const Battle::Arena & arena, const Spell & spell, const Battle::Units & friendly ) const
 {
+    (void)spell;
     assert( spell == Spell::EARTHQUAKE );
 
     // If we are not attacking a castle, then this spell is useless.
