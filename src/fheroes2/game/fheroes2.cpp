@@ -75,6 +75,7 @@
 #include "localevent.h"
 #include "logging.h"
 #include "math_base.h"
+#include "monster.h"
 #include "render_processor.h"
 #include "screen.h"
 #include "settings.h"
@@ -364,6 +365,14 @@ int main( int argc, char ** argv )
 
         // Initialize game data.
         Game::Init();
+
+        // calculate monster tier list:
+        /*for ( int id = 1; id < 67; id++ ) {
+            Monster( id ).GetMonsterStrength();
+            std::cout << fheroes2::getMonsterData( id ).generalStats.untranslatedName << " " << Monster( id ).GetMonsterStrength() << " "
+                      << fheroes2::getMonsterData( id ).battleStats.monsterBaseStrength << "\n";
+        }*/
+        
 
         if ( conf.isShowIntro() ) {
             fheroes2::showTeamInfo();
