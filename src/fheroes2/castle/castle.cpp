@@ -1,6 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2019 - 2025                                             *
+ *   Copyright (C) 2019 - 2026                                             *
  *                                                                         *
  *   Free Heroes2 Engine: http://sourceforge.net/projects/fheroes2         *
  *   Copyright (C) 2009 by Andrey Afletdinov <fheroes2@gmail.com>          *
@@ -847,8 +847,9 @@ void Castle::ActionNewWeek()
             DWELLING_UPGRADE2, DWELLING_UPGRADE3, DWELLING_UPGRADE4, DWELLING_UPGRADE5, DWELLING_UPGRADE6, DWELLING_UPGRADE7 };
 
     const bool isNeutral = ( GetColor() == PlayerColor::NONE );
-    const bool isPlagueWeek = ( world.GetWeekType().GetType() == WeekName::PLAGUE );
-    const bool isMonsterWeek = ( world.GetWeekType().GetType() == WeekName::MONSTERS );
+    const WeekName weekType = world.GetWeekType().GetType();
+    const bool isPlagueWeek = ( weekType == WeekName::PLAGUE );
+    const bool isMonsterWeek = ( weekType == WeekName::MONSTERS );
 
     if ( !isPlagueWeek ) {
         static const std::array<uint32_t, 6> basicDwellings
@@ -1322,7 +1323,6 @@ bool Castle::BuyBuilding( const uint32_t buildingType )
     return true;
 }
 
-/* draw image castle to position */
 void Castle::DrawImageCastle( const fheroes2::Point & pt ) const
 {
     fheroes2::Display & display = fheroes2::Display::instance();
@@ -1362,16 +1362,16 @@ void Castle::DrawImageCastle( const fheroes2::Point & pt ) const
         return;
     }
 
-    for ( uint32_t ii = 0; ii < 5; ++ii ) {
-        const fheroes2::Sprite & sprite = fheroes2::AGG::GetICN( ICN::OBJNTWBA, index + ii );
-        dst_pt.x = pt.x + ii * 32 + sprite.x();
+    for ( uint32_t i = 0; i < 5; ++i ) {
+        const fheroes2::Sprite & sprite = fheroes2::AGG::GetICN( ICN::OBJNTWBA, index + i );
+        dst_pt.x = pt.x + i * 32 + sprite.x();
         dst_pt.y = pt.y + 3 * 32 + sprite.y();
         fheroes2::Blit( sprite, display, dst_pt.x, dst_pt.y );
     }
 
-    for ( uint32_t ii = 0; ii < 5; ++ii ) {
-        const fheroes2::Sprite & sprite = fheroes2::AGG::GetICN( ICN::OBJNTWBA, index + 5 + ii );
-        dst_pt.x = pt.x + ii * 32 + sprite.x();
+    for ( uint32_t i = 0; i < 5; ++i ) {
+        const fheroes2::Sprite & sprite = fheroes2::AGG::GetICN( ICN::OBJNTWBA, index + 5 + i );
+        dst_pt.x = pt.x + i * 32 + sprite.x();
         dst_pt.y = pt.y + 4 * 32 + sprite.y();
         fheroes2::Blit( sprite, display, dst_pt.x, dst_pt.y );
     }
@@ -2294,8 +2294,6 @@ void AllCastles::AddCastle( std::unique_ptr<Castle> && castle )
 {
     assert( castle );
 
-    const fheroes2::Point & center = castle->GetCenter();
-
     _castles.emplace_back( std::move( castle ) );
 
     /* Register position of all castle elements on the map
@@ -2315,6 +2313,8 @@ void AllCastles::AddCastle( std::unique_ptr<Castle> && castle )
 
     // Castles are added from top to bottom, from left to right.
     // Tiles containing castle ID cannot be overwritten.
+
+    const fheroes2::Point & center = _castles.back()->GetCenter();
 
     for ( int32_t y = -2; y <= 1; ++y ) {
         for ( int32_t x = -2; x <= 2; ++x ) {

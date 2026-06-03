@@ -1,6 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2025                                                    *
+ *   Copyright (C) 2025 - 2026                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,6 +21,7 @@
 #include "map_random_generator_helper.h"
 
 #include <algorithm>
+#include <array>
 #include <cassert>
 #include <cmath>
 #include <cstddef>
@@ -55,12 +56,12 @@ namespace
     {
         int32_t _from{ -1 };
         uint32_t _cost{ 0 };
-        int _direction{ Direction::UNKNOWN };
+        int32_t _direction{ Direction::UNKNOWN };
     };
 
-    constexpr int randomCastleIndex{ 12 };
-    constexpr int randomTownIndex{ 13 };
-    constexpr int randomHeroIndex{ 7 };
+    constexpr int32_t randomCastleIndex{ 12 };
+    constexpr int32_t randomTownIndex{ 13 };
+    constexpr int32_t randomHeroIndex{ 7 };
     constexpr size_t maxPlacementAttempts{ 99 };
     constexpr uint32_t roadBuilderMargin{ Maps::Ground::defaultGroundPenalty * 3 };
 
@@ -124,7 +125,7 @@ namespace
         { MP2::OBJ_WATER_ALTAR, 5000 },
     };
 
-    constexpr int32_t treeTypeFromGroundType( const int groundType )
+    constexpr int32_t treeTypeFromGroundType( const int32_t groundType )
     {
         switch ( groundType ) {
         case Maps::Ground::WATER:
@@ -154,7 +155,7 @@ namespace
         return 0;
     }
 
-    constexpr int32_t mountainTypeFromGroundType( const int groundType )
+    constexpr int32_t mountainTypeFromGroundType( const int32_t groundType )
     {
         switch ( groundType ) {
         case Maps::Ground::WATER:
@@ -184,7 +185,7 @@ namespace
         return 0;
     }
 
-    constexpr MP2::MapObjectType getFakeMP2MineType( const int resource )
+    constexpr MP2::MapObjectType getFakeMP2MineType( const int32_t resource )
     {
         switch ( resource ) {
         case Resource::WOOD:
@@ -205,32 +206,6 @@ namespace
         return MP2::OBJ_NONE;
     }
 
-    std::pair<Maps::ObjectGroup, int32_t> convertMP2ToObjectInfo( const MP2::MapObjectType mp2Type )
-    {
-        static std::map<MP2::MapObjectType, std::pair<Maps::ObjectGroup, int32_t>> lookup;
-
-        if ( lookup.empty() ) {
-            const std::vector<Maps::ObjectGroup> limitedGroupList{ Maps::ObjectGroup::ADVENTURE_ARTIFACTS, Maps::ObjectGroup::ADVENTURE_DWELLINGS,
-                                                                   Maps::ObjectGroup::ADVENTURE_MINES,     Maps::ObjectGroup::ADVENTURE_POWER_UPS,
-                                                                   Maps::ObjectGroup::ADVENTURE_TREASURES, Maps::ObjectGroup::MONSTERS };
-
-            for ( const auto & group : limitedGroupList ) {
-                const auto & groupObjects = Maps::getObjectsByGroup( group );
-                for ( size_t index = 0; index < groupObjects.size(); ++index ) {
-                    const MP2::MapObjectType type = groupObjects[index].objectType;
-                    lookup.try_emplace( type, std::make_pair( group, static_cast<int32_t>( index ) ) );
-                }
-            }
-        }
-
-        const auto it = lookup.find( mp2Type );
-        if ( it != lookup.end() ) {
-            return it->second;
-        }
-
-        return {};
-    }
-
     void iterateOverObjectParts( const Maps::ObjectInfo & info, const std::function<void( const Maps::ObjectPartInfo & )> & lambda )
     {
         for ( const auto & objectPart : info.groundLevelParts ) {
@@ -246,8 +221,10 @@ namespace
     void markNodeIndexAsType( Maps::Random_Generator::MapStateManager & data, const int32_t index, const Maps::Random_Generator::NodeType type )
     {
         auto & node = data.getNodeToUpdate( index );
-        // Never override border types (no assert needed; can happen when placing overlapping obstacles)
-        if ( node.type != Maps::Random_Generator::NodeType::BORDER && node.type != Maps::Random_Generator::NodeType::ACTION ) {
+        // Never override border types (no assert needed; can happen when placing overlapping obstacles),
+        // action types and do not put path though an obstacle.
+        if ( node.type != Maps::Random_Generator::NodeType::BORDER && node.type != Maps::Random_Generator::NodeType::ACTION
+             && ( type != Maps::Random_Generator::NodeType::PATH || node.type != Maps::Random_Generator::NodeType::OBSTACLE ) ) {
             node.type = type;
         }
     }
@@ -268,6 +245,10 @@ namespace
             const Maps::Random_Generator::Node & node = data.getNode( position + partInfo.tileOffset );
 
             if ( node.index == -1 || node.region == 0 ) {
+                validPlacement = false;
+                return;
+            }
+            if ( node.type == Maps::Random_Generator::NodeType::ACTION || node.type == Maps::Random_Generator::NodeType::PATH ) {
                 validPlacement = false;
                 return;
             }
@@ -399,15 +380,38 @@ namespace Maps::Random_Generator
         return convertMP2ToObjectInfo( Rand::GetWithGen( possibilities, randomGenerator ) );
     }
 
-    int32_t selectTerrainVariantForObject( const ObjectGroup groupType, const int32_t objectIndex, const int groundType )
+    std::pair<ObjectGroup, int32_t> convertMP2ToObjectInfo( const MP2::MapObjectType mp2Type )
     {
-        if ( groupType == ObjectGroup::LANDSCAPE_TREES ) {
-            assert( objectIndex < 6 );
+        static std::map<MP2::MapObjectType, std::pair<Maps::ObjectGroup, int32_t>> lookup;
+
+        if ( lookup.empty() ) {
+            const std::vector<ObjectGroup> limitedGroupList{ ObjectGroup::ADVENTURE_ARTIFACTS, ObjectGroup::ADVENTURE_DWELLINGS, ObjectGroup::ADVENTURE_MINES,
+                                                             ObjectGroup::ADVENTURE_POWER_UPS, ObjectGroup::ADVENTURE_TREASURES, ObjectGroup::MONSTERS };
+
+            for ( const auto & group : limitedGroupList ) {
+                const auto & groupObjects = Maps::getObjectsByGroup( group );
+                for ( size_t index = 0; index < groupObjects.size(); ++index ) {
+                    const MP2::MapObjectType type = groupObjects[index].objectType;
+                    lookup.try_emplace( type, std::make_pair( group, static_cast<int32_t>( index ) ) );
+                }
+            }
+        }
+
+        const auto it = lookup.find( mp2Type );
+        if ( it != lookup.end() ) {
+            return it->second;
+        }
+
+        return {};
+    }
+
+    int32_t selectTerrainVariantForObject( const ObjectGroup groupType, const int32_t objectIndex, const int32_t groundType )
+    {
+        if ( groupType == ObjectGroup::LANDSCAPE_TREES && objectIndex < 6 ) {
             return treeTypeFromGroundType( groundType ) + objectIndex;
         }
 
-        if ( groupType == ObjectGroup::LANDSCAPE_MOUNTAINS ) {
-            assert( objectIndex < 8 );
+        if ( groupType == ObjectGroup::LANDSCAPE_MOUNTAINS && objectIndex < 8 ) {
             return mountainTypeFromGroundType( groundType ) + objectIndex;
         }
         return objectIndex;
@@ -429,7 +433,6 @@ namespace Maps::Random_Generator
         cache[static_cast<size_t>( start )]._cost = 0;
 
         const bool fromActionTile = ( nodes.getNode( start ).type == Maps::Random_Generator::NodeType::ACTION );
-        const Directions & directions = Direction::All();
 
         int32_t bestRoadIndex = -1;
         uint32_t bestRoadCost = std::numeric_limits<uint32_t>::max();
@@ -449,7 +452,7 @@ namespace Maps::Random_Generator
                 bestRoadCost = currentNode._cost;
             }
 
-            for ( const int direction : directions ) {
+            for ( const int32_t direction : Direction::allNeighboringDirections ) {
                 if ( !Maps::isValidDirection( currentNodeIdx, direction ) ) {
                     continue;
                 }
@@ -462,7 +465,7 @@ namespace Maps::Random_Generator
 
                 // Edge case: avoid tight road turns for a better visuals
                 if ( isDiagonal && currentNode._from != -1 ) {
-                    const int previousDirection = cache[currentNode._from]._direction;
+                    const int32_t previousDirection = cache[currentNode._from]._direction;
 
                     if ( previousDirection != direction && Direction::isDiagonal( previousDirection ) ) {
                         continue;
@@ -472,7 +475,7 @@ namespace Maps::Random_Generator
                     }
                 }
 
-                const int newIndex = Maps::GetDirectionIndex( currentNodeIdx, direction );
+                const int32_t newIndex = Maps::GetDirectionIndex( currentNodeIdx, direction );
                 if ( newIndex == start ) {
                     continue;
                 }
@@ -541,16 +544,16 @@ namespace Maps::Random_Generator
 
         std::vector<std::vector<int32_t>> buckets;
 
-        const int centerX = region.centerIndex % mapWidth;
-        const int centerY = region.centerIndex / mapWidth;
+        const int32_t centerX = region.centerIndex % mapWidth;
+        const int32_t centerY = region.centerIndex / mapWidth;
 
         for ( const Node & node : region.nodes ) {
             if ( node.type != NodeType::OPEN || node.index < 0 ) {
                 continue;
             }
 
-            const int dx = ( node.index % mapWidth ) - centerX;
-            const int dy = ( node.index / mapWidth ) - centerY;
+            const int32_t dx = ( node.index % mapWidth ) - centerX;
+            const int32_t dy = ( node.index / mapWidth ) - centerY;
 
             const double distance = std::sqrt( static_cast<double>( dx * dx + dy * dy ) );
             const uint32_t noise = static_cast<int>( Rand::GetWithGen( 0, 2, randomGenerator ) );
@@ -572,11 +575,11 @@ namespace Maps::Random_Generator
         return buckets;
     }
 
-    std::vector<int32_t> findOpenTiles( const Region & region )
+    std::vector<int32_t> findTilesByType( const Region & region, const NodeType type )
     {
         std::vector<int32_t> result;
         for ( const Node & node : region.nodes ) {
-            if ( node.type == NodeType::OPEN ) {
+            if ( node.type == type ) {
                 result.push_back( node.index );
             }
         }
@@ -654,12 +657,12 @@ namespace Maps::Random_Generator
         return result;
     }
 
-    bool canPlaceBorderObstacle( const MapStateManager & data, const ObjectInfo & info, const fheroes2::Point & mainTilePos )
+    bool canPlaceBorderObstacle( const MapStateManager & data, const ObjectInfo & info, const fheroes2::Point & position )
     {
         bool validPlacement = true;
 
-        auto updateObjectArea = [&data, &mainTilePos, &validPlacement]( const auto & partInfo ) {
-            const Node & node = data.getNode( mainTilePos + partInfo.tileOffset );
+        auto updateObjectArea = [&data, &position, &validPlacement]( const auto & partInfo ) {
+            const Node & node = data.getNode( position + partInfo.tileOffset );
 
             if ( node.index == -1 || node.region == 0 ) {
                 validPlacement = false;
@@ -674,7 +677,7 @@ namespace Maps::Random_Generator
         iterateOverObjectParts( info, updateObjectArea );
 
         for ( const auto & objectPart : info.topLevelParts ) {
-            const Node & node = data.getNode( mainTilePos + objectPart.tileOffset );
+            const Node & node = data.getNode( position + objectPart.tileOffset );
             if ( node.index == -1 || node.region == 0 ) {
                 return false;
             }
@@ -683,43 +686,76 @@ namespace Maps::Random_Generator
         return validPlacement;
     }
 
-    bool canFitObjectSet( const MapStateManager & data, const ObjectSet & set, const fheroes2::Point & mainTilePos )
+    bool canPlaceAllObjects( const MapStateManager & data, const std::vector<ObjectPlacement> & objects, const fheroes2::Point & position, const int32_t ground )
+    {
+        return std::all_of( objects.begin(), objects.end(), [&ground, &data, &position]( const ObjectPlacement & object ) {
+            const int32_t objectIndex = selectTerrainVariantForObject( object.groupType, object.objectIndex, ground );
+            return canPlaceObject( data, Maps::getObjectInfo( object.groupType, objectIndex ), position + object.offset );
+        } );
+    }
+
+    bool canFitObjectSet( const MapStateManager & data, const ObjectSet & set, const fheroes2::Point & position, const int32_t ground )
     {
         for ( const fheroes2::Point offset : set.entranceCheck ) {
-            const Node & node = data.getNode( mainTilePos + offset );
+            const Node & node = data.getNode( position + offset );
             if ( node.index == -1 || node.type != NodeType::OPEN ) {
                 return false;
             }
         }
 
         for ( const auto * placements : { &set.obstacles, &set.valuables, &randomMonsterSet } ) {
-            for ( const auto & placement : *placements ) {
-                const auto & info = Maps::getObjectInfo( placement.groupType, placement.objectIndex );
-
-                if ( !canPlaceObject( data, info, mainTilePos + placement.offset ) ) {
-                    return false;
-                }
+            if ( !canPlaceAllObjects( data, *placements, position, ground ) ) {
+                return false;
             }
         }
 
         return true;
     }
 
-    void markObjectPlacement( MapStateManager & data, const ObjectInfo & info, const fheroes2::Point & mainTilePos )
+    void markObjectPlacement( MapStateManager & data, const ObjectInfo & info, const fheroes2::Point & position )
     {
-        iterateOverObjectParts( info, [&data, &mainTilePos]( const auto & partInfo ) { markNodeAsType( data, mainTilePos + partInfo.tileOffset, NodeType::OBSTACLE ); } );
+        iterateOverObjectParts( info, [&data, &position]( const auto & partInfo ) { markNodeAsType( data, position + partInfo.tileOffset, NodeType::OBSTACLE ); } );
 
         if ( !MP2::isOffGameActionObject( info.objectType ) ) {
             return;
         }
 
-        markNodeAsType( data, mainTilePos, NodeType::ACTION );
+        markNodeAsType( data, position, NodeType::ACTION );
     }
 
     // Wouldn't render correctly but will speed up placement
-    void forceTempRoadOnTile( Map_Format::MapFormat & mapFormat, const int32_t tileIndex )
+    void forceTempRoadOnTile( Maps::Random_Generator::MapStateManager & data, Map_Format::MapFormat & mapFormat, const int32_t tileIndex )
     {
-        Maps::writeRoadSpriteToTile( mapFormat.tiles[tileIndex], tileIndex, 0 );
+        if ( data.getNode( tileIndex ).type == NodeType::OBSTACLE ) {
+            // Roads should not be placed under the obstacles.
+            return;
+        }
+
+        markNodeIndexAsType( data, tileIndex, NodeType::PATH );
+
+        auto & tile = mapFormat.tiles[tileIndex];
+        if ( Maps::doesContainRoad( tile ) ) {
+            return;
+        }
+
+        const auto & objectInfo = Maps::getObjectInfo( Maps::ObjectGroup::ROADS, 2 );
+        if ( objectInfo.empty() ) {
+            assert( 0 );
+            return;
+        }
+
+        if ( Ground::doesTerrainImageIndexContainEmbeddedObjects( tile.terrainIndex ) ) {
+            // Set terrain image without extra objects under the road.
+            const int32_t groundType = Ground::getGroundByImageIndex( tile.terrainIndex );
+            tile.terrainIndex = Ground::getRandomTerrainImageIndex( groundType, false );
+            world.getTile( tileIndex ).setTerrain( tile.terrainIndex, tile.terrainFlags );
+        }
+
+        // We just increase the UID counter to use the last UID in `Maps::addObjectToMap()`.
+        // All road objects will be updated and placed to the `world` tiles only after all of the road parts are placet to the `Map_Format`.
+        Maps::getNewObjectUID();
+
+        Maps::addObjectToMap( mapFormat, tileIndex, Maps::ObjectGroup::ROADS, 2 );
     }
 
     bool putObjectOnMap( Map_Format::MapFormat & mapFormat, Tile & tile, const ObjectGroup groupType, const int32_t objectIndex )
@@ -730,8 +766,21 @@ namespace Maps::Random_Generator
             return false;
         }
 
+        if ( MP2::isOffGameActionObject( objectInfo.objectType ) ) {
+            const auto & tileObjects = mapFormat.tiles[tile.GetIndex()].objects;
+            const bool tileHasActionObject = std::any_of( tileObjects.cbegin(), tileObjects.cend(), []( const Maps::Map_Format::TileObjectInfo & tileObjectinfo ) {
+                const auto & info = Maps::getObjectInfo( tileObjectinfo.group, static_cast<int32_t>( tileObjectinfo.index ) );
+                return MP2::isOffGameActionObject( info.objectType );
+            } );
+
+            if ( tileHasActionObject ) {
+                // Two action objects cannot be placed on one tile.
+                return false;
+            }
+        }
+
         // Maps::setObjectOnTile isn't idempotent, check if object was already placed
-        if ( MP2::isInGameActionObject( objectInfo.objectType ) && tile.getMainObjectType() == objectInfo.objectType ) {
+        if ( tile.getMainObjectType() == objectInfo.objectType && MP2::isInGameActionObject( objectInfo.objectType ) ) {
             return false;
         }
 
@@ -762,8 +811,7 @@ namespace Maps::Random_Generator
 
             if ( putObjectOnMap( mapFormat, tile, groupType, type ) ) {
                 for ( const auto & step : roadToObject ) {
-                    markNodeIndexAsType( data, step, NodeType::PATH );
-                    forceTempRoadOnTile( mapFormat, step );
+                    forceTempRoadOnTile( data, mapFormat, step );
                 }
                 transaction.commit();
                 return true;
@@ -839,15 +887,14 @@ namespace Maps::Random_Generator
         // Force roads coming from the castle
         const int32_t nextIndex = Maps::GetDirectionIndex( bottomIndex, Direction::BOTTOM );
         if ( Maps::isValidAbsIndex( nextIndex ) ) {
-            markNodeIndexAsType( data, bottomIndex, NodeType::PATH );
-            Maps::updateRoadOnTile( mapFormat, bottomIndex, true );
-            Maps::updateRoadOnTile( mapFormat, nextIndex, true );
+            forceTempRoadOnTile( data, mapFormat, bottomIndex );
+            forceTempRoadOnTile( data, mapFormat, nextIndex );
         }
 
         return true;
     }
 
-    int32_t placeMine( Map_Format::MapFormat & mapFormat, MapStateManager & data, MapEconomy & economy, const std::vector<int32_t> & tileOptions, const int resource,
+    int32_t placeMine( Map_Format::MapFormat & mapFormat, MapStateManager & data, MapEconomy & economy, const std::vector<int32_t> & tileOptions, const int32_t resource,
                        const MonsterStrength monsterStrength )
     {
         for ( const int32_t nodeIndex : tileOptions ) {
@@ -857,17 +904,17 @@ namespace Maps::Random_Generator
                 economy.increaseMineCount( resource );
 
                 const int32_t mineValue = getObjectGoldValue( getFakeMP2MineType( resource ) );
-                placeMonster( mapFormat, Maps::GetDirectionIndex( nodeIndex, Direction::BOTTOM ), getMonstersByValue( monsterStrength, mineValue ) );
+                placeMonster( mapFormat, data, Maps::GetDirectionIndex( nodeIndex, Direction::BOTTOM ), getMonstersByValue( monsterStrength, mineValue ) );
                 return nodeIndex;
             }
         }
         return -1;
     }
 
-    bool placeBorderObstacle( Map_Format::MapFormat & mapFormat, MapStateManager & data, const Node & node, Rand::PCG32 & randomGenerator )
+    bool placeBorderObstacle( Map_Format::MapFormat & mapFormat, MapStateManager & data, const Node & node, const int32_t ground, Rand::PCG32 & randomGenerator )
     {
         Tile & tile = world.getTile( node.index );
-        const auto it = obstaclesPerGround.find( tile.GetGround() );
+        const auto it = obstaclesPerGround.find( ground );
         if ( it == obstaclesPerGround.end() || it->second.empty() ) {
             return false;
         }
@@ -886,13 +933,15 @@ namespace Maps::Random_Generator
         return false;
     }
 
-    void placeMonster( Map_Format::MapFormat & mapFormat, const int32_t index, const MonsterSelection & monster )
+    void placeMonster( Map_Format::MapFormat & mapFormat, MapStateManager & data, const int32_t index, const MonsterSelection & monster )
     {
         if ( monster.monsterId == Monster::UNKNOWN || !Maps::isValidAbsIndex( index ) ) {
             return;
         }
 
-        putObjectOnMap( mapFormat, world.getTile( index ), ObjectGroup::MONSTERS, static_cast<int32_t>( Monster( monster.monsterId ).GetSpriteIndex() ) );
+        if ( putObjectOnMap( mapFormat, world.getTile( index ), ObjectGroup::MONSTERS, static_cast<int32_t>( Monster( monster.monsterId ).GetSpriteIndex() ) ) ) {
+            markNodeIndexAsType( data, index, NodeType::ACTION );
+        }
 
         if ( monster.allowedMonsters.empty() ) {
             return;
@@ -906,7 +955,7 @@ namespace Maps::Random_Generator
         }
     }
 
-    bool placeSimpleObject( Map_Format::MapFormat & mapFormat, MapStateManager & data, const Node & centerNode, const ObjectPlacement & placement )
+    bool placeSimpleObject( Map_Format::MapFormat & mapFormat, MapStateManager & data, const Node & centerNode, const ObjectPlacement & placement, const int32_t ground )
     {
         const fheroes2::Point position = Maps::GetPoint( centerNode.index ) + placement.offset;
         if ( !Maps::isValidAbsPoint( position.x, position.y ) ) {
@@ -914,7 +963,7 @@ namespace Maps::Random_Generator
         }
 
         Tile & tile = world.getTile( position.x, position.y );
-        const int32_t objectIndex = selectTerrainVariantForObject( placement.groupType, placement.objectIndex, tile.GetGround() );
+        const int32_t objectIndex = selectTerrainVariantForObject( placement.groupType, placement.objectIndex, ground );
         const auto & objectInfo = Maps::getObjectInfo( placement.groupType, objectIndex );
         if ( putObjectOnMap( mapFormat, tile, placement.groupType, objectIndex ) ) {
             markObjectPlacement( data, objectInfo, position );
@@ -978,7 +1027,7 @@ namespace Maps::Random_Generator
         int32_t treasureLimit = region.treasureLimit;
         std::vector<std::pair<int32_t, ObjectSet>> objectSetsPlanned;
 
-        std::vector<int32_t> openTiles = findOpenTiles( region );
+        std::vector<int32_t> openTiles = findTilesByType( region, NodeType::OPEN );
         Rand::ShuffleWithGen( openTiles, randomGenerator );
 
         size_t attempt = 0;
@@ -991,7 +1040,7 @@ namespace Maps::Random_Generator
             const fheroes2::Point mapPoint = Maps::GetPoint( nodeIndex );
 
             for ( const auto & prefab : objectSets ) {
-                if ( !canFitObjectSet( data, prefab, mapPoint ) ) {
+                if ( !canFitObjectSet( data, prefab, mapPoint, region.groundType ) ) {
                     continue;
                 }
 
@@ -1034,7 +1083,7 @@ namespace Maps::Random_Generator
         const Node & node = data.getNode( tileIndex );
 
         for ( const auto & obstacle : objectSet.obstacles ) {
-            if ( !placeSimpleObject( mapFormat, data, node, obstacle ) ) {
+            if ( !placeSimpleObject( mapFormat, data, node, obstacle, region.groundType ) ) {
                 // Validate that object set can be placed before calling this!
                 assert( 0 );
             }
@@ -1044,7 +1093,7 @@ namespace Maps::Random_Generator
         int32_t groupValue = 0;
         for ( const auto & treasure : objectSet.valuables ) {
             if ( treasure.groupType == ObjectGroup::ADVENTURE_POWER_UPS ) {
-                placeSimpleObject( mapFormat, data, node, treasure );
+                placeSimpleObject( mapFormat, data, node, treasure, region.groundType );
                 groupValue += getObjectGoldValue( treasure.groupType, treasure.objectIndex );
             }
             else {
@@ -1052,20 +1101,20 @@ namespace Maps::Random_Generator
 
                 // Randomize what treasure to pick
                 const auto & [groupType, objectIndex] = getRandomTreasure( valueLimit, randomGenerator );
-                placeSimpleObject( mapFormat, data, node, { treasure.offset, groupType, objectIndex } );
+                placeSimpleObject( mapFormat, data, node, { treasure.offset, groupType, objectIndex }, region.groundType );
                 groupValue += getObjectGoldValue( groupType, objectIndex );
             }
         }
         // It is possible to go into the negatives; intentional
         region.treasureLimit -= groupValue;
 
-        placeMonster( mapFormat, node.index, getMonstersByValue( monsterStrength, groupValue ) );
+        placeMonster( mapFormat, data, node.index, getMonstersByValue( monsterStrength, groupValue ) );
     }
 
     void placeObjectSet( Map_Format::MapFormat & mapFormat, MapStateManager & data, Region & region, std::vector<ObjectSet> objectSets,
                          const MonsterStrength monsterStrength, const uint8_t expectedCount, Rand::PCG32 & randomGenerator )
     {
-        int objectsPlaced = 0;
+        int32_t objectsPlaced = 0;
         for ( size_t attempt = 0; attempt < maxPlacementAttempts; ++attempt ) {
             if ( objectsPlaced == expectedCount || region.treasureLimit <= 0 ) {
                 break;
@@ -1075,7 +1124,7 @@ namespace Maps::Random_Generator
 
             Rand::ShuffleWithGen( objectSets, randomGenerator );
             for ( const auto & prefab : objectSets ) {
-                if ( !canFitObjectSet( data, prefab, Maps::GetPoint( node.index ) ) ) {
+                if ( !canFitObjectSet( data, prefab, Maps::GetPoint( node.index ), region.groundType ) ) {
                     continue;
                 }
 
@@ -1092,38 +1141,96 @@ namespace Maps::Random_Generator
                 }
 
                 for ( const auto & step : routeToGroup ) {
-                    markNodeIndexAsType( data, step, NodeType::PATH );
-                    forceTempRoadOnTile( mapFormat, step );
+                    forceTempRoadOnTile( data, mapFormat, step );
                 }
                 transaction.commit();
 
                 for ( const auto & obstacle : prefab.obstacles ) {
-                    placeSimpleObject( mapFormat, data, node, obstacle );
+                    placeSimpleObject( mapFormat, data, node, obstacle, region.groundType );
                 }
 
                 const int32_t groupValueLimit = std::min( region.treasureLimit, maximumTreasureGroupValue );
                 int32_t groupValue = 0;
                 for ( const auto & treasure : prefab.valuables ) {
                     if ( treasure.groupType == ObjectGroup::ADVENTURE_POWER_UPS ) {
-                        placeSimpleObject( mapFormat, data, node, { treasure.offset, treasure.groupType, treasure.objectIndex } );
+                        placeSimpleObject( mapFormat, data, node, { treasure.offset, treasure.groupType, treasure.objectIndex }, region.groundType );
                         groupValue += getObjectGoldValue( treasure.groupType, treasure.objectIndex );
                     }
                     else {
                         const int32_t valueLimit = std::max( minimalTreasureValue, groupValueLimit - groupValue );
 
                         const auto & [groupType, objectIndex] = getRandomTreasure( valueLimit, randomGenerator );
-                        placeSimpleObject( mapFormat, data, node, { treasure.offset, groupType, objectIndex } );
+                        placeSimpleObject( mapFormat, data, node, { treasure.offset, groupType, objectIndex }, region.groundType );
                         groupValue += getObjectGoldValue( groupType, objectIndex );
                     }
                 }
                 // It is possible to go into the negatives; intentional
                 region.treasureLimit -= groupValue;
 
-                placeMonster( mapFormat, node.index, getMonstersByValue( monsterStrength, groupValue ) );
+                placeMonster( mapFormat, data, node.index, getMonstersByValue( monsterStrength, groupValue ) );
 
                 ++objectsPlaced;
                 break;
             }
+        }
+    }
+
+    void placeDecorations( Map_Format::MapFormat & mapFormat, MapStateManager & data, const Region & region, const std::vector<DecorationSet> & decorations,
+                           Rand::PCG32 & randomGenerator )
+    {
+        if ( decorations.empty() ) {
+            return;
+        }
+
+        std::vector<int32_t> openTiles = findTilesByType( region, NodeType::OPEN );
+
+        const auto openSpaceFilter = [&data]( const int32_t idx ) {
+            return std::any_of( Direction::allNeighboringDirections.begin(), Direction::allNeighboringDirections.end(), [&]( const auto direction ) {
+                if ( !Maps::isValidDirection( idx, direction ) ) {
+                    return false;
+                }
+
+                return data.getNode( Maps::GetDirectionIndex( idx, direction ) ).type != NodeType::OPEN;
+            } );
+        };
+        openTiles.erase( std::remove_if( openTiles.begin(), openTiles.end(), openSpaceFilter ), openTiles.end() );
+
+        if ( openTiles.empty() ) {
+            return;
+        }
+
+        const int32_t individualObjectCopies = std::max( 1, static_cast<int32_t>( openTiles.size() ) / 300 );
+        std::vector<int32_t> objectCount( decorations.size(), individualObjectCopies );
+
+        const size_t possibilitiesCount = decorations.size() * individualObjectCopies * 3;
+        const std::vector<int32_t> tileIndicies = pickEvenlySpacedTiles( openTiles, possibilitiesCount, {} );
+
+        for ( const int32_t tileIndex : tileIndicies ) {
+            const size_t setIndex = Rand::GetWithGen( 0, static_cast<uint32_t>( decorations.size() - 1 ), randomGenerator );
+            if ( objectCount[setIndex] <= 0 ) {
+                continue;
+            }
+            const auto & objectSet = decorations[setIndex];
+
+            const fheroes2::Point position = Maps::GetPoint( tileIndex );
+            if ( !canPlaceAllObjects( data, objectSet.obstacles, position, region.groundType ) ) {
+                continue;
+            }
+
+            const Node & node = data.getNode( tileIndex );
+
+            for ( const auto & obstacle : objectSet.obstacles ) {
+                placeSimpleObject( mapFormat, data, node, obstacle, region.groundType );
+            }
+            for ( const auto & obstacle : objectSet.optional ) {
+                const int32_t objectIndex = selectTerrainVariantForObject( obstacle.groupType, obstacle.objectIndex, region.groundType );
+                const auto & objectInfo = Maps::getObjectInfo( obstacle.groupType, objectIndex );
+                if ( Rand::GetWithGen( 0, 1, randomGenerator ) && canPlaceBorderObstacle( data, objectInfo, position + obstacle.offset ) ) {
+                    placeSimpleObject( mapFormat, data, node, obstacle, region.groundType );
+                }
+            }
+
+            --objectCount[setIndex];
         }
     }
 }

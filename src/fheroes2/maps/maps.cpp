@@ -1,6 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2019 - 2025                                             *
+ *   Copyright (C) 2019 - 2026                                             *
  *                                                                         *
  *   Free Heroes2 Engine: http://sourceforge.net/projects/fheroes2         *
  *   Copyright (C) 2009 by Andrey Afletdinov <fheroes2@gmail.com>          *
@@ -425,10 +425,10 @@ Maps::Indexes Maps::getAroundIndexes( const int32_t tileIndex, const int32_t wid
     const int32_t centerY = tileIndex / width;
 
     // We avoid getting out of map boundaries.
-    const int32_t minTileX = std::max( centerX - maxDistanceFromTile, 0 );
-    const int32_t minTileY = std::max( centerY - maxDistanceFromTile, 0 );
-    const int32_t maxTileX = std::min( centerX + maxDistanceFromTile + 1, width );
-    const int32_t maxTileY = std::min( centerY + maxDistanceFromTile + 1, height );
+    const int32_t minTileX = std::max<int32_t>( centerX - maxDistanceFromTile, 0 );
+    const int32_t minTileY = std::max<int32_t>( centerY - maxDistanceFromTile, 0 );
+    const int32_t maxTileX = std::min<int32_t>( centerX + maxDistanceFromTile + 1, width );
+    const int32_t maxTileY = std::min<int32_t>( centerY + maxDistanceFromTile + 1, height );
 
     for ( int32_t tileY = minTileY; tileY < maxTileY; ++tileY ) {
         const int32_t indexOffsetY = tileY * width;
@@ -474,13 +474,13 @@ void Maps::ClearFog( const int32_t tileIndex, const int32_t scoutingDistance, co
     const int32_t squaredScoutingRadiusLimit = getSquaredScoutingRadiusLimit( scoutingDistance );
     const PlayerColorsSet alliedColors = Players::GetPlayerFriends( playerColor );
 
-    const int32_t minY = std::max( center.y - scoutingDistance, 0 );
-    const int32_t maxY = std::min( center.y + scoutingDistance, world.h() - 1 );
+    const int32_t minY = std::max<int32_t>( center.y - scoutingDistance, 0 );
+    const int32_t maxY = std::min<int32_t>( center.y + scoutingDistance, world.h() - 1 );
     assert( minY < maxY );
 
     const int32_t worldWidth = world.w();
-    const int32_t minX = std::max( center.x - scoutingDistance, 0 );
-    const int32_t maxX = std::min( center.x + scoutingDistance, worldWidth - 1 );
+    const int32_t minX = std::max<int32_t>( center.x - scoutingDistance, 0 );
+    const int32_t maxX = std::min<int32_t>( center.x + scoutingDistance, worldWidth - 1 );
     assert( minX < maxX );
 
     fheroes2::Point fogRevealMinPos( world.h(), worldWidth );
@@ -533,13 +533,13 @@ int32_t Maps::getFogTileCountToBeRevealed( const int32_t tileIndex, const int32_
     const fheroes2::Point center = Maps::GetPoint( tileIndex );
     const int32_t squaredScoutingRadiusLimit = getSquaredScoutingRadiusLimit( scoutingDistance );
 
-    const int32_t minY = std::max( center.y - scoutingDistance, 0 );
-    const int32_t maxY = std::min( center.y + scoutingDistance, world.h() - 1 );
+    const int32_t minY = std::max<int32_t>( center.y - scoutingDistance, 0 );
+    const int32_t maxY = std::min<int32_t>( center.y + scoutingDistance, world.h() - 1 );
     assert( minY < maxY );
 
     const int32_t worldWidth = world.w();
-    const int32_t minX = std::max( center.x - scoutingDistance, 0 );
-    const int32_t maxX = std::min( center.x + scoutingDistance, worldWidth - 1 );
+    const int32_t minX = std::max<int32_t>( center.x - scoutingDistance, 0 );
+    const int32_t maxX = std::min<int32_t>( center.x + scoutingDistance, worldWidth - 1 );
     assert( minX < maxX );
 
     int32_t tileCount = 0;
@@ -565,8 +565,14 @@ int32_t Maps::getFogTileCountToBeRevealed( const int32_t tileIndex, const int32_
 
 Maps::Indexes Maps::ScanAroundObject( const int32_t center, const MP2::MapObjectType objectType, const bool ignoreHeroes )
 {
-    Indexes results = getAroundIndexes( center );
+    const Indexes results = getAroundIndexes( center );
     return MapsIndexesFilteredObject( results, objectType, ignoreHeroes );
+}
+
+bool Maps::hasNearbyObject( const int32_t center, const MP2::MapObjectType objectType )
+{
+    const Indexes results = getAroundIndexes( center );
+    return std::any_of( results.cbegin(), results.cend(), [objectType]( const int32_t index ) { return world.getTile( index ).getMainObjectType() == objectType; } );
 }
 
 bool Maps::isValidForDimensionDoor( int32_t targetIndex, bool isWater )
@@ -577,7 +583,7 @@ bool Maps::isValidForDimensionDoor( int32_t targetIndex, bool isWater )
 
 Maps::Indexes Maps::ScanAroundObject( const int32_t center, const MP2::MapObjectType objectType )
 {
-    Indexes results = getAroundIndexes( center );
+    const Indexes results = getAroundIndexes( center );
     return MapsIndexesFilteredObject( results, objectType );
 }
 

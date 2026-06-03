@@ -1,6 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2025                                                    *
+ *   Copyright (C) 2025 - 2026                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -298,6 +298,12 @@ namespace Maps::Random_Generator
         int32_t objectIndex{ 0 };
     };
 
+    struct DecorationSet final
+    {
+        std::vector<ObjectPlacement> obstacles;
+        std::vector<ObjectPlacement> optional;
+    };
+
     struct ObjectSet final
     {
         std::vector<ObjectPlacement> obstacles;
@@ -308,6 +314,6 @@ namespace Maps::Random_Generator
     struct MonsterSelection final
     {
         int32_t monsterId{ Monster::UNKNOWN };
-        std::vector<int> allowedMonsters;
+        std::vector<int32_t> allowedMonsters;
     };
 }

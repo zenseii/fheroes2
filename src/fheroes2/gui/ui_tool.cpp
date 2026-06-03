@@ -1,6 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2020 - 2025                                             *
+ *   Copyright (C) 2020 - 2026                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -536,13 +536,13 @@ namespace fheroes2
         // The spell effect represents as a blurry image. The blur algorithm should blur only horizontally and vertically from current pixel.
         // So the color data is averaged in a "cross" around the current pixel (not a square or circle like other blur algorithms).
         for ( int32_t y = 0; y < height; ++y ) {
-            const int32_t startY = std::max( y - blurRadius, 0 );
+            const int32_t startY = std::max<int32_t>( y - blurRadius, 0 );
             const int32_t rangeY = std::min( y + blurRadius + 1, height ) - startY;
             const uint8_t * imageInXStart = imageIn + static_cast<ptrdiff_t>( y ) * width;
             const uint8_t * imageInYStart = imageIn + static_cast<ptrdiff_t>( startY ) * width;
 
             for ( int32_t x = 0; x < width; ++x, ++imageOutX ) {
-                const int32_t startX = std::max( x - blurRadius, 0 );
+                const int32_t startX = std::max<int32_t>( x - blurRadius, 0 );
                 const int32_t rangeX = std::min( x + blurRadius + 1, width ) - startX;
 
                 uint32_t sumRed = 0;
@@ -737,7 +737,7 @@ namespace fheroes2
             return {};
         }
 
-        const int32_t zeroBufValue = std::clamp( 0, min, max );
+        const int32_t zeroBufValue = std::clamp<int32_t>( 0, min, max );
 
         if ( le.isKeyPressed( fheroes2::Key::KEY_BACKSPACE ) || le.isKeyPressed( fheroes2::Key::KEY_DELETE ) ) {
             valueBuf.clear();
@@ -812,12 +812,12 @@ namespace fheroes2
             if ( applyRandomPalette ) {
                 fheroes2::Sprite tmp = heroSprite;
                 fheroes2::ApplyPalette( tmp, PAL::GetPalette( PAL::PaletteType::PURPLE ) );
-                fheroes2::Blit( tmp, 0, std::max( 0, tmp.height() - portPos.height ), racePortrait, ( portPos.width - tmp.width() ) / 2,
-                                std::max( 0, portPos.height - tmp.height() ), tmp.width(), portPos.height );
+                fheroes2::Blit( tmp, 0, std::max<int32_t>( 0, tmp.height() - portPos.height ), racePortrait, ( portPos.width - tmp.width() ) / 2,
+                                std::max<int32_t>( 0, portPos.height - tmp.height() ), tmp.width(), portPos.height );
             }
             else {
-                fheroes2::Blit( heroSprite, 0, std::max( 0, heroSprite.height() - portPos.height ), racePortrait, ( portPos.width - heroSprite.width() ) / 2,
-                                std::max( 0, portPos.height - heroSprite.height() ), heroSprite.width(), portPos.height );
+                fheroes2::Blit( heroSprite, 0, std::max<int32_t>( 0, heroSprite.height() - portPos.height ), racePortrait, ( portPos.width - heroSprite.width() ) / 2,
+                                std::max<int32_t>( 0, portPos.height - heroSprite.height() ), heroSprite.width(), portPos.height );
             }
         };
 
@@ -909,5 +909,133 @@ namespace fheroes2
         }
 
         return multiFontText;
+    }
+
+    void UIScrollInertia::reset()
+    {
+        _movementSteps.clear();
+        _dragTimer.reset();
+        _active = false;
+        _velX = 0;
+        _velY = 0;
+        _subpixelShiftX = 0;
+        _subpixelShiftY = 0;
+    }
+
+    void UIScrollInertia::addMovementStep( const fheroes2::Point & delta )
+    {
+        _movementSteps.emplace_back( delta, _dragTimer.getMs() );
+        while ( _movementSteps.size() > 2 && _movementSteps.back().timeMs - _movementSteps.front().timeMs > 100 ) {
+            _movementSteps.pop_front();
+        }
+    }
+
+    void UIScrollInertia::commitRelease()
+    {
+        if ( _movementSteps.size() >= 2 ) {
+            const uint64_t now = _dragTimer.getMs();
+            const uint64_t lastSampleAge = now - _movementSteps.back().timeMs;
+
+            if ( lastSampleAge < 50 ) {
+                const uint64_t dt = _movementSteps.back().timeMs - _movementSteps.front().timeMs;
+                if ( dt > 0 ) {
+                    int64_t sumX = 0;
+                    int64_t sumY = 0;
+                    for ( const auto & step : _movementSteps ) {
+                        sumX += step.delta.x;
+                        sumY += step.delta.y;
+                    }
+                    // Threshold: 0.3 px/ms = 77 in 1/256 units, 77*77=5929
+                    _velX = static_cast<int32_t>( sumX * 256 / static_cast<int64_t>( dt ) );
+                    _velY = static_cast<int32_t>( sumY * 256 / static_cast<int64_t>( dt ) );
+                    if ( _velX * _velX + _velY * _velY > 5929 ) {
+                        _active = true;
+                        _subpixelShiftX = 0;
+                        _subpixelShiftY = 0;
+                        _timer.reset();
+                    }
+                    else {
+                        _velX = 0;
+                        _velY = 0;
+                    }
+                }
+            }
+        }
+        _movementSteps.clear();
+    }
+
+    bool UIScrollInertia::update( const std::function<fheroes2::Point()> & getPosition, const std::function<void( const fheroes2::Point & )> & setPosition )
+    {
+        if ( !_active ) {
+            return false;
+        }
+
+        const uint64_t elapsedTimeMs = _timer.getMs();
+        if ( elapsedTimeMs == 0 ) {
+            return false;
+        }
+        _timer.reset();
+
+        // Exponential velocity decay approximated as vel *= (200 - dt) / 200.
+        // The time constant of 200 ms was chosen empirically to feel natural:
+        // fast enough to stop within a second, slow enough to feel smooth.
+        if ( elapsedTimeMs >= 200 ) {
+            _deactivate();
+            return false;
+        }
+        const int32_t dtMs = static_cast<int32_t>( elapsedTimeMs );
+        _velX = _velX * ( 200 - dtMs ) / 200;
+        _velY = _velY * ( 200 - dtMs ) / 200;
+
+        // Stop threshold: 0.05 px/ms = 13 in 1/256 units, 13*13=169.
+        if ( _velX * _velX + _velY * _velY < 169 ) {
+            _deactivate();
+            return false;
+        }
+
+        // Accumulate in 1/256-pixel fixed-point units for half-pixel precision.
+        _subpixelShiftX += _velX * dtMs;
+        _subpixelShiftY += _velY * dtMs;
+
+        const fheroes2::Point viewShift( _subpixelShiftX / 256, _subpixelShiftY / 256 );
+        _subpixelShiftX -= viewShift.x * 256;
+        _subpixelShiftY -= viewShift.y * 256;
+
+        if ( viewShift.x == 0 && viewShift.y == 0 ) {
+            return true;
+        }
+
+        const fheroes2::Point beforeCenter = getPosition();
+        setPosition( beforeCenter + viewShift );
+        const fheroes2::Point afterCenter = getPosition();
+
+        // If both axes are blocked by the map boundary, stop inertia immediately.
+        if ( beforeCenter == afterCenter ) {
+            _deactivate();
+            return false;
+        }
+
+        // Zero out the velocity for any axis that hit a boundary, so the other axis can continue.
+        // We only do this when the shift was non-zero; a zero shift means the subpixel
+        // accumulation has not reached a full pixel yet, so we keep decaying normally.
+        if ( viewShift.x != 0 && afterCenter.x == beforeCenter.x ) {
+            _velX = 0;
+            _subpixelShiftX = 0;
+        }
+        if ( viewShift.y != 0 && afterCenter.y == beforeCenter.y ) {
+            _velY = 0;
+            _subpixelShiftY = 0;
+        }
+        if ( _velX == 0 && _velY == 0 ) {
+            _deactivate();
+        }
+
+        return true;
+    }
+
+    void UIScrollInertia::_deactivate()
+    {
+        _active = false;
+        _movementSteps.clear();
     }
 }

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2019 - 2025                                             *
+ *   Copyright (C) 2019 - 2026                                             *
  *                                                                         *
  *   Free Heroes2 Engine: http://sourceforge.net/projects/fheroes2         *
  *   Copyright (C) 2010 by Andrey Afletdinov <fheroes2@gmail.com>          *
@@ -169,8 +169,13 @@ namespace
         body.add( { getMapTypeName( info->version ), fheroes2::FontType::normalWhite() } );
 
         if ( info->version == GameVersion::RESURRECTION ) {
-            body.add( { _( "\n\nLanguage:\n" ), fheroes2::FontType::normalYellow() } );
+            body.add( { _( "\n\nSupported languages:\n" ), fheroes2::FontType::normalYellow() } );
             body.add( { fheroes2::getLanguageName( info->mainLanguage ), fheroes2::FontType::normalWhite() } );
+
+            for ( const auto language : info->translations ) {
+                body.add( { "\n", fheroes2::FontType::normalYellow() } );
+                body.add( { fheroes2::getLanguageName( language ), fheroes2::FontType::normalWhite() } );
+            }
         }
 
         body.add( { _( "\n\nLocation: " ), fheroes2::FontType::smallYellow() } );
@@ -659,7 +664,7 @@ const Maps::FileInfo * Dialog::SelectScenario( MapsFileInfoList & all, const boo
                 scenarioList.RemoveSelected();
 
                 scenarioList.updateScrollBarImage();
-                scenarioList.SetCurrent( std::max( selectedId - 1, 0 ) );
+                scenarioList.SetCurrent( std::max<int32_t>( selectedId - 1, 0 ) );
 
                 // Remove the map from all lists.
                 small.erase( std::remove_if( small.begin(), small.end(), [&removedMapInfo]( const auto & info ) { return info.filename == removedMapInfo.filename; } ),

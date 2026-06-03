@@ -1,6 +1,6 @@
 /***************************************************************************
  *   fheroes2: https://github.com/ihhub/fheroes2                           *
- *   Copyright (C) 2025                                                    *
+ *   Copyright (C) 2025 - 2026                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -35,6 +35,7 @@
 #include <vector>
 
 #include "color.h"
+#include "direction.h"
 #include "editor_interface.h"
 #include "ground.h"
 #include "logging.h"
@@ -46,6 +47,7 @@
 #include "maps.h"
 #include "maps_tiles.h"
 #include "math_base.h"
+#include "mp2.h"
 #include "rand.h"
 #include "resource.h"
 #include "translations.h"
@@ -208,6 +210,344 @@ namespace Maps::Random_Generator
                    { { 1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 } } },
     };
 
+    const std::map<int32_t, std::vector<DecorationSet>> decorationsPerGround{
+        { Maps::Ground::ALL,
+          {
+              { // Large mountain cross.
+                {
+                    { { 0, 0 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 1 },
+                    { { -2, 2 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 1 },
+                    { { -3, 0 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 4 },
+                    { { 1, 2 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 2 },
+                },
+                // Optional.
+                {} },
+              { // Two large mountains.
+                {
+                    { { 0, 0 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 0 },
+                    { { -3, 1 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 1 },
+                    { { -2, 2 }, ObjectGroup::LANDSCAPE_TREES, 3 },
+                },
+                // Optional.
+                {} },
+              { // Vertical mountain chain.
+                {
+                    { { 0, 0 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 2 },
+                    { { 0, 2 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 3 },
+                    { { 0, 4 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 2 },
+                },
+                {
+                    // Optional.
+                    { { -1, 0 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                    { { 1, 3 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                    { { -1, 4 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                } },
+              { // Small mountains.
+                {
+                    { { 0, 0 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 2 },
+                    { { 1, 1 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 3 },
+                    { { -1, 1 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 5 },
+                },
+                // Optional.
+                {} },
+              { // Small mountains.
+                {
+                    { { 0, 0 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 4 },
+                    { { -1, 1 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 5 },
+                    { { 0, 1 }, ObjectGroup::LANDSCAPE_TREES, 4 },
+                },
+                // Optional.
+                {} },
+              { // Horizontal tree line.
+                {
+                    { { -2, 0 }, ObjectGroup::LANDSCAPE_TREES, 3 },
+                    { { 0, 0 }, ObjectGroup::LANDSCAPE_TREES, 2 },
+                    { { 2, -1 }, ObjectGroup::LANDSCAPE_TREES, 1 },
+                    { { 4, 0 }, ObjectGroup::LANDSCAPE_TREES, 2 },
+                },
+                // Optional.
+                {
+                    { { -2, -1 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                } },
+              { // Y tree group.
+                {
+                    { { 0, 0 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                    { { -1, 1 }, ObjectGroup::LANDSCAPE_TREES, 1 },
+                },
+                // Optional.
+                {} },
+          } },
+        { Maps::Ground::GRASS,
+          {
+              {
+                  // Obstacles.
+                  { { { 0, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 4 },
+                    { { -2, -1 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 5 },
+                    { { 0, -2 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 5 },
+                    { { 1, -3 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                    { { 3, -2 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                    { { 4, -1 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                    { { -3, -1 }, ObjectGroup::LANDSCAPE_TREES, 3 },
+                    { { 2, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 14 },
+                    { { -2, 0 }, ObjectGroup::LANDSCAPE_ROCKS, 19 } },
+                  // Optional.
+                  {},
+              },
+              {
+                  // Obstacles.
+                  { { { 0, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 5 },
+                    { { -3, -1 }, ObjectGroup::LANDSCAPE_TREES, 1 },
+                    { { 1, -1 }, ObjectGroup::LANDSCAPE_TREES, 2 },
+                    { { -1, -2 }, ObjectGroup::LANDSCAPE_TREES, 3 },
+                    { { 0, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 14 },
+                    { { 0, 0 }, ObjectGroup::LANDSCAPE_TREES, 4 } },
+                  // Optional.
+                  {},
+              },
+          } },
+        { Maps::Ground::SNOW,
+          {
+              {
+                  // Obstacles.
+                  { { { 0, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 37 },
+                    { { -1, 0 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                    { { 1, 1 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                    { { -2, 2 }, ObjectGroup::LANDSCAPE_TREES, 1 },
+                    { { 0, 3 }, ObjectGroup::LANDSCAPE_TREES, 2 },
+                    { { 1, 0 }, ObjectGroup::LANDSCAPE_TREES, 3 },
+                    { { 2, 0 }, ObjectGroup::LANDSCAPE_ROCKS, 12 } },
+                  // Optional.
+                  {},
+              },
+              {
+                  // Obstacles.
+                  { { { 0, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 37 },
+                    { { -1, -1 }, ObjectGroup::LANDSCAPE_TREES, 41 },
+                    { { 2, 0 }, ObjectGroup::LANDSCAPE_TREES, 2 },
+                    { { -1, 0 }, ObjectGroup::LANDSCAPE_TREES, 39 } },
+                  // Optional.
+                  {},
+              },
+              {
+                  // Obstacles.
+                  {
+                      { { 0, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 38 },
+                      { { 2, -1 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                      { { 1, 1 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 33 },
+                  },
+                  // Optional.
+                  {},
+              },
+          } },
+        { Maps::Ground::SWAMP,
+          {
+              {
+                  // Swampy lake.
+                  {
+                      { { 0, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 43 },
+                      { { 1, -1 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                      { { -2, 1 }, ObjectGroup::LANDSCAPE_TREES, 50 },
+                      { { 0, 1 }, ObjectGroup::LANDSCAPE_TREES, 4 },
+                  },
+                  // Optional.
+                  {},
+              },
+              {
+                  // Smaller lakes.
+                  {
+                      { { 0, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 44 },
+                      { { 1, -4 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 45 },
+                      { { -1, -3 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                      { { 0, -2 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                      { { -2, -1 }, ObjectGroup::LANDSCAPE_TREES, 1 },
+                  },
+                  // Optional.
+                  {},
+              },
+          } },
+        { Maps::Ground::LAVA,
+          {
+              {
+                  // Large mountain with lava.
+                  {
+                      { { 0, 0 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 1 },
+                      { { 0, 2 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 4 },
+                      { { 3, -1 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 3 },
+                      { { 2, 0 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 55 },
+                  },
+                  // Optional.
+                  {
+                      { { 3, 2 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 74 },
+                      { { 1, 1 }, ObjectGroup::LANDSCAPE_TREES, 5 },
+                      { { 0, -3 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 2 },
+                      { { -1, -2 }, ObjectGroup::LANDSCAPE_TREES, 2 },
+                      { { -1, 2 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                      { { 5, 0 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                  },
+              },
+              {
+                  // Large lava pools.
+                  {
+                      { { 0, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 74 },
+                      { { -2, -1 }, ObjectGroup::LANDSCAPE_TREES, 3 },
+                      { { -3, -1 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 57 },
+                      { { 2, -1 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 2 },
+                      { { 0, 1 }, ObjectGroup::LANDSCAPE_TREES, 3 },
+                      { { -2, 1 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 80 },
+                      { { 2, 1 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 81 },
+                  },
+                  // Optional.
+                  {},
+              },
+              {
+                  // Two large lava pools.
+                  {
+                      { { 0, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 74 },
+                      { { 2, -1 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 75 },
+                      { { 0, -1 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 57 },
+                      { { 3, -1 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 55 },
+                      { { 2, 0 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 5 },
+                      { { 2, -2 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 79 },
+                      { { -3, 0 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                  },
+                  // Optional.
+                  {
+                      { { 2, 1 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 81 },
+                      { { -2, -1 }, ObjectGroup::LANDSCAPE_TREES, 3 },
+                      { { -3, 0 }, ObjectGroup::LANDSCAPE_TREES, 3 },
+                  },
+              },
+              {
+                  // Small lava pool.
+                  {
+                      { { 0, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 75 },
+                      { { 0, -1 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 77 },
+                      { { 2, -1 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 78 },
+                      { { 1, -1 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                  },
+                  // Optional.
+                  {
+                      { { 1, 1 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 77 },
+                      { { 2, 0 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                      { { -1, 1 }, ObjectGroup::LANDSCAPE_TREES, 2 },
+                  },
+              },
+              {
+                  // Craters.
+                  {
+                      { { 0, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 69 },
+                      { { 0, 1 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 70 },
+                      { { 1, -1 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 5 },
+                  },
+                  // Optional.
+                  {
+                      { { 4, -1 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 69 },
+                      { { 1, -2 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 70 },
+                      { { 2, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 79 },
+                  },
+              },
+          } },
+        { Maps::Ground::DIRT,
+          { {
+              // Large dirt water lake.
+              {
+                  { { 0, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 103 },
+                  { { 2, -2 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                  { { 3, 1 }, ObjectGroup::LANDSCAPE_TREES, 1 },
+                  { { -4, -1 }, ObjectGroup::LANDSCAPE_TREES, 1 },
+              },
+              // Optional.
+              {
+                  { { 3, 1 }, ObjectGroup::LANDSCAPE_TREES, 1 },
+                  { { 4, -1 }, ObjectGroup::LANDSCAPE_TREES, 1 },
+              },
+          } } },
+        { Maps::Ground::WASTELAND,
+          {
+              {
+                  // Obstacles.
+                  { { { 0, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 138 },
+                    { { 1, -1 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 2 },
+                    { { -3, 1 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 6 },
+                    { { 1, -2 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 6 },
+                    { { -2, -1 }, ObjectGroup::LANDSCAPE_TREES, 3 },
+                    { { -4, 1 }, ObjectGroup::LANDSCAPE_TREES, 5 },
+                    { { -2, 1 }, ObjectGroup::LANDSCAPE_ROCKS, 29 } },
+                  // Optional.
+                  {
+                      { { 2, 1 }, ObjectGroup::LANDSCAPE_TREES, 1 },
+                      { { 0, 3 }, ObjectGroup::LANDSCAPE_TREES, 3 },
+                      { { -1, -2 }, ObjectGroup::LANDSCAPE_ROCKS, 26 },
+                      { { -4, -1 }, ObjectGroup::LANDSCAPE_TREES, 1 },
+                  },
+              },
+              {
+                  // Obstacles.
+                  {
+                      { { 0, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 134 },
+                      { { 2, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 139 },
+                      { { 0, -1 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 141 },
+                  },
+                  // Optional.
+                  {
+                      { { -2, 1 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 139 },
+                      { { 0, 1 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 140 },
+                      { { -2, 0 }, ObjectGroup::LANDSCAPE_ROCKS, 39 },
+                      { { 2, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 132 },
+                  },
+              },
+              {
+                  // Obstacles.
+                  {
+                      { { 0, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 138 },
+                      { { 0, -1 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 139 },
+                      { { -3, -1 }, ObjectGroup::LANDSCAPE_TREES, 1 },
+                      { { 2, 0 }, ObjectGroup::LANDSCAPE_TREES, 2 },
+                      { { -1, 1 }, ObjectGroup::LANDSCAPE_TREES, 4 },
+                  },
+                  // Optional.
+                  {
+                      { { 1, 1 }, ObjectGroup::LANDSCAPE_TREES, 1 },
+                      { { -3, 1 }, ObjectGroup::LANDSCAPE_TREES, 2 },
+                      { { -4, 1 }, ObjectGroup::LANDSCAPE_ROCKS, 30 },
+                  },
+              },
+          } },
+        { Maps::Ground::BEACH,
+          {
+              {
+                  // Large dirt water lake.
+                  {
+                      { { 0, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 103 },
+                      { { 0, 1 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 56 },
+                      { { -4, -1 }, ObjectGroup::LANDSCAPE_ROCKS, 22 },
+                      { { 1, -2 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 5 },
+                      { { 2, -2 }, ObjectGroup::LANDSCAPE_TREES, 1 },
+                      { { 3, 1 }, ObjectGroup::LANDSCAPE_TREES, 1 },
+                      { { -4, 0 }, ObjectGroup::LANDSCAPE_TREES, 0 },
+                  },
+                  // Optional.
+                  {},
+              },
+              {
+                  // Small grass water lake.
+                  {
+                      { { 0, 0 }, ObjectGroup::LANDSCAPE_MISCELLANEOUS, 5 },
+                      { { 1, -1 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 2 },
+                      { { 1, 1 }, ObjectGroup::LANDSCAPE_MOUNTAINS, 5 },
+                      { { -2, -1 }, ObjectGroup::LANDSCAPE_TREES, 1 },
+                      { { 2, 0 }, ObjectGroup::LANDSCAPE_TREES, 5 },
+                      { { 0, 1 }, ObjectGroup::LANDSCAPE_TREES, 55 },
+                  },
+                  // Optional.
+                  {
+                      { { -2, 1 }, ObjectGroup::LANDSCAPE_TREES, 1 },
+                      { { 0, -2 }, ObjectGroup::LANDSCAPE_TREES, 1 },
+                  },
+              },
+          } },
+    };
+
     std::string layoutToString( const Layout layout )
     {
         switch ( layout ) {
@@ -275,7 +615,7 @@ namespace Maps::Random_Generator
         const int32_t minimumRegionCount = playerCount + 1;
         const int32_t tileCount = mapWidth * mapWidth;
         const int32_t waterTiles = tileCount - ( smallestStartingRegionSize * minimumRegionCount );
-        return std::max( 0, waterTiles * 100 / tileCount );
+        return std::max<int32_t>( 0, waterTiles * 100 / tileCount );
     }
 
     bool generateMap( Map_Format::MapFormat & mapFormat, const Configuration & config, const int32_t width, const int32_t height )
@@ -308,9 +648,9 @@ namespace Maps::Random_Generator
 
         MapStateManager mapState( width, height );
 
-        auto mapBoundsCheck = [width, height]( int x, int y ) {
-            x = std::clamp( x, 0, width - 1 );
-            y = std::clamp( y, 0, height - 1 );
+        auto mapBoundsCheck = [width, height]( int32_t x, int32_t y ) {
+            x = std::clamp<int32_t>( x, 0, width - 1 );
+            y = std::clamp<int32_t>( y, 0, height - 1 );
             return x * width + y;
         };
 
@@ -324,9 +664,9 @@ namespace Maps::Random_Generator
         //         Insert empty region that represents water and map edges
         std::vector<Region> mapRegions = { { 0, mapState.getNodeToUpdate( 0 ), neutralColorIndex, Ground::WATER, 1, 0, RegionType::NEUTRAL } };
 
-        const int neutralRegionCount = std::max( 1, expectedRegionCount - config.playerCount );
-        const int innerLayer = std::min( neutralRegionCount, config.playerCount );
-        const int outerLayer = std::max( std::min( neutralRegionCount, innerLayer * 2 ), config.playerCount );
+        const int32_t neutralRegionCount = std::max<int32_t>( 1, expectedRegionCount - config.playerCount );
+        const int32_t innerLayer = std::min<int32_t>( neutralRegionCount, config.playerCount );
+        const int32_t outerLayer = std::max<int32_t>( std::min<int32_t>( neutralRegionCount, innerLayer * 2 ), config.playerCount );
         const double distanceModifier = ( config.waterPercentage > 20 ) ? 0.8 : 0.9;
 
         const double radius = sqrt( ( innerLayer + outerLayer ) * regionSizeLimit / M_PI );
@@ -495,7 +835,7 @@ namespace Maps::Random_Generator
         for ( const Region & region : mapRegions ) {
             for ( const Node & node : region.nodes ) {
                 if ( node.type == NodeType::BORDER ) {
-                    placeBorderObstacle( mapFormat, mapState, node, randomGenerator );
+                    placeBorderObstacle( mapFormat, mapState, node, region.groundType, randomGenerator );
                 }
             }
         }
@@ -506,17 +846,8 @@ namespace Maps::Random_Generator
                 continue;
             }
 
-            for ( const auto & [regionId, tileIndex] : region.connections ) {
-                mapState.getNodeToUpdate( tileIndex ).type = NodeType::PATH;
-                const auto & path = findPathToNearestRoad( mapState, width, region.id, tileIndex );
-                for ( const auto & step : path ) {
-                    mapState.getNodeToUpdate( step ).type = NodeType::PATH;
-                    forceTempRoadOnTile( mapFormat, step );
-                }
-            }
-
             const auto & mineInfo = Maps::getObjectInfo( ObjectGroup::ADVENTURE_MINES, fheroes2::getMineObjectInfoId( Resource::GOLD, Ground::GRASS ) );
-            std::vector<int32_t> options = findTilesForPlacement( mapState, width, region.id, findOpenTiles( region ), mineInfo );
+            std::vector<int32_t> options = findTilesForPlacement( mapState, width, region.id, findTilesByType( region, NodeType::OPEN ), mineInfo );
             if ( options.empty() ) {
                 continue;
             }
@@ -536,6 +867,15 @@ namespace Maps::Random_Generator
             if ( regionSizeLimit > regionSizeForGoldMine ) {
                 for ( size_t idx = 0; idx < regionConfiguration.goldMineCount; ++idx ) {
                     placeMine( mapFormat, mapState, mapEconomy, options, Resource::GOLD, config.monsterStrength );
+                }
+            }
+
+            // Connect regions only after placing mines and castles to avoid roads under these objects.
+            for ( const auto & [regionId, tileIndex] : region.connections ) {
+                mapState.getNodeToUpdate( tileIndex ).type = NodeType::PATH;
+                const auto & path = findPathToNearestRoad( mapState, width, region.id, tileIndex );
+                for ( const auto & step : path ) {
+                    forceTempRoadOnTile( mapState, mapFormat, step );
                 }
             }
         }
@@ -567,7 +907,16 @@ namespace Maps::Random_Generator
             }
         }
 
-        // TODO: Step 9: Detect and fill empty areas with decorative/flavour objects.
+        // Step 9: Detect and fill empty areas with decorative/flavour objects.
+        for ( Region & region : mapRegions ) {
+            const auto it = decorationsPerGround.find( region.groundType );
+            if ( it != decorationsPerGround.end() ) {
+                placeDecorations( mapFormat, mapState, region, it->second, randomGenerator );
+            }
+            if ( region.groundType != Ground::WATER ) {
+                placeDecorations( mapFormat, mapState, region, decorationsPerGround.at( Ground::ALL ), randomGenerator );
+            }
+        }
 
         // Step 10: Place missing monsters.
         const bool isSmallMap = ( mapFormat.width == Maps::SMALL );
@@ -576,10 +925,33 @@ namespace Maps::Random_Generator
         for ( const Region & region : mapRegions ) {
             for ( const auto & [regionId, tileIndex] : region.connections ) {
                 if ( region.type == mapRegions[regionId].type ) {
-                    placeMonster( mapFormat, tileIndex, strongGuard );
+                    placeMonster( mapFormat, mapState, tileIndex, strongGuard );
                 }
                 else {
-                    placeMonster( mapFormat, tileIndex, weakGuard );
+                    placeMonster( mapFormat, mapState, tileIndex, weakGuard );
+                }
+            }
+        }
+
+        // Step 11. Place free pickup objects
+        const auto & randomResourceInfo = convertMP2ToObjectInfo( MP2::OBJ_RANDOM_RESOURCE );
+        for ( const Region & region : mapRegions ) {
+            const auto & pathTiles = findTilesByType( region, NodeType::PATH );
+            if ( pathTiles.empty() ) {
+                continue;
+            }
+
+            for ( int32_t count = 0; count < regionConfiguration.treasureCount * 2; ++count ) {
+                int32_t tileIndex = Rand::GetWithGen( pathTiles, randomGenerator );
+
+                const int32_t direction = Rand::GetWithGen( Direction::allNeighboringDirections, randomGenerator );
+                const int32_t adjancent = Maps::GetDirectionIndex( tileIndex, direction );
+                if ( Maps::isValidDirection( tileIndex, direction ) && mapState.getNode( adjancent ).type == NodeType::OPEN ) {
+                    tileIndex = adjancent;
+                }
+
+                if ( putObjectOnMap( mapFormat, world.getTile( tileIndex ), randomResourceInfo.first, randomResourceInfo.second ) ) {
+                    mapState.getNodeToUpdate( tileIndex ).type = NodeType::ACTION;
                 }
             }
         }
@@ -596,6 +968,7 @@ namespace Maps::Random_Generator
         }
 
         Maps::updateMapPlayers( mapFormat );
+        world.updatePassabilities();
 
         // Set random map name and description to be unique.
         mapFormat.name = "Random map " + std::to_string( generatorSeed );
