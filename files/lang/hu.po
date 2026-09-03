@@ -4222,6 +4222,9 @@ msgstr "Térkép mentve ide: "
 msgid "Failed to save the map."
 msgstr "Térkép mentése sikertelen."
 
+msgid "The selected object has been moved to the top layer."
+msgstr ""
+
 msgid "Unsaved Changes"
 msgstr "Nem mentett módosítások"
 
@@ -5235,14 +5238,6 @@ msgstr ""
 
 msgid ""
 "EXPANSION\n"
-"CAMPAIGN"
-msgstr ""
-"KIEGÉSZÍTŐ\n"
-"HADJÁRAT"
-
-#, fuzzy
-msgid ""
-"RESURRECTION\n"
 "CAMPAIGN"
 msgstr ""
 "KIEGÉSZÍTŐ\n"
@@ -12756,6 +12751,14 @@ msgstr "A férfi üres fecsegésére a nő így válaszolt: bla-bla-bla..."
 
 msgid "An unknown force is being resurrected..."
 msgstr "Egy ismeretlen erő kelt új életre ..."
+
+#, fuzzy
+#~ msgid ""
+#~ "RESURRECTION\n"
+#~ "CAMPAIGN"
+#~ msgstr ""
+#~ "KIEGÉSZÍTŐ\n"
+#~ "HADJÁRAT"
 
 #~ msgid "Create a new map from scratch."
 #~ msgstr "Teljesen új térkép létrehozása."

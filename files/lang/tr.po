@@ -4120,6 +4120,9 @@ msgstr ""
 msgid "Failed to save the map."
 msgstr ""
 
+msgid "The selected object has been moved to the top layer."
+msgstr ""
+
 msgid "Unsaved Changes"
 msgstr ""
 
@@ -5119,14 +5122,6 @@ msgstr ""
 
 msgid ""
 "EXPANSION\n"
-"CAMPAIGN"
-msgstr ""
-"EKLENTİ\n"
-"HİKAYESİ"
-
-#, fuzzy
-msgid ""
-"RESURRECTION\n"
 "CAMPAIGN"
 msgstr ""
 "EKLENTİ\n"
@@ -11688,6 +11683,14 @@ msgstr ""
 
 msgid "An unknown force is being resurrected..."
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "RESURRECTION\n"
+#~ "CAMPAIGN"
+#~ msgstr ""
+#~ "EKLENTİ\n"
+#~ "HİKAYESİ"
 
 #~ msgid "AI"
 #~ msgstr "Bilgisayar"

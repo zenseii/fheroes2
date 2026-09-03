@@ -4146,6 +4146,9 @@ msgstr ""
 msgid "Failed to save the map."
 msgstr "Įrašyti į failą:"
 
+msgid "The selected object has been moved to the top layer."
+msgstr ""
+
 msgid "Unsaved Changes"
 msgstr ""
 
@@ -5109,11 +5112,6 @@ msgstr ""
 
 msgid ""
 "EXPANSION\n"
-"CAMPAIGN"
-msgstr ""
-
-msgid ""
-"RESURRECTION\n"
 "CAMPAIGN"
 msgstr ""
 

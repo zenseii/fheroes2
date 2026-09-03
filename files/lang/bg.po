@@ -4397,6 +4397,9 @@ msgstr ""
 msgid "Failed to save the map."
 msgstr "Файл за запазване:"
 
+msgid "The selected object has been moved to the top layer."
+msgstr ""
+
 msgid "Unsaved Changes"
 msgstr ""
 
@@ -5489,12 +5492,6 @@ msgstr ""
 
 msgid ""
 "EXPANSION\n"
-"CAMPAIGN"
-msgstr "ЕКСПАНЗИЯ"
-
-#, fuzzy
-msgid ""
-"RESURRECTION\n"
 "CAMPAIGN"
 msgstr "ЕКСПАНЗИЯ"
 
@@ -13150,6 +13147,12 @@ msgstr "Той й каза: \"Яда, бля, дя...\" и тогава тя к�
 
 msgid "An unknown force is being resurrected..."
 msgstr "Непозната сила възкръсва..."
+
+#, fuzzy
+#~ msgid ""
+#~ "RESURRECTION\n"
+#~ "CAMPAIGN"
+#~ msgstr "ЕКСПАНЗИЯ"
 
 #, fuzzy
 #~ msgid "Create a new map from scratch."

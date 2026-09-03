@@ -4308,6 +4308,9 @@ msgstr "Karte gespeichert in: "
 msgid "Failed to save the map."
 msgstr "Speichern der Karte fehlgeschlagen."
 
+msgid "The selected object has been moved to the top layer."
+msgstr ""
+
 msgid "Unsaved Changes"
 msgstr "Ungespeicherte Änderungen"
 
@@ -5345,14 +5348,6 @@ msgstr ""
 
 msgid ""
 "EXPANSION\n"
-"CAMPAIGN"
-msgstr ""
-"ZUSATZ\n"
-"FELDZUG"
-
-#, fuzzy
-msgid ""
-"RESURRECTION\n"
 "CAMPAIGN"
 msgstr ""
 "ZUSATZ\n"
@@ -13077,6 +13072,14 @@ msgstr "Er sagte ihr: Yada yada yada... und dann sagte sie: Bla, bla, bla..."
 
 msgid "An unknown force is being resurrected..."
 msgstr "Eine unbekannte Macht wird wiederbelebt..."
+
+#, fuzzy
+#~ msgid ""
+#~ "RESURRECTION\n"
+#~ "CAMPAIGN"
+#~ msgstr ""
+#~ "ZUSATZ\n"
+#~ "FELDZUG"
 
 #~ msgid "Create a new map from scratch."
 #~ msgstr "Komplett neue Karte erstellen."

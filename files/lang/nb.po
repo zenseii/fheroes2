@@ -4460,6 +4460,9 @@ msgstr ""
 msgid "Failed to save the map."
 msgstr "Lagringsfil:"
 
+msgid "The selected object has been moved to the top layer."
+msgstr ""
+
 msgid "Unsaved Changes"
 msgstr ""
 
@@ -5530,15 +5533,6 @@ msgstr ""
 
 msgid ""
 "EXPANSION\n"
-"CAMPAIGN"
-msgstr ""
-"PRISEN\n"
-"FOR\n"
-"LOJALITET"
-
-#, fuzzy
-msgid ""
-"RESURRECTION\n"
 "CAMPAIGN"
 msgstr ""
 "PRISEN\n"
@@ -13372,6 +13366,15 @@ msgstr ""
 
 msgid "An unknown force is being resurrected..."
 msgstr "En ukjent styrke holder på å komme tilbake..."
+
+#, fuzzy
+#~ msgid ""
+#~ "RESURRECTION\n"
+#~ "CAMPAIGN"
+#~ msgstr ""
+#~ "PRISEN\n"
+#~ "FOR\n"
+#~ "LOJALITET"
 
 #, fuzzy
 #~ msgid "Create a new map from scratch."

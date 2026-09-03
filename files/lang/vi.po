@@ -4375,6 +4375,9 @@ msgstr ""
 msgid "Failed to save the map."
 msgstr "Tệp để Lưu:"
 
+msgid "The selected object has been moved to the top layer."
+msgstr ""
+
 msgid "Unsaved Changes"
 msgstr ""
 
@@ -5455,14 +5458,6 @@ msgstr ""
 
 msgid ""
 "EXPANSION\n"
-"CAMPAIGN"
-msgstr ""
-"CHIẾN DỊCH\n"
-"MỞ RỘNG"
-
-#, fuzzy
-msgid ""
-"RESURRECTION\n"
 "CAMPAIGN"
 msgstr ""
 "CHIẾN DỊCH\n"
@@ -13185,6 +13180,14 @@ msgstr ""
 
 msgid "An unknown force is being resurrected..."
 msgstr "Một lực lượng bóng tối đang hồi sinh..."
+
+#, fuzzy
+#~ msgid ""
+#~ "RESURRECTION\n"
+#~ "CAMPAIGN"
+#~ msgstr ""
+#~ "CHIẾN DỊCH\n"
+#~ "MỞ RỘNG"
 
 #, fuzzy
 #~ msgid "Create a new map from scratch."

@@ -4257,6 +4257,9 @@ msgstr "Mapa salvo em: "
 msgid "Failed to save the map."
 msgstr "Falha ao salvar o mapa."
 
+msgid "The selected object has been moved to the top layer."
+msgstr ""
+
 msgid "Unsaved Changes"
 msgstr "Alterações Não Salvas"
 
@@ -5269,14 +5272,6 @@ msgstr ""
 
 msgid ""
 "EXPANSION\n"
-"CAMPAIGN"
-msgstr ""
-"CAMPANHA\n"
-"DA EXPANSÃO"
-
-#, fuzzy
-msgid ""
-"RESURRECTION\n"
 "CAMPAIGN"
 msgstr ""
 "CAMPANHA\n"
@@ -12908,6 +12903,14 @@ msgstr ""
 
 msgid "An unknown force is being resurrected..."
 msgstr "Uma força misteriosa está ressuscitando..."
+
+#, fuzzy
+#~ msgid ""
+#~ "RESURRECTION\n"
+#~ "CAMPAIGN"
+#~ msgstr ""
+#~ "CAMPANHA\n"
+#~ "DA EXPANSÃO"
 
 #~ msgid "Create a new map from scratch."
 #~ msgstr "Crie um novo mapa do zero."

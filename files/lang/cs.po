@@ -4246,6 +4246,9 @@ msgstr "Mapa uložena do: "
 msgid "Failed to save the map."
 msgstr "Uložení mapy se nezdařilo."
 
+msgid "The selected object has been moved to the top layer."
+msgstr ""
+
 msgid "Unsaved Changes"
 msgstr "Neuložené změny"
 
@@ -5283,14 +5286,6 @@ msgstr ""
 
 msgid ""
 "EXPANSION\n"
-"CAMPAIGN"
-msgstr ""
-"KAMPAŇ\n"
-"DATADISKU"
-
-#, fuzzy
-msgid ""
-"RESURRECTION\n"
 "CAMPAIGN"
 msgstr ""
 "KAMPAŇ\n"
@@ -12784,6 +12779,14 @@ msgstr "On jí řekl: Yada yada yada... ona pak řekla: Bla, bla, bla..."
 
 msgid "An unknown force is being resurrected..."
 msgstr "Neznámá síla se probouzí..."
+
+#, fuzzy
+#~ msgid ""
+#~ "RESURRECTION\n"
+#~ "CAMPAIGN"
+#~ msgstr ""
+#~ "KAMPAŇ\n"
+#~ "DATADISKU"
 
 #~ msgid "Create a new map from scratch."
 #~ msgstr "Vytvořit novou mapu od základu."

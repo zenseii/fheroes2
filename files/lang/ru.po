@@ -4263,6 +4263,9 @@ msgstr "Карта сохранена в: "
 msgid "Failed to save the map."
 msgstr "Не удалось сохранить карту."
 
+msgid "The selected object has been moved to the top layer."
+msgstr ""
+
 msgid "Unsaved Changes"
 msgstr "Несохранённые изменения"
 
@@ -5277,14 +5280,6 @@ msgstr ""
 
 msgid ""
 "EXPANSION\n"
-"CAMPAIGN"
-msgstr ""
-"ЦЕНА\n"
-"ВЕРНОСТИ"
-
-#, fuzzy
-msgid ""
-"RESURRECTION\n"
 "CAMPAIGN"
 msgstr ""
 "ЦЕНА\n"
@@ -12819,6 +12814,14 @@ msgstr "Он сказал ей: Бе бе бе... а потом она сказ�
 
 msgid "An unknown force is being resurrected..."
 msgstr "Возрождается неведомая сила..."
+
+#, fuzzy
+#~ msgid ""
+#~ "RESURRECTION\n"
+#~ "CAMPAIGN"
+#~ msgstr ""
+#~ "ЦЕНА\n"
+#~ "ВЕРНОСТИ"
 
 #~ msgid "Create a new map from scratch."
 #~ msgstr "Создать новую карту с нуля."

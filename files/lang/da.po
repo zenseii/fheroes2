@@ -4327,6 +4327,9 @@ msgstr "Kortet er gemt i: "
 msgid "Failed to save the map."
 msgstr "Kunne ikke gemme kortet."
 
+msgid "The selected object has been moved to the top layer."
+msgstr ""
+
 msgid "Unsaved Changes"
 msgstr "Ikke-gemte ændringer"
 
@@ -5357,14 +5360,6 @@ msgstr ""
 
 msgid ""
 "EXPANSION\n"
-"CAMPAIGN"
-msgstr ""
-"UDVIDELSE\n"
-"FELTTOG"
-
-#, fuzzy
-msgid ""
-"RESURRECTION\n"
 "CAMPAIGN"
 msgstr ""
 "UDVIDELSE\n"
@@ -12997,6 +12992,14 @@ msgstr ""
 
 msgid "An unknown force is being resurrected..."
 msgstr "En ukendt styrke er ved at genopstå..."
+
+#, fuzzy
+#~ msgid ""
+#~ "RESURRECTION\n"
+#~ "CAMPAIGN"
+#~ msgstr ""
+#~ "UDVIDELSE\n"
+#~ "FELTTOG"
 
 #~ msgid "Create a new map from scratch."
 #~ msgstr "Opret et nyt kort fra bunden."

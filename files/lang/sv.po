@@ -4225,6 +4225,9 @@ msgstr "Kartan sparades i:"
 msgid "Failed to save the map."
 msgstr "Misslyckades att spara kartan."
 
+msgid "The selected object has been moved to the top layer."
+msgstr ""
+
 msgid "Unsaved Changes"
 msgstr "Osparade ändringar"
 
@@ -5228,14 +5231,6 @@ msgstr ""
 
 msgid ""
 "EXPANSION\n"
-"CAMPAIGN"
-msgstr ""
-"EXPANSIONS-\n"
-"KAMPANJ"
-
-#, fuzzy
-msgid ""
-"RESURRECTION\n"
 "CAMPAIGN"
 msgstr ""
 "EXPANSIONS-\n"
@@ -12772,6 +12767,14 @@ msgstr "Han sa till henne: Jag bah... och hon svarade: Du bah..."
 
 msgid "An unknown force is being resurrected..."
 msgstr "En okänd kraft återuppstår..."
+
+#, fuzzy
+#~ msgid ""
+#~ "RESURRECTION\n"
+#~ "CAMPAIGN"
+#~ msgstr ""
+#~ "EXPANSIONS-\n"
+#~ "KAMPANJ"
 
 #~ msgid "Create a new map from scratch."
 #~ msgstr "Skapa en ny blank karta."
