@@ -103,7 +103,7 @@ jobs:
             FHEROES2_WITH_TSAN: ON
         - name: macOS SDL2
           on: [ 'pull_request', 'push' ]
-          os: macos-14
+          os: macos-26-intel
           arch: x86_64
           dependencies: sdl2 sdl2_mixer sdl2_image
           env:
@@ -124,7 +124,7 @@ jobs:
             maps/*.fh2m
             ./script/demo/download_demo_version.sh
             ./script/homm2/extract_homm2_resources.sh
-            script/macos/Brewfile
+            script/macos/macportsfile
           tools_package_name: fheroes2_tools_macos_x86-64_SDL2.zip
           tools_package_files: >-
             LICENSE
@@ -165,11 +165,6 @@ jobs:
     - name: Install dependencies (macOS)
       if: ${{ contains( matrix.on, github.event_name ) && startsWith( matrix.os, 'macos-' ) }}
       run: |
-        if [[ "${{ matrix.arch }}" == x86_64 ]]; then
-            arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            # Homebrew uses /opt/homebrew for Apple Silicon packages and /usr/local for x86_64 packages
-            export PATH=/usr/local/bin:$PATH
-        fi
         brew install ${{ matrix.dependencies }}
       env:
         # Do not update outdated dependencies of installed packages
@@ -182,10 +177,6 @@ jobs:
     - name: Build (MacOS)
       if: ${{ contains( matrix.on, github.event_name ) && startsWith( matrix.os, 'macos-' ) }}
       run: |
-        if [[ "${{ matrix.arch }}" == x86_64 ]]; then
-            # Homebrew uses /opt/homebrew for Apple Silicon packages and /usr/local for x86_64 packages
-            export PATH=/usr/local/bin:$PATH
-        fi
         make -j "$(sysctl -n hw.logicalcpu)"
       env: ${{ matrix.env }}
     - name: Create packages
