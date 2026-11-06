@@ -1135,6 +1135,8 @@ namespace ICN
 
         EVIL_DIALOG_PLAIN_CORNERS,
 
+        GENIE_FRAMES,
+
         // IMPORTANT! Put any new entry just above this one.
         LASTICN
     };

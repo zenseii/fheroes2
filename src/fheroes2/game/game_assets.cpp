@@ -2932,6 +2932,80 @@ namespace
 
             break;
         }
+        case ICN::GENIE_FRAMES: {
+            // We add 6 more frames to duplicate the first 6 for reuse in the upwards angle attack animation.
+            _icnVsSprite[id].resize( /*18*/ 12 );
+
+            for ( int i = 0; i < _icnVsSprite[id].size(); ++i ) {
+                const int nameNumber = i + 1;
+
+                // Merge heads with sprites. All downward attack sprites from sprite 7 use head from OG sprite 22, Upwards attack uses OG sprite 26's head
+
+                if ( i < 9 ) {
+                    fheroes2::h2d::readImage( "genie_snap_animation_0" + std::to_string( nameNumber ) + ".image", _icnVsSprite[id][i] );
+                }
+                else {
+                    fheroes2::h2d::readImage( "genie_snap_animation_" + std::to_string( nameNumber ) + ".image", _icnVsSprite[id][i] );
+                    }
+                
+            }
+
+            // Cut out the downwards facing head of the genie
+            fheroes2::Sprite genieHeadDownwards;
+            genieHeadDownwards.resize( 17, 23 );
+            genieHeadDownwards.reset();
+
+            const fheroes2::Sprite & genieDownwardsAttackOriginal = Assets::getImage( ICN::GENIE, 22 );
+
+            // Copy upper part of downwards looking head
+            Copy( genieDownwardsAttackOriginal, 26, 0, genieHeadDownwards, 0, 0, 17, 17 );
+            // Copy lower part 1
+            Copy( genieDownwardsAttackOriginal, 30, 17, genieHeadDownwards, 4, 17, 13, 2 );
+            Copy( genieDownwardsAttackOriginal, 33, 18, genieHeadDownwards, 5, 19, 1, 1 );
+            Copy( genieDownwardsAttackOriginal, 32, 19, genieHeadDownwards, 6, 19, 8, 2 );
+            Copy( genieDownwardsAttackOriginal, 40, 19, genieHeadDownwards, 14, 19, 3, 1 );
+
+            Copy( genieDownwardsAttackOriginal, 34, 21, genieHeadDownwards, 8, 21, 6, 1 );
+            Copy( genieDownwardsAttackOriginal, 35, 22, genieHeadDownwards, 9, 22, 6, 1 );
+
+
+            // Slap the head on top of the neck
+            Blit( genieHeadDownwards, 0, 0, _icnVsSprite[id][6], 13, 4, genieHeadDownwards.width(), genieHeadDownwards.height() );
+            Blit( genieHeadDownwards, 0, 0, _icnVsSprite[id][7], 13, 4, genieHeadDownwards.width(), genieHeadDownwards.height() );
+            Blit( genieHeadDownwards, 0, 0, _icnVsSprite[id][8], 13, 3, genieHeadDownwards.width(), genieHeadDownwards.height() );
+            Blit( genieHeadDownwards, 0, 0, _icnVsSprite[id][9], 12, 3, genieHeadDownwards.width(), genieHeadDownwards.height() );
+            Blit( genieHeadDownwards, 0, 0, _icnVsSprite[id][10], 12, 4, genieHeadDownwards.width(), genieHeadDownwards.height() );
+            Blit( genieHeadDownwards, 0, 0, _icnVsSprite[id][11], 13, 4, genieHeadDownwards.width(), genieHeadDownwards.height() );
+            
+            
+            fheroes2::Save( genieHeadDownwards, "genieHeadDownwards.png", 96 );
+
+            // Genie upwards head. OG Sprite 26
+
+            const fheroes2::Sprite & genieUpwardsAttackOriginal = Assets::getImage( ICN::GENIE, 26 );
+            fheroes2::Sprite genieHeadUpwards;
+            genieHeadUpwards.resize( 23, 23 );
+            genieHeadUpwards.reset();
+
+            Copy( genieUpwardsAttackOriginal, 0, 0, genieHeadUpwards, 0, 0, 23, 17 );
+            Copy( genieUpwardsAttackOriginal, 9, 8, genieHeadUpwards, 7, 16, 1, 1 );
+            Copy( genieUpwardsAttackOriginal, 13, 5, genieHeadUpwards, 8, 16, 1, 1 );
+            Copy( genieUpwardsAttackOriginal, 9, 8, genieHeadUpwards, 9, 16, 1, 1 );
+
+            Copy( genieUpwardsAttackOriginal, 14, 17, genieHeadUpwards, 14, 17, 8, 4 );
+            Copy( genieUpwardsAttackOriginal, 12, 3, genieHeadUpwards, 14, 20, 1, 1 );
+            Copy( genieUpwardsAttackOriginal, 12, 3, genieHeadUpwards, 15, 20, 1, 1 );
+
+             Copy( genieUpwardsAttackOriginal, 17, 21, genieHeadUpwards, 17, 21, 3, 1 );
+            Copy( genieUpwardsAttackOriginal, 17, 21, genieHeadUpwards, 18, 22, 2, 1 );
+
+            fheroes2::Save( genieHeadUpwards, "genieHeadUpwards.png", 96 );
+
+            Blit( genieHeadUpwards, 0, 0, _icnVsSprite[id][1], 6, 5, genieHeadUpwards.width(), genieHeadUpwards.height() );
+            fheroes2::Save( _icnVsSprite[id][1], "genieUpwardsAttack.png", 96 );
+
+             break;
+        }
         case ICN::MONS32:
             if ( _icnVsSprite[id].size() > 4 ) { // Veteran Pikeman
                 fheroes2::Sprite & modified = _icnVsSprite[id][4];

@@ -121,7 +121,7 @@ namespace M82
                    { GBLNKILL, "GBLNKILL.82M" },
                    { GBLNMOVE, "GBLNMOVE.82M" },
                    { GBLNWNCE, "GBLNWNCE.82M" },
-                   { GENIATTK, "GENIATTK.82M" },
+                   { GENIATTK, "genie_snap.sound" },
                    { GENIKILL, "GENIKILL.82M" },
                    { GENIMOVE, "GENIMOVE.82M" },
                    { GENIWNCE, "GENIWNCE.82M" },

@@ -6157,8 +6157,8 @@ void Battle::Interface::_redrawActionGenieHalvingAttack( const Unit & target )
     _spriteInsteadCurrentUnit = &mixSprite;
 
     const uint32_t genieHalvingDelay = 1800 / 20;
-
-    AudioManager::PlaySound( M82::STONESKI );
+    // Play dust sound here
+    /*AudioManager::PlaySound( M82::GENIE_SNAP );*/
 
     uint8_t alpha = 0;
     uint32_t frame = 0;

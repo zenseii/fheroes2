@@ -348,7 +348,7 @@ fheroes2::GameMode Game::MainMenu( const bool isFirstGameRun )
 
     fheroes2::Sprite highlightDoor = Assets::getImage( ICN::SHNGANIM, 18 );
     fheroes2::ApplyPalette( highlightDoor, 8 );
-
+    int counterGenie = 1;
     while ( true ) {
         if ( !le.HandleEvents( true, true ) ) {
             if ( Game::processExitEvent() == fheroes2::GameMode::QUIT_GAME ) {
@@ -358,8 +358,12 @@ fheroes2::GameMode Game::MainMenu( const bool isFirstGameRun )
                 continue;
             }
         }
+        
+       
 
         bool redrawScreen = false;
+
+         
 
         for ( ButtonInfo & button : buttons ) {
             button.wasOver = button.isOver;
@@ -443,6 +447,7 @@ fheroes2::GameMode Game::MainMenu( const bool isFirstGameRun )
         }
 
         if ( validateAnimationDelay( DelayType::MAIN_MENU_DELAY ) ) {
+            fheroes2::drawMainMenuScreen();
             const fheroes2::Sprite & lantern12 = Assets::getImage( ICN::SHNGANIM, ICN::getAnimatedIcnIndex( ICN::SHNGANIM, 0, lantern_frame ) );
             ++lantern_frame;
             fheroes2::Blit( lantern12, display, lantern12.x(), lantern12.y() );
@@ -451,6 +456,12 @@ fheroes2::GameMode Game::MainMenu( const bool isFirstGameRun )
                 fheroes2::Blit( highlightDoor, 0, doorOffsetY, display, highlightDoor.x(), highlightDoor.y() + doorOffsetY, highlightDoor.width(),
                                 highlightDoor.height() );
             }
+
+            // draw genie animation number countergenie % 12
+            const fheroes2::Sprite & spriteGenie = Assets::getImage( ICN::GENIE_FRAMES, counterGenie % 12 );
+            fheroes2::Blit( spriteGenie, display, spriteGenie.x() + 200, spriteGenie.y() + 300 );
+            ++counterGenie;
+            
 
             display.render();
         }

@@ -52,6 +52,9 @@
 #include "game_init.h"
 #include "game_invalid_assets.h"
 #include "logging.h"
+#include "h2d.h"
+#include "h2d_file.h"
+#include "image_tool.h"
 
 int main( int argc, char ** argv )
 {
@@ -81,6 +84,38 @@ int main( int argc, char ** argv )
         Game::initEventHandler();
         Game::initAnimation();
         Game::initHotKeys();
+
+        fheroes2::H2DReader reader;
+        reader.open( "resurrection.h2d" );
+
+        std::vector<fheroes2::Sprite> genieSprites;
+        genieSprites.resize( 12 );
+        fheroes2::H2DWriter writer;
+        writer.add( reader );
+
+        for ( int i = 0; i < genieSprites.size(); ++i ) {
+            const int nameNumber = i + 1;
+            
+            if ( i < 9 ) {
+                fheroes2::Load( "genie_snap_animation_0" + std::to_string( nameNumber ) + ".png", genieSprites[i] );
+                fheroes2::ReplaceColorIdByTransformId( genieSprites[i], 23, 1 );
+                fheroes2::ReplaceColorIdByTransformId( genieSprites[i], 29, 2 );
+                fheroes2::writeImageToH2D( writer, "genie_snap_animation_0" + std::to_string( nameNumber ) + ".image", genieSprites[i], " Author: Magonus " );
+            }
+            else {
+                fheroes2::Load( "genie_snap_animation_" + std::to_string( nameNumber ) + ".png", genieSprites[i] );
+                fheroes2::ReplaceColorIdByTransformId( genieSprites[i], 23, 1 );
+                fheroes2::ReplaceColorIdByTransformId( genieSprites[i], 29, 2 );
+                fheroes2::writeImageToH2D( writer, "genie_snap_animation_" + std::to_string( nameNumber ) + ".image", genieSprites[i], " Author: Magonus " );
+            }
+        }
+
+        fheroes2::Save( genieSprites[5], "testSprites.png", 96 );
+
+        
+
+        writer.write( "modified.h2d" );
+
 
         try {
             Game::runMainGameLoop();
