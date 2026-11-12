@@ -2934,7 +2934,7 @@ namespace
         }
         case ICN::GENIE_FRAMES: {
             // We add 6 more frames to duplicate the first 6 for reuse in the upwards angle attack animation.
-            _icnVsSprite[id].resize( /*18*/ 12 );
+            _icnVsSprite[id].resize( 18 );
 
             for ( int i = 0; i < _icnVsSprite[id].size(); ++i ) {
                 const int nameNumber = i + 1;
@@ -2944,9 +2944,13 @@ namespace
                 if ( i < 9 ) {
                     fheroes2::h2d::readImage( "genie_snap_animation_0" + std::to_string( nameNumber ) + ".image", _icnVsSprite[id][i] );
                 }
-                else {
+                else if ( i < 12) {
                     fheroes2::h2d::readImage( "genie_snap_animation_" + std::to_string( nameNumber ) + ".image", _icnVsSprite[id][i] );
                     }
+                else {
+                    int newNameNumber = i - 11;
+                    fheroes2::h2d::readImage( "genie_snap_animation_0" + std::to_string( newNameNumber ) + ".image", _icnVsSprite[id][i] );
+                }
                 
             }
 
@@ -2978,7 +2982,7 @@ namespace
             Blit( genieHeadDownwards, 0, 0, _icnVsSprite[id][11], 13, 4, genieHeadDownwards.width(), genieHeadDownwards.height() );
             
             
-            fheroes2::Save( genieHeadDownwards, "genieHeadDownwards.png", 96 );
+            //fheroes2::Save( genieHeadDownwards, "genieHeadDownwards.png", 96 );
 
             // Genie upwards head. OG Sprite 26
 
@@ -2996,13 +3000,29 @@ namespace
             Copy( genieUpwardsAttackOriginal, 12, 3, genieHeadUpwards, 14, 20, 1, 1 );
             Copy( genieUpwardsAttackOriginal, 12, 3, genieHeadUpwards, 15, 20, 1, 1 );
 
-             Copy( genieUpwardsAttackOriginal, 17, 21, genieHeadUpwards, 17, 21, 3, 1 );
-            Copy( genieUpwardsAttackOriginal, 17, 21, genieHeadUpwards, 18, 22, 2, 1 );
+            Copy( genieUpwardsAttackOriginal, 17, 21, genieHeadUpwards, 17, 21, 3, 1 );
+            Copy( genieUpwardsAttackOriginal, 19, 22, genieHeadUpwards, 19, 22, 2, 1 );
+            Copy( genieUpwardsAttackOriginal, 11, 17, genieHeadUpwards, 11, 17, 3, 1 );
+
+            Copy( genieUpwardsAttackOriginal, 13, 18, genieHeadUpwards, 13, 18, 1, 1 );
 
             fheroes2::Save( genieHeadUpwards, "genieHeadUpwards.png", 96 );
 
-            Blit( genieHeadUpwards, 0, 0, _icnVsSprite[id][1], 6, 5, genieHeadUpwards.width(), genieHeadUpwards.height() );
-            fheroes2::Save( _icnVsSprite[id][1], "genieUpwardsAttack.png", 96 );
+
+            Blit( genieHeadUpwards, 0, 0, _icnVsSprite[id][12], 6, 6, genieHeadUpwards.width(), genieHeadUpwards.height() );
+            Blit( genieHeadUpwards, 0, 0, _icnVsSprite[id][13], 6, 5, genieHeadUpwards.width(), genieHeadUpwards.height() );
+            Blit( genieHeadUpwards, 0, 0, _icnVsSprite[id][14], 5, 5, genieHeadUpwards.width(), genieHeadUpwards.height() );
+            Blit( genieHeadUpwards, 0, 0, _icnVsSprite[id][15], 5, 5, genieHeadUpwards.width(), genieHeadUpwards.height() );
+            Blit( genieHeadUpwards, 0, 0, _icnVsSprite[id][16], 8, 5, genieHeadUpwards.width(), genieHeadUpwards.height() );
+            Blit( genieHeadUpwards, 0, 0, _icnVsSprite[id][17], 6, 6, genieHeadUpwards.width(), genieHeadUpwards.height() );
+
+            // Blit( genieHeadUpwards, 0, 0, _icnVsSprite[id][1], 6, 5, genieHeadUpwards.width(), genieHeadUpwards.height() );
+            for (int i = 12; i < 18; ++i){
+                fheroes2::Save( _icnVsSprite[id][i], "genieUpwardsAttack_" + std::to_string(i) + ".png", 96 );
+            }
+            // fheroes2::Save( _icnVsSprite[id][1], "genieUpwardsAttack.png", 96 );
+
+            // Third head
 
              break;
         }

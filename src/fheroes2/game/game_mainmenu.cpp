@@ -348,7 +348,7 @@ fheroes2::GameMode Game::MainMenu( const bool isFirstGameRun )
 
     fheroes2::Sprite highlightDoor = Assets::getImage( ICN::SHNGANIM, 18 );
     fheroes2::ApplyPalette( highlightDoor, 8 );
-    int counterGenie = 1;
+    int counterGenie = 0;
     while ( true ) {
         if ( !le.HandleEvents( true, true ) ) {
             if ( Game::processExitEvent() == fheroes2::GameMode::QUIT_GAME ) {
@@ -458,7 +458,7 @@ fheroes2::GameMode Game::MainMenu( const bool isFirstGameRun )
             }
 
             // draw genie animation number countergenie % 12
-            const fheroes2::Sprite & spriteGenie = Assets::getImage( ICN::GENIE_FRAMES, counterGenie % 12 );
+            const fheroes2::Sprite & spriteGenie = Assets::getImage( ICN::GENIE_FRAMES, counterGenie % 17 );
             fheroes2::Blit( spriteGenie, display, spriteGenie.x() + 200, spriteGenie.y() + 300 );
             ++counterGenie;
             

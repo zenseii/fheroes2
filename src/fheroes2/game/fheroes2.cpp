@@ -85,7 +85,7 @@ int main( int argc, char ** argv )
         Game::initAnimation();
         Game::initHotKeys();
 
-        fheroes2::H2DReader reader;
+        /*fheroes2::H2DReader reader;
         reader.open( "resurrection.h2d" );
 
         std::vector<fheroes2::Sprite> genieSprites;
@@ -114,7 +114,7 @@ int main( int argc, char ** argv )
 
         
 
-        writer.write( "modified.h2d" );
+        writer.write( "modified.h2d" ); */
 
 
         try {
