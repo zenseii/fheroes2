@@ -557,7 +557,7 @@ namespace
             bool needRedraw = ( listId != listbox.getCurrentId() );
             bool listUpdated = false;
 
-            if ( le.isKeyPressed( fheroes2::Key::KEY_DELETE ) && isListboxSelected ) {
+            if ( Game::HotKeyPressEvent( Game::HotKeyEvent::DEFAULT_DELETE ) && isListboxSelected ) {
                 listbox.SetCurrent( listId );
                 listbox.Redraw();
 
@@ -612,7 +612,7 @@ namespace
                 bool prepareRedraw = false;
 
                 if ( le.MouseClickLeft( buttonVirtualKB->area() ) || ( isInGameKeyboardRequired && le.MouseClickLeft( textInputRoi ) ) ) {
-                    fheroes2::openVirtualKeyboard( filename, lengthLimit );
+                    fheroes2::openVirtualKeyboard( filename, lengthLimit, false );
 
                     charInsertPos = filename.size();
                     prepareRedraw = true;

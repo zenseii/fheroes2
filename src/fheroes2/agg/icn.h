@@ -963,6 +963,8 @@ namespace ICN
 
         WIZARD_CASTLE_BAY,
 
+        MARKETPLACE_ICON,
+
         GOOD_ARMY_BUTTON,
         GOOD_MARKET_BUTTON,
         EVIL_ARMY_BUTTON,
@@ -1132,6 +1134,7 @@ namespace ICN
         SCENIBKG_EVIL,
 
         EVIL_DIALOG_PLAIN_CORNERS,
+        SLEEPING_HERO_ICON,
 
         // IMPORTANT! Put any new entry just above this one.
         LASTICN
